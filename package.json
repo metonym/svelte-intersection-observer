@@ -1,0 +1,45 @@
+{
+  "name": "svelte-intersection-observer",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Detect if an element is in the viewport using the Intersection Observer API",
+  "author": "Eric Liu (https://github.com/metonym)",
+  "svelte": "src/index.js",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "sideEffects": false,
+  "scripts": {
+    "prepublishOnly": "rollup -c",
+    "build": "rollup -c",
+    "postbuild": "prettier --write '**/*.{js,svelte}'"
+  },
+  "devDependencies": {
+    "prettier": "1.19.1",
+    "prettier-plugin-svelte": "0.7.0",
+    "rollup": "^2.3.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-svelte": "^5.2.1",
+    "svelte": "^3.20.1"
+  },
+  "prettier": {
+    "printWidth": 100
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metonym/svelte-intersection-observer.git"
+  },
+  "homepage": "https://github.com/metonym/svelte-intersection-observer",
+  "bugs": "https://github.com/metonym/svelte-intersection-observer/issues",
+  "keywords": [
+    "intersection observer",
+    "viewport",
+    "lazy-loading",
+    "conditional",
+    "svelte",
+    "svelte component"
+  ],
+  "files": [
+    "lib",
+    "src"
+  ]
+}
