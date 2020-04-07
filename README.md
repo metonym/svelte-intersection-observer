@@ -33,14 +33,14 @@ yarn add -D svelte-intersection-observer
 
 ### Props
 
-| Property name | Description                                                                           | Value                                                                                                               |
-| ------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| element       | Element observed for intersection                                             | `HTMLElement`                                                                                                       |
-| root          | Containing element                                                                    | `null` or `HTMLElement` (default: `null`)                                                                           |
-| rootMargin    | Offset of the containing element                                                      | `string` (default: `"0px"`)                                                                                         |
+| Property name | Description                               | Value                                                                                                               |
+| :------------ | :---------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| element       | Element observed for intersection         | `HTMLElement`                                                                                                       |
+| root          | Containing element                        | `null` or `HTMLElement` (default: `null`)                                                                           |
+| rootMargin    | Offset of the containing element          | `string` (default: `"0px"`)                                                                                         |
 | threshold     | Percentage of element to trigger an event | `number` between 0 and 1 (default: `0`)                                                                             |
-| intersecting  | If the element is intersecting                                                        | `boolean`                                                                                                           |
-| entry         | Observed element metadata                                 | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
+| intersecting  | If the element is intersecting            | `boolean`                                                                                                           |
+| entry         | Observed element metadata                 | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
 
 ### Dispatched Events
 
