@@ -35,14 +35,14 @@ yarn add -D svelte-intersection-observer
 
 | Property name | Description                                                                           | Value                                                                                                               |
 | ------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| element       | Element observed for intersecting changes                                             | `HTMLElement`                                                                                                       |
+| element       | Element observed for intersection                                             | `HTMLElement`                                                                                                       |
 | root          | Containing element                                                                    | `null` or `HTMLElement` (default: `null`)                                                                           |
 | rootMargin    | Offset of the containing element                                                      | `string` (default: `"0px"`)                                                                                         |
-| threshold     | Percentage of the intersecting element to be visible to trigger an intersection event | `number` between 0 and 1 (default: `0`)                                                                             |
+| threshold     | Percentage of element to trigger an event | `number` between 0 and 1 (default: `0`)                                                                             |
 | intersecting  | If the element is intersecting                                                        | `boolean`                                                                                                           |
-| entry         | Observed element metadata triggered when intersecting                                 | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
+| entry         | Observed element metadata                                 | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
 
-### Dispatched Event
+### Dispatched Events
 
 The `observe` event is dispatched when an intersection change occurs.
 
