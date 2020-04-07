@@ -3,10 +3,10 @@
 </script>
 
 <script>
+  export let element = null; // HTMLElement
   export let root = null; // HTMLElement
   export let rootMargin = "0px";
   export let threshold = 0;
-  export let element = null; // HTMLElement
 
   import { tick, createEventDispatcher, onDestroy, afterUpdate } from "svelte";
 
@@ -35,21 +35,18 @@
   });
 
   onDestroy(() => {
-    observer.disconnect(); // TODO: enable 'disconnectOnly' option?
-    observer = undefined;
+    observer.disconnect();
   });
 
-  $: {
-    observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(_entry => {
-          entry = _entry;
-          intersecting = _entry.isIntersecting;
-        });
-      },
-      { root, rootMargin, threshold }
-    );
-  }
+  $: observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(_entry => {
+        entry = _entry;
+        intersecting = _entry.isIntersecting;
+      });
+    },
+    { root, rootMargin, threshold }
+  );
 </script>
 
 <slot {intersecting} {entry} />
