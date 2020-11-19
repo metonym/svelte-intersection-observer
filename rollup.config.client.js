@@ -6,7 +6,7 @@ export default {
   output: {
     format: "iife",
     name: "app",
-    file: "public/dist/bundle.js",
+    file: "public/bundle.js",
   },
   plugins: [svelte(), resolve()],
 };
