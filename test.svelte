@@ -1,12 +1,24 @@
 <script lang="ts">
-  import IntersectionObserver from "./types";
+  import IntersectionObserver from "svelte-intersection-observer";
 
-  let element = null;
+  let entry = {};
+  let element = undefined;
+
+  $: inView = entry.isIntersecting;
 </script>
+
+<header>
+  <strong>Scroll down.</strong>
+  <div>
+    Element in view?
+    <strong class="answer" class:inView>{inView ? 'Yes' : 'No'}</strong>
+  </div>
+</header>
 
 <IntersectionObserver
   {element}
-  rootMargin="50px"
   on:observe={({ detail }) => {
-    console.log(detail);
-  }} />
+    entry = detail;
+  }}>
+  <div bind:this={element} class="element">Element</div>
+</IntersectionObserver>

@@ -39,7 +39,9 @@
     }
   });
 
-  onDestroy(observer.disconnect);
+  onDestroy(() => {
+    observer.disconnect();
+  });
 
   $: observer = new IntersectionObserver(
     (entries) => {

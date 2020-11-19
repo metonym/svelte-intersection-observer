@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 24px;
+        line-height: 1.5;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica,
+          sans-serif;
+        letter-spacing: 0.01rem;
+        overflow-y: scroll;
+      }
+
+      header {
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+        background-color: #e0f7f6;
+      }
+
+      .element {
+        margin-top: calc(100vh + 1px);
+        height: 38vh;
+        padding: 1rem;
+        background-color: #376462;
+        color: #fff;
+      }
+
+      .answer {
+        color: #d54309;
+      }
+
+      .answer.inView {
+        color: #00a91c;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="dist/bundle.js"></script>
+  </body>
+</html>

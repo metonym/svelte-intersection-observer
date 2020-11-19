@@ -10,6 +10,9 @@
   "types": "./types/index.d.ts",
   "sideEffects": false,
   "scripts": {
+    "dev": "rollup -c rollup.config.client.js -w",
+    "build": "rollup -c rollup.config.client.js",
+    "deploy": "npx gh-pages -d public",
     "prepack": "rollup -c"
   },
   "devDependencies": {
