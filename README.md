@@ -5,6 +5,10 @@
 
 > Detect if an element is in the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry).
 
+Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d?version=3.29.7).
+
+## [Demo](https://metonym.github.io/svelte-intersection-observer/)
+
 ## Install
 
 ```sh
