@@ -7,13 +7,13 @@
 
 ## Install
 
-```bash
+```sh
 yarn add -D svelte-intersection-observer
 ```
 
 ## Usage
 
-```html
+```svelte
 <script>
   import IntersectionObserver from "svelte-intersection-observer";
 
