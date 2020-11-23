@@ -25,8 +25,10 @@ npm i -D svelte-intersection-observer
 <script>
   import IntersectionObserver from "svelte-intersection-observer";
 
+  let entry = {};
   let element;
-  let inView;
+
+  $: inView = entry.isIntersecting;
 </script>
 
 <header>
@@ -37,15 +39,9 @@ npm i -D svelte-intersection-observer
   </div>
 </header>
 
-<IntersectionObserver
-  {element}
-  let:intersecting
-  on:observe={({ detail }) => {
-    inView = detail.isIntersecting;
-  }}
->
+<IntersectionObserver {element} bind:entry>
   <div class="element" bind:this="{element}">
-    {#if intersecting}
+    {#if inView}
       Element is in view
     {/if}
   </div>
@@ -56,14 +52,14 @@ npm i -D svelte-intersection-observer
 
 ### Props
 
-| Property name | Description                               | Value                                                                                                               |
-| :------------ | :---------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
-| element       | Element observed for intersection         | `HTMLElement`                                                                                                       |
-| root          | Containing element                        | `null` or `HTMLElement` (default: `null`)                                                                           |
-| rootMargin    | Offset of the containing element          | `string` (default: `"0px"`)                                                                                         |
-| threshold     | Percentage of element to trigger an event | `number` between 0 and 1 (default: `0`)                                                                             |
-| intersecting  | If the element is intersecting            | `boolean`                                                                                                           |
-| entry         | Observed element metadata                 | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
+| Property name | Description                               | Value                                                                                                     |
+| :------------ | :---------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| element       | Element observed for intersection         | `HTMLElement`                                                                                             |
+| root          | Containing element                        | `null` or `HTMLElement` (default: `null`)                                                                 |
+| rootMargin    | Offset of the containing element          | `string` (default: `"0px"`)                                                                               |
+| threshold     | Percentage of element to trigger an event | `number` between 0 and 1 (default: `0`)                                                                   |
+| intersecting  | If the element is intersecting            | `boolean`                                                                                                 |
+| entry         | Observed element metadata                 | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
 
 ### Dispatched Events
 
