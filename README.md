@@ -5,14 +5,18 @@
 
 > Detect if an element is in the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry).
 
+This module ships with [TypeScript definitions](./types).
+
 Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d?version=3.29.7).
 
 ## [Demo](https://metonym.github.io/svelte-intersection-observer/)
 
 ## Install
 
-```sh
+```bash
 yarn add -D svelte-intersection-observer
+# OR
+npm i -D svelte-intersection-observer
 ```
 
 ## Usage
@@ -22,10 +26,25 @@ yarn add -D svelte-intersection-observer
   import IntersectionObserver from "svelte-intersection-observer";
 
   let element;
+  let inView;
 </script>
 
-<IntersectionObserver {element} let:intersecting>
-  <div bind:this="{element}">
+<header>
+  <strong>Scroll down.</strong>
+  <div>
+    Element in view?
+    <strong class="answer" class:inView>{inView ? 'Yes' : 'No'}</strong>
+  </div>
+</header>
+
+<IntersectionObserver
+  {element}
+  let:intersecting
+  on:observe={({ detail }) => {
+    inView = detail.isIntersecting;
+  }}
+>
+  <div class="element" bind:this="{element}">
     {#if intersecting}
       Element is in view
     {/if}
@@ -48,22 +67,7 @@ yarn add -D svelte-intersection-observer
 
 ### Dispatched Events
 
-The `observe` event is dispatched when an intersection change occurs.
-
-```jsx
-<IntersectionObserver
-  {element}
-  on:observe={({ detail: entry }) => {
-    console.log(entry);
-    // entry.boundingClientRect
-    // entry.intersectionRatio
-    // entry.intersectionRect
-    // entry.isIntersecting
-    // entry.rootBounds
-    // entry.target
-    // entry.time
-  }} />
-```
+- **on:observe**: fired when an intersection change occurs (type `IntersectionObserverEntry`)
 
 ## [Changelog](CHANGELOG.md)
 
@@ -71,7 +75,7 @@ The `observe` event is dispatched when an intersection change occurs.
 
 [MIT](LICENSE)
 
-[npm]: https://img.shields.io/npm/v/svelte-intersection-observer.svg?color=blue
+[npm]: https://img.shields.io/npm/v/svelte-intersection-observer.svg?color=%235832c9
 [npm-url]: https://npmjs.com/package/svelte-intersection-observer
 [build]: https://travis-ci.com/metonym/svelte-intersection-observer.svg?branch=master
 [build-badge]: https://travis-ci.com/metonym/svelte-intersection-observer
