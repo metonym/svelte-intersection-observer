@@ -17,11 +17,13 @@
   export let rootMargin = "0px";
   export let threshold = 0;
 
+  /** @type {{} | Entry} */
+  export let entry = null;
+
   import { tick, createEventDispatcher, onDestroy, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();
-
-  let entry = null;
+  
   let intersecting = false;
   let prevElement = null;
 
@@ -32,9 +34,7 @@
 
     if (element != null && element != prevElement) {
       observer.observe(element);
-
       if (prevElement != null) observer.unobserve(prevElement);
-
       prevElement = element;
     }
   });

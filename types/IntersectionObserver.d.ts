@@ -22,6 +22,11 @@ export interface IntersectionObserverProps {
    * @default 0
    */
   threshold?: number;
+
+  /**
+   * @default null
+   */
+  entry?: {} | Entry;
 }
 
 export default class IntersectionObserver {
