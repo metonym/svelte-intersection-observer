@@ -11,8 +11,8 @@
   "sideEffects": false,
   "scripts": {
     "dev": "rollup -cw",
-    "build": "rollup -c",
-    "deploy": "npx gh-pages -d public",
+    "predeploy": "rollup -c",
+    "deploy": "npx gh-pages -d dist",
     "prepack": "BUNDLE=true rollup -c",
     "svelte-check": "svelte-check"
   },
