@@ -27,7 +27,12 @@ export interface IntersectionObserverProps {
   /**
    * @default null
    */
-  entry?: {} | Entry;
+  entry?: null | Entry;
+
+  /**
+   * @default false
+   */
+  intersecting?: boolean;
 }
 
 export default class IntersectionObserver extends SvelteComponentTyped<

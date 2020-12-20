@@ -28,7 +28,7 @@ export default () => {
           background-color: #e0f7f6;
         }
 
-        .element {
+        .code-fence header ~ div {
           margin-top: calc(380px);
           height: 200px;
           padding: 1rem;
@@ -36,11 +36,11 @@ export default () => {
           color: #fff;
         }
 
-        .answer {
+        .code-fence header div strong {
           color: #d54309;
         }
 
-        .answer.inView {
+        .code-fence header div strong.intersecting {
           color: #00a91c;
         }
       `,

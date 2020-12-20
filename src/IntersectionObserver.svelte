@@ -1,7 +1,3 @@
-<script context="module">
-  let observer = undefined;
-</script>
-
 <script>
   /**
    * @typedef {null | IntersectionObserverEntry} Entry
@@ -17,15 +13,16 @@
   export let rootMargin = "0px";
   export let threshold = 0;
 
-  /** @type {{} | Entry} */
+  /** @type {null | Entry} */
   export let entry = null;
+  export let intersecting = false;
 
   import { tick, createEventDispatcher, onDestroy, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();
-  
-  let intersecting = false;
+
   let prevElement = null;
+  let observer = undefined;
 
   afterUpdate(async () => {
     if (entry != null) dispatch("observe", entry);
