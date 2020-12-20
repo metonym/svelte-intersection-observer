@@ -5,11 +5,7 @@
 
 > Detect if an element is in the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry).
 
-This module ships with [TypeScript definitions](./types).
-
 Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d?version=3.29.7).
-
-## [Demo](https://metonym.github.io/svelte-intersection-observer/)
 
 ## Install
 
@@ -25,10 +21,10 @@ npm i -D svelte-intersection-observer
 <script>
   import IntersectionObserver from "svelte-intersection-observer";
 
-  let entry = {};
+  let entry;
   let element;
 
-  $: inView = entry.isIntersecting;
+  $: inView = entry && entry.isIntersecting;
 </script>
 
 <header>
@@ -52,18 +48,22 @@ npm i -D svelte-intersection-observer
 
 ### Props
 
-| Property name | Description                               | Value                                                                                                     |
-| :------------ | :---------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| element       | Element observed for intersection         | `HTMLElement`                                                                                             |
-| root          | Containing element                        | `null` or `HTMLElement` (default: `null`)                                                                 |
-| rootMargin    | Offset of the containing element          | `string` (default: `"0px"`)                                                                               |
-| threshold     | Percentage of element to trigger an event | `number` between 0 and 1 (default: `0`)                                                                   |
-| intersecting  | If the element is intersecting            | `boolean`                                                                                                 |
-| entry         | Observed element metadata                 | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
+| Prop name    | Description                               | Value                                                                                                     |
+| :----------- | :---------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| element      | Element observed for intersection         | `HTMLElement`                                                                                             |
+| root         | Containing element                        | `null` or `HTMLElement` (default: `null`)                                                                 |
+| rootMargin   | Offset of the containing element          | `string` (default: `"0px"`)                                                                               |
+| threshold    | Percentage of element to trigger an event | `number` between 0 and 1 (default: `0`)                                                                   |
+| intersecting | If the element is intersecting            | `boolean`                                                                                                 |
+| entry        | Observed element metadata                 | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
 
-### Dispatched Events
+### Dispatched events
 
 - **on:observe**: fired when an intersection change occurs (type `IntersectionObserverEntry`)
+
+## TypeScript support
+
+Svelte version 3.31.0 or greater is required to use this module with TypeScript.
 
 ## [Changelog](CHANGELOG.md)
 

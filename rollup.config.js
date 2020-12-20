@@ -10,8 +10,40 @@ export default () => {
   if (!BUNDLE) {
     return svelteReadme({
       minify: !DEV,
-      prefixUrl:
-        "https://github.com/metonym/svelte-intersection-observer/tree/master/",
+      svelte: { dev: DEV, immutable: true },
+      prefixUrl: `${pkg.homepage}/tree/master/`,
+      style: `
+        .code-fence {
+          overflow-y: scroll;
+          height: 380px;
+        }
+
+        header {
+          position: sticky;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          width: 100%;
+          padding: 1rem;
+          background-color: #e0f7f6;
+        }
+
+        .element {
+          margin-top: calc(380px);
+          height: 200px;
+          padding: 1rem;
+          background-color: #376462;
+          color: #fff;
+        }
+
+        .answer {
+          color: #d54309;
+        }
+
+        .answer.inView {
+          color: #00a91c;
+        }
+      `,
     });
   }
 
