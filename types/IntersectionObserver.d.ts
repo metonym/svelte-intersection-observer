@@ -1,6 +1,7 @@
 /// <reference types="svelte" />
+import { SvelteComponentTyped } from "svelte";
 
-type Entry = null | IntersectionObserverEntry;
+export type Entry = null | IntersectionObserverEntry;
 
 export interface IntersectionObserverProps {
   /**
@@ -29,12 +30,8 @@ export interface IntersectionObserverProps {
   entry?: {} | Entry;
 }
 
-export default class IntersectionObserver {
-  $$prop_def: IntersectionObserverProps;
-  $$slot_def: {
-    default: { intersecting: boolean; entry: Entry };
-  };
-
-  $on(eventname: "observe", cb: (event: CustomEvent<Entry>) => void): () => void;
-  $on(eventname: string, cb: (event: Event) => void): () => void;
-}
+export default class IntersectionObserver extends SvelteComponentTyped<
+  IntersectionObserverProps,
+  { observe: CustomEvent<Entry> },
+  { default: { intersecting: boolean; entry: Entry } }
+> {}
