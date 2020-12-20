@@ -2,6 +2,7 @@
   import IntersectionObserver from "svelte-intersection-observer";
   import type { Entry } from "./types/IntersectionObserver";
 
+  let intersecting = false;
   let entry: Entry = null;
   let element: HTMLElement;
 
@@ -16,7 +17,7 @@
   </div>
 </header>
 
-<IntersectionObserver {element} bind:entry>
+<IntersectionObserver {element} bind:entry bind:intersecting>
   <div class="element" bind:this={element}>
     {#if inView}Element is in view{/if}
   </div>
