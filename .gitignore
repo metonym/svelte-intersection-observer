@@ -1,6 +1,6 @@
 .DS_Store
 *.tgz
-/public/bundle.js
+/public
 /lib
 /node_modules
 yarn-debug.log*
