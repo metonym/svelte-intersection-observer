@@ -25,12 +25,10 @@ npm i -D svelte-intersection-observer
   let intersecting;
 </script>
 
-<header>
-  <strong>Scroll down.</strong>
-  <div>
-    Element in view?
-    <strong class:intersecting>{intersecting ? 'Yes' : 'No'}</strong>
-  </div>
+<header class:intersecting>
+  Scroll down<br />
+  Element in view:
+  <strong>{intersecting ? 'Yes' : 'No'}</strong>
 </header>
 
 <IntersectionObserver {element} bind:intersecting>
@@ -50,7 +48,6 @@ npm i -D svelte-intersection-observer
 | root         | Containing element                                          | `null` or `HTMLElement` (default: `null`)                                                                 |
 | rootMargin   | Offset of the containing element                            | `string` (default: `"0px"`)                                                                               |
 | threshold    | Percentage of element to trigger an event                   | `number` between 0 and 1 (default: `0`)                                                                   |
-| intersecting | If the element is intersecting                              | `boolean`                                                                                                 |
 | entry        | Observed element metadata                                   | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
 | intersecting | `true` if the observed element is intersecting the viewport | `boolean`                                                                                                 |
 

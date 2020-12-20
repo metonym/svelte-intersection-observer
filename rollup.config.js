@@ -36,11 +36,11 @@ export default () => {
           color: #fff;
         }
 
-        .code-fence header div strong {
+        .code-fence header strong {
           color: #d54309;
         }
 
-        .code-fence header div strong.intersecting {
+        .code-fence header.intersecting strong {
           color: #00a91c;
         }
       `,
