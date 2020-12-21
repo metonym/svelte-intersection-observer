@@ -30,11 +30,7 @@ npm i -D svelte-intersection-observer
 </header>
 
 <IntersectionObserver {element} bind:intersecting>
-  <div bind:this={element}>
-    {#if intersecting}
-      Element is in view
-    {/if}
-  </div>
+  <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
 ```
 
