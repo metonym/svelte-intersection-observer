@@ -28,6 +28,12 @@ export default () => {
           background-color: #e0f7f6;
         }
 
+        header:before {
+          content: "Scroll down.";
+          display: block;
+          color: #111;
+        }
+
         .code-fence header ~ div {
           margin-top: calc(380px);
           height: 200px;
@@ -36,11 +42,12 @@ export default () => {
           color: #fff;
         }
 
-        .code-fence header strong {
+        .code-fence header {
+          font-weight: bold;
           color: #d54309;
         }
 
-        .code-fence header.intersecting strong {
+        .code-fence header.intersecting {
           color: #00a91c;
         }
       `,

@@ -26,14 +26,14 @@ npm i -D svelte-intersection-observer
 </script>
 
 <header class:intersecting>
-  Scroll down<br />
-  Element in view:
-  <strong>{intersecting ? 'Yes' : 'No'}</strong>
+  {intersecting ? 'Element is in view' : 'Element is not in view'}
 </header>
 
 <IntersectionObserver {element} bind:intersecting>
   <div bind:this={element}>
-    {#if intersecting}Element is in view{/if}
+    {#if intersecting}
+      Element is in view
+    {/if}
   </div>
 </IntersectionObserver>
 ```
