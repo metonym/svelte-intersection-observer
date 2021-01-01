@@ -1,11 +1,12 @@
 # svelte-intersection-observer
 
 [![NPM][npm]][npm-url]
-[![Build][build]][build-badge]
 
 > Detect if an element is in the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry).
 
 Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d?version=3.29.7).
+
+<!-- TOC -->
 
 ## Install
 
@@ -17,6 +18,7 @@ npm i -D svelte-intersection-observer
 
 ## Usage
 
+<!-- prettier-ignore-start -->
 ```svelte
 <script>
   import IntersectionObserver from "svelte-intersection-observer";
@@ -33,6 +35,7 @@ npm i -D svelte-intersection-observer
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
 ```
+<!-- prettier-ignore-end -->
 
 ## API
 
@@ -55,13 +58,13 @@ npm i -D svelte-intersection-observer
 
 Svelte version 3.31.0 or greater is required to use this module with TypeScript.
 
-## [Changelog](CHANGELOG.md)
+## Changelog
+
+[Changelog](CHANGELOG.md)
 
 ## License
 
 [MIT](LICENSE)
 
-[npm]: https://img.shields.io/npm/v/svelte-intersection-observer.svg?color=%235832c9
+[npm]: https://img.shields.io/npm/v/svelte-intersection-observer.svg?color=%23ff3e00&style=for-the-badge
 [npm-url]: https://npmjs.com/package/svelte-intersection-observer
-[build]: https://travis-ci.com/metonym/svelte-intersection-observer.svg?branch=master
-[build-badge]: https://travis-ci.com/metonym/svelte-intersection-observer
