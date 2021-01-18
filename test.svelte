@@ -13,7 +13,7 @@
   <strong>Scroll down.</strong>
   <div>
     Element in view?
-    <strong class="answer" class:inView>{inView ? 'Yes' : 'No'}</strong>
+    <strong class="answer" class:inView>{inView ? "Yes" : "No"}</strong>
   </div>
 </header>
 

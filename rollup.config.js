@@ -9,9 +9,6 @@ const BUNDLE = process.env.BUNDLE === "true";
 export default () => {
   if (!BUNDLE) {
     return svelteReadme({
-      minify: !DEV,
-      svelte: { dev: DEV, immutable: true },
-      prefixUrl: `${pkg.homepage}/tree/master/`,
       style: `
         .code-fence {
           overflow-y: scroll;
