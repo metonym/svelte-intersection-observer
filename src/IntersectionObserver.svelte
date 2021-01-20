@@ -37,18 +37,20 @@
   });
 
   onDestroy(() => {
-    observer.disconnect();
+    if (observer) observer.disconnect();
   });
 
-  $: observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((_entry) => {
-        entry = _entry;
-        intersecting = _entry.isIntersecting;
-      });
-    },
-    { root, rootMargin, threshold }
-  );
+  $: if (typeof window !== "undefined") {
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((_entry) => {
+          entry = _entry;
+          intersecting = _entry.isIntersecting;
+        });
+      },
+      { root, rootMargin, threshold }
+    );
+  }
 </script>
 
 <slot {intersecting} {entry} />
