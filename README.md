@@ -18,6 +18,8 @@ npm i -D svelte-intersection-observer
 
 ## Usage
 
+### Basic
+
 <!-- prettier-ignore-start -->
 ```svelte
 <script>
@@ -35,28 +37,24 @@ npm i -D svelte-intersection-observer
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
 ```
+<!-- prettier-ignore-end -->
 
-Working with dispatched events
-```svelte
-<script>
-  import IntersectionObserver from "svelte-intersection-observer";
+### on:intersect event
 
-  let element;
-  let observer;
+The "intersect" event is dispatched only if the observed element is intersecting the viewport.
 
-  const onIntersectHandler = (entry) => {
-    if (someCondition) {
-      observer.unobserve(entry.details.target);
-    }
-  }
-</script>
-
-<IntersectionObserver {element} bind:observer on:intersect={onIntersectHandler}>
+<!-- prettier-ignore-start -->
+```html
+<IntersectionObserver
+  {element}
+  on:intersect="{(e) => {
+    console.log(e.detail); // IntersectionObserverEntry
+  }}"
+>
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
 ```
 <!-- prettier-ignore-end -->
-
 
 ## API
 
