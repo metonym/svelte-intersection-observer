@@ -45,8 +45,14 @@ export interface IntersectionObserverProps {
   once?: boolean;
 }
 
-export default class IntersectionObserver extends SvelteComponentTyped<
+export default class SvelteIntersectionObserver extends SvelteComponentTyped<
   IntersectionObserverProps,
-  { observe: CustomEvent<Entry>, intersect: CustomEvent<Entry> },
-  { default: { intersecting: boolean; entry: Entry; observer: IntersectionObserver; } }
+  { observe: CustomEvent<Entry>; intersect: CustomEvent<Entry> },
+  {
+    default: {
+      intersecting: boolean;
+      entry: Entry;
+      observer: IntersectionObserver;
+    };
+  }
 > {}
