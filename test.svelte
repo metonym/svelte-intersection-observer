@@ -1,10 +1,11 @@
 <script lang="ts">
-  import IntersectionObserver from "./types";
+  import SvelteIntersectionObserver from "./types";
   import type { Entry } from "./types/IntersectionObserver";
 
   let intersecting = false;
   let entry: Entry = null;
   let element: HTMLElement;
+  let observer: IntersectionObserver;
 
   $: inView = entry && entry.isIntersecting;
 </script>
@@ -17,8 +18,18 @@
   </div>
 </header>
 
-<IntersectionObserver {element} bind:entry bind:intersecting>
+<SvelteIntersectionObserver {element} bind:entry bind:intersecting>
   <div class="element" bind:this={element}>
     {#if inView}Element is in view{/if}
   </div>
-</IntersectionObserver>
+</SvelteIntersectionObserver>
+
+<SvelteIntersectionObserver
+  {element}
+  bind:observer
+  on:intersect={(e) => {
+    console.log(e.detail);
+  }}
+>
+  <div bind:this={element}>Hello world</div>
+</SvelteIntersectionObserver>

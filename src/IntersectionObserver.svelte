@@ -7,6 +7,7 @@
 
   /** @type {null | HTMLElement} */
   export let element = null;
+  export let once = false;
 
   /** @type {null | HTMLElement} */
   export let root = null;
@@ -16,22 +17,32 @@
   /** @type {null | Entry} */
   export let entry = null;
   export let intersecting = false;
+  /** @type {null | IntersectionObserver} */
+  export let observer = null;
 
   import { tick, createEventDispatcher, onDestroy, afterUpdate } from "svelte";
 
   const dispatch = createEventDispatcher();
 
   let prevElement = null;
-  let observer = undefined;
 
   afterUpdate(async () => {
-    if (entry != null) dispatch("observe", entry);
+    if (entry !== null) {
+      dispatch("observe", entry);
+
+      if (entry.isIntersecting) {
+        dispatch("intersect", entry);
+
+        if (once) observer.unobserve(entry.target);
+      }
+    }
 
     await tick();
 
-    if (element != null && element != prevElement) {
+    if (element !== null && element !== prevElement) {
       observer.observe(element);
-      if (prevElement != null) observer.unobserve(prevElement);
+
+      if (prevElement !== null) observer.unobserve(prevElement);
       prevElement = element;
     }
   });
@@ -53,4 +64,4 @@
   }
 </script>
 
-<slot {intersecting} {entry} />
+<slot {intersecting} {entry} {observer} />

@@ -18,6 +18,8 @@ npm i -D svelte-intersection-observer
 
 ## Usage
 
+### Basic
+
 <!-- prettier-ignore-start -->
 ```svelte
 <script>
@@ -37,22 +39,42 @@ npm i -D svelte-intersection-observer
 ```
 <!-- prettier-ignore-end -->
 
+### on:intersect event
+
+The "intersect" event is dispatched only if the observed element is intersecting the viewport.
+
+<!-- prettier-ignore-start -->
+```html
+<IntersectionObserver
+  {element}
+  on:intersect="{(e) => {
+    console.log(e.detail); // IntersectionObserverEntry
+  }}"
+>
+  <div bind:this={element}>Hello world</div>
+</IntersectionObserver>
+```
+<!-- prettier-ignore-end -->
+
 ## API
 
 ### Props
 
-| Prop name    | Description                                                 | Value                                                                                                     |
-| :----------- | :---------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| element      | Element observed for intersection                           | `HTMLElement`                                                                                             |
-| root         | Containing element                                          | `null` or `HTMLElement` (default: `null`)                                                                 |
-| rootMargin   | Offset of the containing element                            | `string` (default: `"0px"`)                                                                               |
-| threshold    | Percentage of element to trigger an event                   | `number` between 0 and 1 (default: `0`)                                                                   |
-| entry        | Observed element metadata                                   | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
-| intersecting | `true` if the observed element is intersecting the viewport | `boolean`                                                                                                 |
+| Prop name    | Description                                                       | Value                                                                                                     |
+| :----------- | :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| element      | Element observed for intersection                                 | `HTMLElement`                                                                                             |
+| root         | Containing element                                                | `null` or `HTMLElement` (default: `null`)                                                                 |
+| rootMargin   | Offset of the containing element                                  | `string` (default: `"0px"`)                                                                               |
+| threshold    | Percentage of element to trigger an event                         | `number` between 0 and 1 (default: `0`)                                                                   |
+| entry        | Observed element metadata                                         | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
+| once         | If `true`, the observed element will be unobserved upon intersect | `boolean` (default: `false`)                                                                              |
+| intersecting | `true` if the observed element is intersecting the viewport       | `boolean` (default: `false`)                                                                              |
+| observer     | IntersectionObserver instance                                     | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           |
 
 ### Dispatched events
 
 - **on:observe**: fired when an intersection change occurs (type `IntersectionObserverEntry`)
+- **on:intersect**: fired when an intersection change occurs and the element is intersecting (type `IntersectionObserverEntry`)
 
 ## TypeScript support
 
