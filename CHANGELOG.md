@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0](https://github.com/metonym/svelte-intersection-observer/releases/tag/v0.6.0) - 2021-02-24
+
+**Features**
+
+- export `observer` prop (type `IntersectionObserver`)
+- dispatch "intersect" event if the observed element `isIntersecting` the viewport
+
 ## [0.5.0](https://github.com/metonym/svelte-intersection-observer/releases/tag/v0.5.0) - 2021-01-20
 
 **Features**
