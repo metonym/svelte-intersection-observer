@@ -64,8 +64,8 @@ The "intersect" event is dispatched only if the observed element is intersecting
 | :----------- | :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
 | element      | Element observed for intersection                                 | `HTMLElement`                                                                                             |
 | root         | Containing element                                                | `null` or `HTMLElement` (default: `null`)                                                                 |
-| rootMargin   | Offset of the containing element                                  | `string` (default: `"0px"`)                                                                               |
-| threshold    | Percentage of element to trigger an event                         | `number` between 0 and 1 (default: `0`)                                                                   |
+| rootMargin   | Margin offset of the containing element                           | `string` (default: `"0px"`)                                                                               |
+| threshold    | Percentage of element visibility to trigger an event              | `number` between 0 and 1 (default: `0`)                                                                   |
 | entry        | Observed element metadata                                         | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
 | once         | If `true`, the observed element will be unobserved upon intersect | `boolean` (default: `false`)                                                                              |
 | intersecting | `true` if the observed element is intersecting the viewport       | `boolean` (default: `false`)                                                                              |

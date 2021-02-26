@@ -2,21 +2,46 @@
   /**
    * @typedef {null | IntersectionObserverEntry} Entry
    * @event {Entry} observe
-   * @slot {{intersecting: boolean; entry: Entry }}
+   * @event {Entry} intersect
+   * @slot {{ intersecting: boolean; entry: Entry; observer: IntersectionObserver }}
    */
 
-  /** @type {null | HTMLElement} */
+  /**
+   * The HTML Element to observe
+   * @type {null | HTMLElement}
+   */
   export let element = null;
+
+  /**
+   * Set to `true` to unobserve the element after it intersects the viewport
+   * @type {boolean}
+   */
   export let once = false;
 
-  /** @type {null | HTMLElement} */
+  /**
+   * Containing element
+   * Defaults to the browser viewport
+   * @type {null | HTMLElement}
+   */
   export let root = null;
+
+  /** Margin offset of the containing element */
   export let rootMargin = "0px";
+
+  /**
+   * Percentage of element visibility to trigger an event
+   * Value must be between 0 and 1
+   */
   export let threshold = 0;
 
   /** @type {null | Entry} */
   export let entry = null;
+
+  /**
+   * `true` is the observed element is intersecting the element
+   */
   export let intersecting = false;
+
   /** @type {null | IntersectionObserver} */
   export let observer = null;
 
