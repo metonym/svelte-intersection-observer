@@ -14,12 +14,12 @@
     "predeploy": "rollup -c",
     "deploy": "npx gh-pages -d dist",
     "prepack": "BUNDLE=true rollup -c",
-    "svelte-check": "svelte-check"
+    "test": "svelte-check"
   },
   "devDependencies": {
-    "svelte": "^3.33.0",
-    "svelte-check": "^1.1.36",
-    "svelte-readme": "^3.0.0"
+    "svelte": "^3.35.0",
+    "svelte-check": "^1.2.6",
+    "svelte-readme": "^3.1.0"
   },
   "repository": {
     "type": "git",

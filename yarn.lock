@@ -715,10 +715,10 @@ supports-color@^7.0.0, supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-check@^1.1.36:
-  version "1.1.36"
-  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-1.1.36.tgz#b3998b5196946501c6e09b4775c096161a96eecc"
-  integrity sha512-vJ5/GGCNUlTtI0Ep6kD/oeISUSEvPBeY+uPT5B1koBxyo10wfkucReJiuDvyNpWokJ9v5C8TL2TeJ27/AyUhdg==
+svelte-check@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-1.2.6.tgz#068b83fdbbb0827af0c080b437794a75e228a0f3"
+  integrity sha512-jl8rGvL+qfBrGJur/hvY177P9qhbpOLrXLqsSiaWRjI771Us7OPFUaghhtUv9EmET5OT4xtmh5PfxUTxD7UCkg==
   dependencies:
     chalk "^4.0.0"
     chokidar "^3.4.1"
@@ -739,10 +739,10 @@ svelte-preprocess@^4.0.0:
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte-readme@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/svelte-readme/-/svelte-readme-3.0.0.tgz#566a525ad15a25fba2af7add77e5843653f39b22"
-  integrity sha512-0cT04B0XrhEdlhm3Ks1TSSB4ZA1TkNaLAekL1ORaEVVkMlh+bKjwwyNk2bkrFnHJAxbXc7rU5AZnHP2joz1JMw==
+svelte-readme@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/svelte-readme/-/svelte-readme-3.1.0.tgz#08455bfceb35669d52d6a014a29695db989e9f45"
+  integrity sha512-fNf8b2T5LfWFWayYSvo04oq/44f9CLTM74buIey5WhgVjPy/ve7Z9HtwVX2JtvzxUykAYe9VdSZaEtNuzJITkA==
   dependencies:
     "@rollup/plugin-node-resolve" "^11.1.0"
     "@rollup/plugin-virtual" "^2.0.3"
@@ -759,10 +759,10 @@ svelte-readme@^3.0.0:
     rollup-plugin-svelte "^7.0.0"
     rollup-plugin-terser "^7.0.2"
 
-svelte@^3.33.0:
-  version "3.33.0"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.33.0.tgz#beb369bf0fc2fc91614e05171676e21947f270ce"
-  integrity sha512-dUZYZCqTz/A1nxgcMabJXgBh60POJmgTJDCxg8ht+NmT2DqEbmFuFAR5e+xoILbd08oxQGT8J8l9jBn3xB+A3w==
+svelte@^3.35.0:
+  version "3.35.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.35.0.tgz#e0d0ba60c4852181c2b4fd851194be6fda493e65"
+  integrity sha512-gknlZkR2sXheu/X+B7dDImwANVvK1R0QGQLd8CNIfxxGPeXBmePnxfzb6fWwTQRsYQG7lYkZXvpXJvxvpsoB7g==
 
 terser@^5.0.0:
   version "5.5.0"
