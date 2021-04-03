@@ -45,7 +45,7 @@
   /** @type {null | IntersectionObserver} */
   export let observer = null;
 
-  import { tick, createEventDispatcher, onDestroy, afterUpdate, onMount } from "svelte";
+  import { tick, createEventDispatcher, afterUpdate, onMount } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -82,10 +82,9 @@
           },
           { root, rootMargin, threshold }
       );
-  });
-
-  onDestroy(() => {
-    if (observer) observer.disconnect();
+      return () => {
+          if (observer) observer.disconnect();
+      }
   });
 
 </script>
