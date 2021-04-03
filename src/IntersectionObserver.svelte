@@ -51,6 +51,22 @@
 
   let prevElement = null;
 
+  onMount(() => {
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((_entry) => {
+          entry = _entry;
+          intersecting = _entry.isIntersecting;
+        });
+      },
+      { root, rootMargin, threshold }
+    );
+
+    return () => {
+      if (observer) observer.disconnect();
+    };
+  });
+
   afterUpdate(async () => {
     if (entry !== null) {
       dispatch("observe", entry);
@@ -71,22 +87,6 @@
       prevElement = element;
     }
   });
-
-  onMount(() => {
-      observer = new IntersectionObserver(
-          (entries) => {
-              entries.forEach((_entry) => {
-                  entry = _entry;
-                  intersecting = _entry.isIntersecting;
-              });
-          },
-          { root, rootMargin, threshold }
-      );
-      return () => {
-          if (observer) observer.disconnect();
-      }
-  });
-
 </script>
 
 <slot {intersecting} {entry} {observer} />
