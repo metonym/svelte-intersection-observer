@@ -3,7 +3,12 @@
 
   let element;
   let intersecting;
+
+  let element2;
+  let intersecting2;
 </script>
+
+<h2>Basic</h2>
 
 <div class="code-fence">
   <header class:intersecting>
@@ -15,10 +20,31 @@
   </IntersectionObserver>
 </div>
 
+<h2>Once</h2>
+
+<div class="code-fence">
+  <header class:intersecting={intersecting2}>
+    {intersecting2 ? "Element is in view" : "Element is not in view"}
+  </header>
+
+  <IntersectionObserver
+    element={element2}
+    bind:intersecting={intersecting2}
+    once
+  >
+    <div bind:this={element2}>Hello world</div>
+  </IntersectionObserver>
+</div>
+
 <style>
+  h2 {
+    margin-bottom: 1rem;
+  }
+
   .code-fence {
     overflow-y: scroll;
     height: 380px;
+    margin-bottom: 3rem;
   }
 
   header {
