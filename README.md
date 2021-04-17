@@ -22,7 +22,6 @@ npm i -D svelte-intersection-observer
 
 ### Basic
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   import IntersectionObserver from "svelte-intersection-observer";
@@ -32,20 +31,41 @@ npm i -D svelte-intersection-observer
 </script>
 
 <header class:intersecting>
-  {intersecting ? 'Element is in view' : 'Element is not in view'}
+  {intersecting ? "Element is in view" : "Element is not in view"}
 </header>
 
 <IntersectionObserver {element} bind:intersecting>
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
+
 ```
-<!-- prettier-ignore-end -->
+
+### Once
+
+Set `once` to `true` for the intersection event to occur only once.
+
+The `element` will be unobserved after the intersection occurs.
+
+```svelte
+<script>
+  let element2;
+  let intersectOnce;
+</script>
+
+<header class:intersecting={intersectOnce}>
+  {intersectOnce ? "Element is in view" : "Element is not in view"}
+</header>
+
+<IntersectionObserver once element={element2} bind:intersecting={intersectOnce}>
+  <div bind:this={element2}>Hello world</div>
+</IntersectionObserver>
+
+```
 
 ### on:intersect event
 
 The "intersect" event is dispatched only if the observed element is intersecting the viewport.
 
-<!-- prettier-ignore-start -->
 ```html
 <IntersectionObserver
   {element}
@@ -53,10 +73,9 @@ The "intersect" event is dispatched only if the observed element is intersecting
     console.log(e.detail); // IntersectionObserverEntry
   }}"
 >
-  <div bind:this={element}>Hello world</div>
+  <div bind:this="{element}">Hello world</div>
 </IntersectionObserver>
 ```
-<!-- prettier-ignore-end -->
 
 ## API
 
