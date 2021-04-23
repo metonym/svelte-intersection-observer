@@ -49,9 +49,11 @@
 
   const dispatch = createEventDispatcher();
 
+  let prevRootMargin = null;
   let prevElement = null;
 
-  onMount(() => {
+  
+  const initialize = () => {
     observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((_entry) => {
@@ -61,6 +63,10 @@
       },
       { root, rootMargin, threshold }
     );
+  }
+  
+  onMount(() => {
+    initialize();
 
     return () => {
       if (observer) observer.disconnect();
@@ -74,7 +80,7 @@
       if (entry.isIntersecting) {
         dispatch("intersect", entry);
 
-        if (once) observer.unobserve(entry.target);
+        if (once) observer.unobserve(element);
       }
     }
 
@@ -86,6 +92,14 @@
       if (prevElement !== null) observer.unobserve(prevElement);
       prevElement = element;
     }
+
+    if (prevRootMargin && rootMargin !== prevRootMargin) {
+      observer.disconnect();
+      prevElement = null;
+      initialize();
+    }
+
+    prevRootMargin = rootMargin;
   });
 </script>
 
