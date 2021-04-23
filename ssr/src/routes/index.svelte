@@ -6,6 +6,11 @@
 
   let element2;
   let intersecting2;
+
+  let element3;
+  let intersecting3;
+
+  let rootMargin;
 </script>
 
 <h2>Basic</h2>
@@ -33,6 +38,27 @@
     once
   >
     <div bind:this={element2}>Hello world</div>
+  </IntersectionObserver>
+</div>
+
+<h2>Dynamic rootMargin</h2>
+
+<div class="code-fence">
+  <header
+    class:intersecting={intersecting3}
+    on:click={() => {
+      rootMargin = rootMargin ? undefined : "-200px";
+    }}
+  >
+    {intersecting3 ? "Element is in view" : "Element is not in view"}
+  </header>
+
+  <IntersectionObserver
+    element={element3}
+    bind:intersecting={intersecting3}
+    {rootMargin}
+  >
+    <div bind:this={element3}>Hello world</div>
   </IntersectionObserver>
 </div>
 
