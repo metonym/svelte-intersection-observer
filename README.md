@@ -2,7 +2,7 @@
 
 [![NPM][npm]][npm-url]
 
-> Detect if an element is in the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry).
+> Detect if an element is in the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 
 <!-- REPO_URL -->
 
