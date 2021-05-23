@@ -49,32 +49,17 @@ export default {
           extensions: [".js", ".mjs", ".html", ".svelte"],
           babelHelpers: "runtime",
           exclude: ["node_modules/@babel/**"],
-          presets: [
-            [
-              "@babel/preset-env",
-              {
-                targets: "> 0.25%, not dead",
-              },
-            ],
-          ],
+          presets: [["@babel/preset-env", { targets: "> 0.25%, not dead" }]],
           plugins: [
             "@babel/plugin-syntax-dynamic-import",
-            [
-              "@babel/plugin-transform-runtime",
-              {
-                useESModules: true,
-              },
-            ],
+            ["@babel/plugin-transform-runtime", { useESModules: true }],
           ],
         }),
-
       !dev && terser({ module: true }),
     ],
-
     preserveEntrySignatures: false,
     onwarn,
   },
-
   server: {
     input: config.server.input(),
     output: config.server.output(),
@@ -96,15 +81,12 @@ export default {
         publicPath: "/client/",
         emitFiles: false, // already emitted by client build
       }),
-      resolve({
-        dedupe: ["svelte"],
-      }),
+      resolve({ dedupe: ["svelte"] }),
       commonjs(),
     ],
     external: Object.keys(pkg.dependencies).concat(
       require("module").builtinModules
     ),
-
     preserveEntrySignatures: "strict",
     onwarn,
   },

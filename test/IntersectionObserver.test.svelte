@@ -1,6 +1,6 @@
 <script lang="ts">
-  import SvelteIntersectionObserver from "./types";
-  import type { Entry } from "./types/IntersectionObserver";
+  import SvelteIntersectionObserver from "../types";
+  import type { Entry } from "../types/IntersectionObserver";
 
   let intersecting = false;
   let entry: Entry = null;
