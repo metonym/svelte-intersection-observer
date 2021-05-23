@@ -97,6 +97,13 @@ The "intersect" event is dispatched only if the observed element is intersecting
 - **on:observe**: fired when an intersection change occurs (type `IntersectionObserverEntry`)
 - **on:intersect**: fired when an intersection change occurs and the element is intersecting (type `IntersectionObserverEntry`)
 
+## Examples
+
+See the examples folder for sample set-ups:
+
+- [examples/sapper](examples/sapper)
+- [examples/sveltekit](examples/sveltekit)
+
 ## TypeScript support
 
 Svelte version 3.31.0 or greater is required to use this module with TypeScript.
