@@ -52,7 +52,6 @@
   let prevRootMargin = null;
   let prevElement = null;
 
-  
   const initialize = () => {
     observer = new IntersectionObserver(
       (entries) => {
@@ -63,8 +62,8 @@
       },
       { root, rootMargin, threshold }
     );
-  }
-  
+  };
+
   onMount(() => {
     initialize();
 
