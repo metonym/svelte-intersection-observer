@@ -37,7 +37,6 @@ npm i -D svelte-intersection-observer
 <IntersectionObserver {element} bind:intersecting>
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
-
 ```
 
 ### Once
@@ -59,7 +58,6 @@ The `element` will be unobserved after the intersection occurs.
 <IntersectionObserver once element={element2} bind:intersecting={intersectOnce}>
   <div bind:this={element2}>Hello world</div>
 </IntersectionObserver>
-
 ```
 
 ### on:intersect event
@@ -101,8 +99,12 @@ The "intersect" event is dispatched only if the observed element is intersecting
 
 See the examples folder for sample set-ups:
 
-- [examples/sapper](examples/sapper)
 - [examples/sveltekit](examples/sveltekit)
+- [examples/svite](examples/svite)
+- [examples/sapper](examples/sapper)
+- [examples/snowpack](examples/snowpack)
+- [examples/rollup](examples/rollup)
+- [examples/webpack](examples/webpack)
 
 ## TypeScript support
 
