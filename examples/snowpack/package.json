@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "snowpack dev",
+    "build": "snowpack build"
+  },
+  "dependencies": {
+    "svelte": "^3.38.2",
+    "svelte-intersection-observer": "^0.7.0"
+  },
+  "devDependencies": {
+    "@snowpack/plugin-svelte": "^3.7.0",
+    "snowpack": "3.5.7"
+  }
+}
