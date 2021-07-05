@@ -1,8 +1,10 @@
 # examples
 
-This folder contains example set-ups that use `svelte-intersection-observer`.
+> Example set-ups that use `svelte-intersection-observer` with popular bundlers/frameworks.
 
-To run this locally, create a link for the package at the root of the repository.
+## Local development
+
+For local development, create a link for the package at the root of the repository.
 
 ```bash
 git clone https://github.com/metonym/svelte-intersection-observer.git
@@ -10,11 +12,9 @@ cd svelte-intersection-observer
 yarn link
 ```
 
-Go into an example folder:
+Then, link the package for each example.
 
 ```bash
-cd examples/sapper
-# or
 cd examples/sveltekit
 ```
 
