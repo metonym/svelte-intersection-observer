@@ -18,12 +18,14 @@
   </div>
 </header>
 
+<!-- svelte-ignore missing-declaration -->
 <SvelteIntersectionObserver {element} bind:entry bind:intersecting>
   <div class="element" bind:this={element}>
     {#if inView}Element is in view{/if}
   </div>
 </SvelteIntersectionObserver>
 
+<!-- svelte-ignore missing-declaration -->
 <SvelteIntersectionObserver
   {element}
   bind:observer
