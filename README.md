@@ -99,7 +99,7 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 
 ### Props
 
-| Name    | Description                                                       | Value                                                                                                     |
+| Name         | Description                                                       | Value                                                                                                     |
 | :----------- | :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
 | element      | Element observed for intersection                                 | `HTMLElement`                                                                                             |
 | once         | If `true`, the observed element will be unobserved upon intersect | `boolean` (default: `false`)                                                                              |
@@ -115,9 +115,59 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 - **on:observe**: fired when the element is first observed or whenever an intersection change occurs
 - **on:intersect**: fired when the element is intersecting the viewport
 
+The `e.detail` dispatched by the `observe` and `intersect` events is an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) interface.
+
+Note that all properties in `IntersectionObserverEntry` are read only.
+
+<details>
+ <summary><code>IntersectionObserverEntry</code></summary>
+
+```html
+interface IntersectionObserverEntry {
+  target: HTMLElement;
+  time: number;
+  isIntersecting: boolean;
+  isVisible: boolean;
+  intersectionRatio: number;
+  intersectionRect: {
+    bottom: number;
+    height: number;
+    left: number;
+    right: number;
+    top: number;
+    width: number;
+    x: number;
+    y: number;
+  };
+  rootBounds: {
+    bottom: number;
+    height: number;
+    left: number;
+    right: number;
+    top: number;
+    width: number;
+    x: number;
+    y: number;
+  };
+  boundingClientRect: {
+    bottom: number;
+    height: number;
+    left: number;
+    right: number;
+    top: number;
+    width: number;
+    x: number;
+    y: number;
+  };
+}
+```
+
+</details>
+
+
 ## Examples
 
-See the examples folder for sample set-ups:
+The [examples folder](examples/) contains sample set-ups.
 
 - [examples/sveltekit](examples/sveltekit)
 - [examples/svite](examples/svite)
