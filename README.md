@@ -22,6 +22,10 @@ npm i -D svelte-intersection-observer
 
 ### Basic
 
+Use the [`bind:this`](https://svelte.dev/docs#bind_element) directive to pass an element reference to the `IntersectionObserver` component.
+
+Then, simply bind to the reactive `intersecting` prop to determine if the element intersects the viewport.
+
 ```svelte
 <script>
   import IntersectionObserver from "svelte-intersection-observer";
@@ -41,9 +45,7 @@ npm i -D svelte-intersection-observer
 
 ### Once
 
-Set `once` to `true` for the intersection event to occur only once.
-
-The `element` will be unobserved after the intersection occurs.
+Set `once` to `true` for the intersection event to occur only once. The `element` will be unobserved after the first intersection event occurs.
 
 ```svelte
 <script>
@@ -60,9 +62,27 @@ The `element` will be unobserved after the intersection occurs.
 </IntersectionObserver>
 ```
 
+### on:observe event
+
+The `observe` event is dispatched when the element is first observed and also whenever an intersection event occurs.
+
+```html
+<IntersectionObserver
+  {element}
+  on:observe="{(e) => {
+    console.log(e.detail); // IntersectionObserverEntry
+    console.log(e.detail.isIntersecting); // true | false
+  }}"
+>
+  <div bind:this="{element}">Hello world</div>
+</IntersectionObserver>
+```
+
 ### on:intersect event
 
-The "intersect" event is dispatched only if the observed element is intersecting the viewport.
+As an alternative to binding the `intersecting` prop, you can listen to the `intersect` event that is dispatched if the observed element is intersecting the viewport.
+
+**Compared to `on:observe`, this event is dispatched only when the element is _intersecting the viewport_.**
 
 ```html
 <IntersectionObserver
@@ -79,21 +99,21 @@ The "intersect" event is dispatched only if the observed element is intersecting
 
 ### Props
 
-| Prop name    | Description                                                       | Value                                                                                                     |
+| Name    | Description                                                       | Value                                                                                                     |
 | :----------- | :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
 | element      | Element observed for intersection                                 | `HTMLElement`                                                                                             |
+| once         | If `true`, the observed element will be unobserved upon intersect | `boolean` (default: `false`)                                                                              |
+| intersecting | `true` if the observed element is intersecting the viewport       | `boolean` (default: `false`)                                                                              |
 | root         | Containing element                                                | `null` or `HTMLElement` (default: `null`)                                                                 |
 | rootMargin   | Margin offset of the containing element                           | `string` (default: `"0px"`)                                                                               |
 | threshold    | Percentage of element visibility to trigger an event              | `number` between 0 and 1 (default: `0`)                                                                   |
 | entry        | Observed element metadata                                         | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
-| once         | If `true`, the observed element will be unobserved upon intersect | `boolean` (default: `false`)                                                                              |
-| intersecting | `true` if the observed element is intersecting the viewport       | `boolean` (default: `false`)                                                                              |
 | observer     | IntersectionObserver instance                                     | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           |
 
 ### Dispatched events
 
-- **on:observe**: fired when an intersection change occurs (type `IntersectionObserverEntry`)
-- **on:intersect**: fired when an intersection change occurs and the element is intersecting (type `IntersectionObserverEntry`)
+- **on:observe**: fired when the element is first observed or whenever an intersection change occurs
+- **on:intersect**: fired when the element is intersecting the viewport
 
 ## Examples
 
@@ -108,7 +128,9 @@ See the examples folder for sample set-ups:
 
 ## TypeScript support
 
-Svelte version 3.31.0 or greater is required to use this module with TypeScript.
+Svelte version 3.31 or greater is required to use this module with TypeScript.
+
+TypeScript definitions for this component are located in the [types folder](types/).
 
 ## Changelog
 
