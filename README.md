@@ -10,11 +10,17 @@ Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999b
 
 <!-- TOC -->
 
-## Install
+## Installation
+
+**Yarn**
 
 ```bash
 yarn add -D svelte-intersection-observer
-# OR
+```
+
+**NPM**
+
+```bash
 npm i -D svelte-intersection-observer
 ```
 
@@ -122,7 +128,8 @@ Note that all properties in `IntersectionObserverEntry` are read only.
 <details>
  <summary><code>IntersectionObserverEntry</code></summary>
 
-```html
+<!-- prettier-ignore-start -->
+```js
 interface IntersectionObserverEntry {
   target: HTMLElement;
   time: number;
@@ -161,9 +168,9 @@ interface IntersectionObserverEntry {
   };
 }
 ```
+<!-- prettier-ignore-end -->
 
 </details>
-
 
 ## Examples
 
