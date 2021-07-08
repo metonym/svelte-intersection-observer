@@ -88,13 +88,14 @@ The `observe` event is dispatched when the element is first observed and also wh
 
 As an alternative to binding the `intersecting` prop, you can listen to the `intersect` event that is dispatched if the observed element is intersecting the viewport.
 
-**Compared to `on:observe`, this event is dispatched only when the element is _intersecting the viewport_.**
+**Note**: Compared to `on:observe`, `on:intersect` is dispatched only when the element is _intersecting the viewport_. In other words, `e.detail.isIntersecting` will only be `true`.
 
 ```html
 <IntersectionObserver
   {element}
   on:intersect="{(e) => {
     console.log(e.detail); // IntersectionObserverEntry
+    console.log(e.detail.isIntersecting); // true
   }}"
 >
   <div bind:this="{element}">Hello world</div>
