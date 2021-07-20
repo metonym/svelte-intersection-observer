@@ -129,8 +129,7 @@ Note that all properties in `IntersectionObserverEntry` are read only.
 <details>
  <summary><code>IntersectionObserverEntry</code></summary>
 
-<!-- prettier-ignore-start -->
-```js
+```ts
 interface IntersectionObserverEntry {
   target: HTMLElement;
   time: number;
@@ -169,7 +168,6 @@ interface IntersectionObserverEntry {
   };
 }
 ```
-<!-- prettier-ignore-end -->
 
 </details>
 
