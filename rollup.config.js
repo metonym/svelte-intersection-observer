@@ -13,6 +13,7 @@ export default () => {
         .code-fence {
           overflow-y: scroll;
           height: 380px;
+          padding: 0;
         }
 
         header {
@@ -32,7 +33,7 @@ export default () => {
         }
 
         .code-fence header ~ div {
-          margin-top: calc(380px);
+          margin-top: calc(380px - 80px);
           height: 200px;
           padding: 1rem;
           background-color: #376462;
