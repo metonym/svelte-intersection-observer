@@ -14,15 +14,15 @@
     "predeploy": "rollup -c",
     "deploy": "npx gh-pages -d dist",
     "prepack": "BUNDLE=true rollup -c",
-    "test": "svelte-check --workspace=test",
+    "test": "svelte-check",
     "format": "prettier --write '.'"
   },
   "devDependencies": {
     "prettier": "^2.3.2",
     "prettier-plugin-svelte": "^2.3.1",
     "svelte": "^3.38.3",
-    "svelte-check": "^2.2.0",
-    "svelte-readme": "^3.1.0"
+    "svelte-check": "^2.2.3",
+    "svelte-readme": "^3.2.0"
   },
   "repository": {
     "type": "git",
