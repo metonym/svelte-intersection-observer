@@ -108,16 +108,16 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 
 ### Props
 
-| Name         | Description                                                       | Type                                                                                                      | Default value |
-| :----------- | :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :------------ |
-| element      | Element observed for intersection                                 | `HTMLElement`                                                                                             | `null`        |
-| once         | If `true`, the observed element will be unobserved upon intersect | `boolean`                                                                                                 | `false`       |
-| intersecting | `true` if the observed element is intersecting the viewport       | `boolean`                                                                                                 | `false`       |
-| root         | Containing element                                                | `null` or `HTMLElement`                                                                                   | `null`        |
-| rootMargin   | Margin offset of the containing element                           | `string`                                                                                                  | `"0px"`       |
-| threshold    | Percentage of element visibility to trigger an event              | `number` between 0 and 1                                                                                  | `0`           |
-| entry        | Observed element metadata                                         | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
-| observer     | IntersectionObserver instance                                     | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
+| Name         | Description                                                          | Type                                                                                                      | Default value |
+| :----------- | :------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :------------ |
+| element      | Element observed for intersection                                    | `HTMLElement`                                                                                             | `null`        |
+| once         | If `true`, the observed element will be unobserved upon intersection | `boolean`                                                                                                 | `false`       |
+| intersecting | `true` if the observed element is intersecting the viewport          | `boolean`                                                                                                 | `false`       |
+| root         | Containing element                                                   | `null` or `HTMLElement`                                                                                   | `null`        |
+| rootMargin   | Margin offset of the containing element                              | `string`                                                                                                  | `"0px"`       |
+| threshold    | Percentage of element visibility to trigger an event                 | `number` between 0 and 1                                                                                  | `0`           |
+| entry        | Observed element metadata                                            | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
+| observer     | IntersectionObserver instance                                        | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
 
 ### Dispatched events
 
