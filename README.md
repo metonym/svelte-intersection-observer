@@ -47,6 +47,7 @@ Then, simply bind to the reactive `intersecting` prop to determine if the elemen
 <IntersectionObserver {element} bind:intersecting>
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
+
 ```
 
 ### Once
@@ -66,6 +67,7 @@ Set `once` to `true` for the intersection event to occur only once. The `element
 <IntersectionObserver once element={element2} bind:intersecting={intersectOnce}>
   <div bind:this={element2}>Hello world</div>
 </IntersectionObserver>
+
 ```
 
 ### on:observe event
@@ -106,16 +108,16 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 
 ### Props
 
-| Name         | Description                                                       | Value                                                                                                     |
-| :----------- | :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| element      | Element observed for intersection                                 | `HTMLElement`                                                                                             |
-| once         | If `true`, the observed element will be unobserved upon intersect | `boolean` (default: `false`)                                                                              |
-| intersecting | `true` if the observed element is intersecting the viewport       | `boolean` (default: `false`)                                                                              |
-| root         | Containing element                                                | `null` or `HTMLElement` (default: `null`)                                                                 |
-| rootMargin   | Margin offset of the containing element                           | `string` (default: `"0px"`)                                                                               |
-| threshold    | Percentage of element visibility to trigger an event              | `number` between 0 and 1 (default: `0`)                                                                   |
-| entry        | Observed element metadata                                         | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
-| observer     | IntersectionObserver instance                                     | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           |
+| Name         | Description                                                       | Type                                                                                                      | Default value |
+| :----------- | :---------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :------------ |
+| element      | Element observed for intersection                                 | `HTMLElement`                                                                                             | `null`        |
+| once         | If `true`, the observed element will be unobserved upon intersect | `boolean`                                                                                                 | `false`       |
+| intersecting | `true` if the observed element is intersecting the viewport       | `boolean`                                                                                                 | `false`       |
+| root         | Containing element                                                | `null` or `HTMLElement`                                                                                   | `null`        |
+| rootMargin   | Margin offset of the containing element                           | `string`                                                                                                  | `"0px"`       |
+| threshold    | Percentage of element visibility to trigger an event              | `number` between 0 and 1                                                                                  | `0`           |
+| entry        | Observed element metadata                                         | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
+| observer     | IntersectionObserver instance                                     | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
 
 ### Dispatched events
 
