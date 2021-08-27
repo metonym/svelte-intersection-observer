@@ -18,10 +18,10 @@
   },
   "devDependencies": {
     "prettier": "^2.3.2",
-    "prettier-plugin-svelte": "^2.3.1",
-    "svelte": "^3.41.0",
-    "svelte-check": "^2.2.4",
-    "svelte-readme": "^3.2.0"
+    "prettier-plugin-svelte": "^2.4.0",
+    "svelte": "^3.42.4",
+    "svelte-check": "^2.2.5",
+    "svelte-readme": "^3.3.0"
   },
   "repository": {
     "type": "git",

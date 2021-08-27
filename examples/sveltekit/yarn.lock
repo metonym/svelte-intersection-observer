@@ -11,19 +11,19 @@
     picomatch "^2.2.2"
 
 "@sveltejs/kit@next":
-  version "1.0.0-next.141"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.141.tgz#8b27c7c4392794452945d0493ce56aaafef47704"
-  integrity sha512-6pU+3IRiRKPbpfd1YszlrXeradkiWTBu01dD+HqwFkZQO0iapwYZyRY93vnKw1bqeIjy87JW6QAwO3h9yU7jhQ==
+  version "1.0.0-next.158"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.158.tgz#d5f50c7b14d9762f7828a8b6f7553e8759c7ed9a"
+  integrity sha512-jVpVeAFOVNOGDRDVvbWjHxco5s78OYsrCJhnEAKoOe690gkWA5Qc8FqPXo8HHiaIHKHmTP1vbrEhQ5jkX7fBAw==
   dependencies:
-    "@sveltejs/vite-plugin-svelte" "^1.0.0-next.14"
+    "@sveltejs/vite-plugin-svelte" "^1.0.0-next.16"
     cheap-watch "^1.0.3"
     sade "^1.7.4"
-    vite "^2.4.3"
+    vite "^2.5.0"
 
-"@sveltejs/vite-plugin-svelte@^1.0.0-next.14":
-  version "1.0.0-next.15"
-  resolved "https://registry.yarnpkg.com/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-1.0.0-next.15.tgz#12e853677387aa0891b03bf69afcc678fbf8f8e2"
-  integrity sha512-8yGX7PxaqtvWw+GHiO2DV7lZ4M7DwIrFq+PgZGZ9X09PuoSeaWszm76GWQXJMKHoPPhdA9084662en9qbv4aRw==
+"@sveltejs/vite-plugin-svelte@^1.0.0-next.16":
+  version "1.0.0-next.19"
+  resolved "https://registry.yarnpkg.com/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-1.0.0-next.19.tgz#9646abc2cd1982146db4bb341aafdb5f32f19dd2"
+  integrity sha512-q9hHkMzodScwDq64pNaWhekpj97vWg3wO9T0rqd8bC2EsrBQs2uD1qMJvDqlNd63AbO2uSJMGo+TQ0Xt2xgyYg==
   dependencies:
     "@rollup/pluginutils" "^4.1.1"
     debug "^4.3.2"
@@ -38,9 +38,9 @@ cheap-watch@^1.0.3:
   integrity sha512-xC5CruMhLzjPwJ5ecUxGu1uGmwJQykUhqd2QrCrYbwvsFYdRyviu6jG9+pccwDXJR/OpmOTOJ9yLFunVgQu9wg==
 
 colorette@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/colorette/-/colorette-1.2.2.tgz#cbcc79d5e99caea2dbf10eb3a26fd8b3e6acfa94"
-  integrity sha512-MKGMzyfeuutC/ZJ1cba9NqcNpfeqMUcYmyF1ZFY6/Cn7CNSAKx6a+s48sqLqyAiZuaP2TcqMhoo+dlwFnVxT9w==
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/colorette/-/colorette-1.3.0.tgz#ff45d2f0edb244069d3b772adeb04fed38d0a0af"
+  integrity sha512-ecORCqbSFP7Wm8Y6lyqMJjexBQqXSF7SSeaTyGGphogUjBlFP9m9o08wy86HL2uB7fMTxtOUzLMk7ogKcxMg1w==
 
 debug@^4.3.2:
   version "4.3.2"
@@ -49,10 +49,10 @@ debug@^4.3.2:
   dependencies:
     ms "2.1.2"
 
-esbuild@^0.12.8:
-  version "0.12.17"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.17.tgz#5816f905c2905de0ebbc658860df7b5b48afbcd3"
-  integrity sha512-GshKJyVYUnlSXIZj/NheC2O0Kblh42CS7P1wJyTbbIHevTG4jYMS9NNw8EOd8dDWD0dzydYHS01MpZoUcQXB4g==
+esbuild@^0.12.17:
+  version "0.12.24"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.24.tgz#21966fad25a80f368ed308101e88102bce0dc68f"
+  integrity sha512-C0ibY+HsXzYB6L/pLWEiWjMpghKsIc58Q5yumARwBQsHl9DXPakW+5NI/Y9w4YXiz0PEP6XTGTT/OV4Nnsmb4A==
 
 estree-walker@^2.0.1:
   version "2.0.2"
@@ -77,9 +77,9 @@ has@^1.0.3:
     function-bind "^1.1.1"
 
 is-core-module@^2.2.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.5.0.tgz#f754843617c70bfd29b7bd87327400cda5c18491"
-  integrity sha512-TXCMSDsEHMEEZ6eCA8rwRDbLu55MRGmrctljsBX/2v1d9/GzqHOxW5c5oPSgrUt2vBFXebu9rGqckXGPWOlYpg==
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.6.0.tgz#d7553b2526fe59b92ba3e40c8df757ec8a709e19"
+  integrity sha512-wShG8vs60jKfPWpF2KZRaAtvt3a20OAn7+IJ6hLPECpSABLcKtFKTTI4ZtH5QcBruBHlq+WsdHWyz0BCZW7svQ==
   dependencies:
     has "^1.0.3"
 
@@ -106,9 +106,9 @@ ms@2.1.2:
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
 nanoid@^3.1.23:
-  version "3.1.23"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.23.tgz#f744086ce7c2bc47ee0a8472574d5c78e4183a81"
-  integrity sha512-FiB0kzdP0FFVGDKlRLEQ1BgDzU87dy5NnzjeW9YZNt+/c3+q82EQDUwniSAUxp/F0gFNI1ZhKU1FqYsMuqZVnw==
+  version "3.1.25"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.25.tgz#09ca32747c0e543f0e1814b7d3793477f9c8e152"
+  integrity sha512-rdwtIXaXCLFAQbnfqDRnI6jaRHp9fTcYBjtFKE8eezcZ7LuLjhUaQGNeMXf1HmRoCH32CLz6XwX0TtxEOS/A3Q==
 
 path-parse@^1.0.6:
   version "1.0.7"
@@ -143,9 +143,9 @@ resolve@^1.20.0:
     path-parse "^1.0.6"
 
 rollup@^2.38.5:
-  version "2.55.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.55.1.tgz#66a444648e2fb603d8e329e77a61c608a6510fda"
-  integrity sha512-1P9w5fpb6b4qroePh8vHKGIvPNxwoCQhjJpIqfZGHLKpZ0xcU2/XBmFxFbc9697/6bmHpmFTLk5R1dAQhFSo0g==
+  version "2.56.3"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.56.3.tgz#b63edadd9851b0d618a6d0e6af8201955a77aeff"
+  integrity sha512-Au92NuznFklgQCUcV96iXlxUbHuB1vQMaH76DHl5M11TotjOHwqk9CwcrT78+Tnv4FN9uTBxq6p4EJoYkpyekg==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -176,17 +176,17 @@ svelte-intersection-observer@^0.7.1:
   resolved "https://registry.yarnpkg.com/svelte-intersection-observer/-/svelte-intersection-observer-0.7.1.tgz#cb3110a16b12a3e148001a27f4dd45b9e552d4a3"
   integrity sha512-duqN9suvQuP3Yb7R0xb4Se0pDKTRnA3enqZ7WH5srESf/q2/hLYyA5lHBU3TRWmj3gkoRVxjfyEbbjUcDM8osw==
 
-svelte@^3.41.0:
-  version "3.41.0"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.41.0.tgz#2009fd6681453ffb8b5aaa57f4a89a8be3dedd78"
-  integrity sha512-X9/lnTcRBCrMdyFBVjfmqy1T2vyN8ejUE1OfbWSccc2Z42Amn3ab3XdBgVl+oDkZvzPfPMoxo6CEbWca7pXOew==
+svelte@^3.42.4:
+  version "3.42.4"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.42.4.tgz#838ed98fa7b26fc5fffe4df0d7ba345f1c54cf4f"
+  integrity sha512-DqC0AmDdBrrbIA+Kzl3yhBb6qCn4vZOAfxye2pTnIpinLegyagC5sLI8Pe9GPlXu9VpHBXIwpDDedpMfu++epA==
 
-vite@^2.4.3:
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.4.4.tgz#8c402a07ad45f168f6eb5428bead38f3e4363e47"
-  integrity sha512-m1wK6pFJKmaYA6AeZIUXyiAgUAAJzVXhIMYCdZUpCaFMGps0v0IlNJtbmPvkUhVEyautalajmnW5X6NboUPsnw==
+vite@^2.5.0:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.5.1.tgz#953c71a034c07b3ae0448d57664ec9c6862f23a8"
+  integrity sha512-FwmLbbz8MB1pBs9dKoRDgpiqoijif8hSK1+NNUYc12/cnf+pM2UFhhQ1rcpXgbMhm/5c2USZdVAf0FSkSxaFDA==
   dependencies:
-    esbuild "^0.12.8"
+    esbuild "^0.12.17"
     postcss "^8.3.6"
     resolve "^1.20.0"
     rollup "^2.38.5"
