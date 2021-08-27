@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: svelte-intersection-observer
+    env: static
+    buildCommand: yarn && yarn build
+    staticPublishPath: dist
+    pullRequestPreviewsEnabled: true
