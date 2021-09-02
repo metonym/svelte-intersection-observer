@@ -47,7 +47,6 @@ Then, simply bind to the reactive `intersecting` prop to determine if the elemen
 <IntersectionObserver {element} bind:intersecting>
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
-
 ```
 
 ### Once
@@ -67,7 +66,6 @@ Set `once` to `true` for the intersection event to occur only once. The `element
 <IntersectionObserver once element={element2} bind:intersecting={intersectOnce}>
   <div bind:this={element2}>Hello world</div>
 </IntersectionObserver>
-
 ```
 
 ### on:observe event
