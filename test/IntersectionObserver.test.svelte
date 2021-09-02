@@ -1,6 +1,7 @@
 <script lang="ts">
   import SvelteIntersectionObserver from "../types";
-  import type { Entry } from "../types/IntersectionObserver";
+  import type { Entry } from "../types/IntersectionObserver.svelte";
+  import IO from "../types/IntersectionObserver.svelte";
 
   let intersecting = false;
   let entry: Entry = null;
@@ -35,3 +36,10 @@
 >
   <div bind:this={element}>Hello world</div>
 </SvelteIntersectionObserver>
+
+<!-- svelte-ignore missing-declaration -->
+<IO
+  on:intersect={(e) => {
+    console.log(e.detail);
+  }}
+/>
