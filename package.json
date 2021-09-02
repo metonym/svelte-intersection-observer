@@ -13,7 +13,7 @@
     "dev": "rollup -cw",
     "build": "rollup -c",
     "prepack": "BUNDLE=true rollup -c",
-    "test": "svelte-check --workspace=test/*",
+    "test": "svelte-check --workspace test",
     "format": "prettier --write '.'"
   },
   "devDependencies": {
@@ -21,7 +21,7 @@
     "prettier-plugin-svelte": "^2.4.0",
     "svelte": "^3.42.4",
     "svelte-check": "^2.2.5",
-    "svelte-readme": "^3.3.0"
+    "svelte-readme": "^3.3.1"
   },
   "repository": {
     "type": "git",

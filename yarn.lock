@@ -734,10 +734,10 @@ svelte-preprocess@^4.0.0:
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte-readme@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/svelte-readme/-/svelte-readme-3.3.0.tgz#48bfe8686f915e513fc1c8111e34f910c35b8649"
-  integrity sha512-vXT1QR/2csNbHCxv4GqO3q6V7wI2Q2cJT5C1Kcps7jE/JI3e2yc0hesafoyMNRH6R0MU6KV0hcW8oQ5Q+Akc0w==
+svelte-readme@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/svelte-readme/-/svelte-readme-3.3.1.tgz#b968c11d5c3eeb0983d1e6aa30b4adc6f4b3d5c0"
+  integrity sha512-lNHP6ZesEt5cW7PQB35uSfGWIiZ33MhUXQWhd1KEP645b0LzIWUSM3Oz2Fp81xngKlvRo4sIHTIeVM1CiJsmfw==
   dependencies:
     "@rollup/plugin-node-resolve" "^11.1.0"
     "@rollup/plugin-virtual" "^2.0.3"
