@@ -7,11 +7,11 @@
   "devDependencies": {
     "esbuild-loader": "^2.15.1",
     "html-webpack-plugin": "5.3.2",
-    "svelte": "^3.42.4",
-    "svelte-intersection-observer": "^0.7.1",
+    "svelte": "^3.42.6",
+    "svelte-intersection-observer": "^0.8.0",
     "svelte-loader": "^3.1.2",
-    "webpack": "^5.51.2",
+    "webpack": "^5.53.0",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.1.0"
+    "webpack-dev-server": "^4.2.1"
   }
 }

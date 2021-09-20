@@ -5,8 +5,8 @@
     "build": "snowpack build"
   },
   "dependencies": {
-    "svelte": "^3.42.4",
-    "svelte-intersection-observer": "^0.7.1"
+    "svelte": "^3.42.6",
+    "svelte-intersection-observer": "^0.8.0"
   },
   "devDependencies": {
     "@snowpack/plugin-svelte": "^3.7.0",
