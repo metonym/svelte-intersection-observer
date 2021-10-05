@@ -47,7 +47,21 @@ export interface IntersectionObserverProps {
 
 export default class SvelteIntersectionObserver extends SvelteComponentTyped<
   IntersectionObserverProps,
-  { observe: CustomEvent<Entry>; intersect: CustomEvent<Entry> },
+  {
+    /**
+     * Dispatched when the element is first observed
+     * and also whenever an intersection event occurs.
+     */
+    observe: CustomEvent<IntersectionObserverEntry>;
+
+    /**
+     * Dispatched only when the element is intersecting the viewport.
+     * `event.detail.isIntersecting` will only be `true`
+     */
+    intersect: CustomEvent<
+      IntersectionObserverEntry & { isIntersecting: true }
+    >;
+  },
   {
     default: {
       intersecting: boolean;

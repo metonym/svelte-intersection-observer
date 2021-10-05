@@ -39,7 +39,12 @@
 
 <!-- svelte-ignore missing-declaration -->
 <IO
-  on:intersect={(e) => {
+  on:observe={(e) => {
     console.log(e.detail);
+    console.log(e.detail.intersectionRect);
+    console.log(e.detail.isIntersecting); // boolean
+  }}
+  on:intersect={(e) => {
+    console.log(e.detail.isIntersecting); // true
   }}
 />
