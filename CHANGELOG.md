@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.1](https://github.com/metonym/svelte-intersection-observer/releases/tag/v0.9.1) - 2021-10-25
+
+**Documentation**
+
+- update the "Once" example to include the `"svelte-intersection-observer"` import
+- rename example `svite` to `vite`
+
+**Refactoring**
+
+- inline `entry` prop typedef
+- remove `@event`, `@slot` artifacts used by sveld to generate initial TypeScript definitions
+
 ## [0.9.0](https://github.com/metonym/svelte-intersection-observer/releases/tag/v0.9.0) - 2021-10-05
 
 - improve TypeScript definitions for dispatched events
