@@ -55,7 +55,9 @@ Set `once` to `true` for the intersection event to occur only once. The `element
 
 ```svelte
 <script>
-  let element2;
+  import IntersectionObserver from "svelte-intersection-observer";
+
+  let elementOnce;
   let intersectOnce;
 </script>
 
@@ -63,8 +65,12 @@ Set `once` to `true` for the intersection event to occur only once. The `element
   {intersectOnce ? "Element is in view" : "Element is not in view"}
 </header>
 
-<IntersectionObserver once element={element2} bind:intersecting={intersectOnce}>
-  <div bind:this={element2}>Hello world</div>
+<IntersectionObserver
+  once
+  element={elementOnce}
+  bind:intersecting={intersectOnce}
+>
+  <div bind:this={elementOnce}>Hello world</div>
 </IntersectionObserver>
 ```
 
@@ -176,7 +182,7 @@ interface IntersectionObserverEntry {
 The [examples folder](examples/) contains sample set-ups.
 
 - [examples/sveltekit](examples/sveltekit)
-- [examples/svite](examples/svite)
+- [examples/vite](examples/vite)
 - [examples/sapper](examples/sapper)
 - [examples/snowpack](examples/snowpack)
 - [examples/rollup](examples/rollup)

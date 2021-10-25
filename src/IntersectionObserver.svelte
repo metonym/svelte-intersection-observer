@@ -1,12 +1,5 @@
 <script>
   /**
-   * @typedef {null | IntersectionObserverEntry} Entry
-   * @event {Entry} observe
-   * @event {Entry} intersect
-   * @slot {{ intersecting: boolean; entry: Entry; observer: IntersectionObserver }}
-   */
-
-  /**
    * The HTML Element to observe
    * @type {null | HTMLElement}
    */
@@ -34,7 +27,7 @@
    */
   export let threshold = 0;
 
-  /** @type {null | Entry} */
+  /** @type {null | IntersectionObserverEntry} */
   export let entry = null;
 
   /**
