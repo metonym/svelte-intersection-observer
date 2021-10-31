@@ -78,15 +78,15 @@ Set `once` to `true` for the intersection event to occur only once. The `element
 
 The `observe` event is dispatched when the element is first observed and also whenever an intersection event occurs.
 
-```html
+```svelte no-eval
 <IntersectionObserver
   {element}
-  on:observe="{(e) => {
+  on:observe={(e) => {
     console.log(e.detail); // IntersectionObserverEntry
     console.log(e.detail.isIntersecting); // true | false
-  }}"
+  }}
 >
-  <div bind:this="{element}">Hello world</div>
+  <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
 ```
 
@@ -96,15 +96,15 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 
 **Note**: Compared to `on:observe`, `on:intersect` is dispatched only when the element is _intersecting the viewport_. In other words, `e.detail.isIntersecting` will only be `true`.
 
-```html
+```svelte no-eval
 <IntersectionObserver
   {element}
-  on:intersect="{(e) => {
+  on:intersect={(e) => {
     console.log(e.detail); // IntersectionObserverEntry
     console.log(e.detail.isIntersecting); // true
-  }}"
+  }}
 >
-  <div bind:this="{element}">Hello world</div>
+  <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
 ```
 
