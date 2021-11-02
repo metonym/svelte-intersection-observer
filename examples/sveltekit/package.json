@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@sveltejs/kit": "next",
-    "svelte": "^3.44.0",
-    "svelte-intersection-observer": "^0.9.0"
+    "svelte": "^3.44.1",
+    "svelte-intersection-observer": "^0.9.1"
   }
 }
