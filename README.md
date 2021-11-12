@@ -121,7 +121,7 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 | Name         | Description                                                 | Type                                                                                                      | Default value |
 | :----------- | :---------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :------------ |
 | element      | Observed element                                            | `HTMLElement`                                                                                             | `null`        |
-| once         | Unobserve he element after the first intersection           | `boolean`                                                                                                 | `false`       |
+| once         | Unobserve the element after the first intersection event    | `boolean`                                                                                                 | `false`       |
 | intersecting | `true` if the observed element is intersecting the viewport | `boolean`                                                                                                 | `false`       |
 | root         | Containing element                                          | `null` or `HTMLElement`                                                                                   | `null`        |
 | rootMargin   | Margin offset of the containing element                     | `string`                                                                                                  | `"0px"`       |
