@@ -24,6 +24,12 @@ yarn add -D svelte-intersection-observer
 npm i -D svelte-intersection-observer
 ```
 
+**pnpm**
+
+```bash
+pnpm i -D svelte-intersection-observer
+```
+
 ## Usage
 
 ### Basic
