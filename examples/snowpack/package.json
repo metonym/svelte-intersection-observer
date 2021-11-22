@@ -5,7 +5,7 @@
     "build": "snowpack build"
   },
   "dependencies": {
-    "svelte": "^3.44.1",
+    "svelte": "^3.44.2",
     "svelte-intersection-observer": "^0.9.1"
   },
   "devDependencies": {

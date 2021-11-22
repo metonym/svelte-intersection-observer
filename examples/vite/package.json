@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "next",
-    "svelte": "^3.44.1",
+    "svelte": "^3.44.2",
     "svelte-intersection-observer": "^0.9.1",
     "vite": "^2.6.14"
   }
