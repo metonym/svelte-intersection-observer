@@ -20,6 +20,7 @@ export default () => {
           z-index: 1;
           top: 0;
           left: 0;
+          min-height: 80px;
           width: 100%;
           padding: 1rem;
           background-color: #e0f7f6;

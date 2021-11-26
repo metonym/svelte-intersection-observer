@@ -80,7 +80,32 @@ Set `once` to `true` for the intersection event to occur only once. The `element
 </IntersectionObserver>
 ```
 
-### on:observe event
+### `let:intersecting`
+
+An alternative to binding to the `intersecting` prop is to use the `let:` directive.
+
+In the following example, the "Hello world" element will fade in when its containing element intersects the viewport.
+
+```svelte
+<script>
+  import IntersectionObserver from "svelte-intersection-observer";
+  import { fade } from "svelte/transition";
+
+  let node;
+</script>
+
+<header />
+
+<IntersectionObserver element={node} let:intersecting>
+  <div bind:this={node}>
+    {#if intersecting}
+      <div transition:fade={{ delay: 200 }}>Hello world</div>
+    {/if}
+  </div>
+</IntersectionObserver>
+```
+
+### `on:observe` event
 
 The `observe` event is dispatched when the element is first observed and also whenever an intersection event occurs.
 
@@ -96,7 +121,7 @@ The `observe` event is dispatched when the element is first observed and also wh
 </IntersectionObserver>
 ```
 
-### on:intersect event
+### `on:intersect` event
 
 As an alternative to binding the `intersecting` prop, you can listen to the `intersect` event that is dispatched if the observed element is intersecting the viewport.
 
