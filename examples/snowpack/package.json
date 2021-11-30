@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "svelte": "^3.44.2",
-    "svelte-intersection-observer": "^0.9.1"
+    "svelte-intersection-observer": "^0.9.2"
   },
   "devDependencies": {
     "@snowpack/plugin-svelte": "^3.7.0",

@@ -1804,10 +1804,10 @@ rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.60.1:
-  version "2.60.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.60.1.tgz#4b34cd247f09b421f10a3c9286eda2ecf9972079"
-  integrity sha512-akwfnpjY0rXEDSn1UTVfKXJhPsEBu+imi1gqBA1ZkHGydUnkV/fWCC90P7rDaLEW8KTwBcS1G3N4893Ndz+jwg==
+rollup@^2.60.2:
+  version "2.60.2"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.60.2.tgz#3f45ace36a9b10b4297181831ea0719922513463"
+  integrity sha512-1Bgjpq61sPjgoZzuiDSGvbI1tD91giZABgjCQBKM5aYLnzjq52GoDuWVwT/cm/MCxCMPU8gqQvkj8doQ5C8Oqw==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -1902,10 +1902,10 @@ supports-color@^7.0.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-intersection-observer@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/svelte-intersection-observer/-/svelte-intersection-observer-0.9.1.tgz#278c4f5b7790392715deed4f706c0a7416b8a37d"
-  integrity sha512-sXoJ6z3l/o7jpdXpuGW9hIOHHE70Zljr+az79WGTUmV0/36LNLFPw6WU91LN8PSynZAb1zAqJADLWN/qMPIQWA==
+svelte-intersection-observer@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/svelte-intersection-observer/-/svelte-intersection-observer-0.9.2.tgz#6c851d5b5cf0c2278c58b7415788b56e7d21c15b"
+  integrity sha512-4q6UwHB+vtWXLKO/gawUpfv8oUoawAftBmm9DeCg7OpCmciyRzSE7cT7trpqWY/mLq6jDSsKxpDiJO5SPwL6Ng==
 
 svelte@^3.44.2:
   version "3.44.2"
