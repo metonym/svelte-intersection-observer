@@ -36,10 +36,10 @@
     magic-string "^0.25.7"
     resolve "^1.17.0"
 
-"@rollup/plugin-node-resolve@^13.0.6":
-  version "13.0.6"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-13.0.6.tgz#29629070bb767567be8157f575cfa8f2b8e9ef77"
-  integrity sha512-sFsPDMPd4gMqnh2gS0uIxELnoRUp5kBl5knxD2EO0778G1oOJv4G1vyT2cpWz75OU2jDVcXhjVUuTAczGyFNKA==
+"@rollup/plugin-node-resolve@^13.1.1":
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-13.1.1.tgz#d38ba06e7b181ab4df64c75409b43d9bdc95ae34"
+  integrity sha512-6QKtRevXLrmEig9UiMYt2fSvee9TyltGRfw+qSs6xjUnxwjOzTOqy+/Lpxsgjb8mJn1EQNbCDAvt89O4uzL5kw==
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     "@types/resolve" "1.17.1"
@@ -346,10 +346,10 @@ rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.60.2:
-  version "2.60.2"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.60.2.tgz#3f45ace36a9b10b4297181831ea0719922513463"
-  integrity sha512-1Bgjpq61sPjgoZzuiDSGvbI1tD91giZABgjCQBKM5aYLnzjq52GoDuWVwT/cm/MCxCMPU8gqQvkj8doQ5C8Oqw==
+rollup@^2.61.1:
+  version "2.61.1"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.61.1.tgz#1a5491f84543cf9e4caf6c61222d9a3f8f2ba454"
+  integrity sha512-BbTXlEvB8d+XFbK/7E5doIcRtxWPRiqr0eb5vQ0+2paMM04Ye4PZY5nHOQef2ix24l/L0SpLd5hwcH15QHPdvA==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -407,10 +407,10 @@ svelte-intersection-observer@^0.9.2:
   resolved "https://registry.yarnpkg.com/svelte-intersection-observer/-/svelte-intersection-observer-0.9.2.tgz#6c851d5b5cf0c2278c58b7415788b56e7d21c15b"
   integrity sha512-4q6UwHB+vtWXLKO/gawUpfv8oUoawAftBmm9DeCg7OpCmciyRzSE7cT7trpqWY/mLq6jDSsKxpDiJO5SPwL6Ng==
 
-svelte@^3.44.2:
-  version "3.44.2"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.44.2.tgz#3e69be2598308dfc8354ba584cec54e648a50f7f"
-  integrity sha512-jrZhZtmH3ZMweXg1Q15onb8QlWD+a5T5Oca4C1jYvSURp2oD35h4A5TV6t6MEa93K4LlX6BkafZPdQoFjw/ylA==
+svelte@^3.44.3:
+  version "3.44.3"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.44.3.tgz#795b1ced6ed3da44969099e5061b850c93c95e9a"
+  integrity sha512-aGgrNCip5PQFNfq9e9tmm7EYxWLVHoFsEsmKrtOeRD8dmoGDdyTQ+21xd7qgFd8MNdKGSYvg7F9dr+Tc0yDymg==
 
 terser@^5.0.0:
   version "5.8.0"
