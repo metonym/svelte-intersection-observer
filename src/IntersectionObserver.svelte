@@ -69,7 +69,10 @@
     initialize();
 
     return () => {
-      if (observer) observer.disconnect();
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
     };
   });
 
