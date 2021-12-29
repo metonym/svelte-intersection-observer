@@ -5,44 +5,56 @@ export type Entry = null | IntersectionObserverEntry;
 
 export interface IntersectionObserverProps {
   /**
+   * The HTML Element to observe.
    * @default null
    */
   element?: null | HTMLElement;
 
   /**
-   * @default null
+   * Set to `true` to unobserve the element
+   * after it intersects the viewport.
+   * @default false
    */
-  root?: null | HTMLElement;
+  once?: boolean;
 
   /**
-   * @default "0px"
-   */
-  rootMargin?: string;
-
-  /**
-   * @default 0
-   */
-  threshold?: number;
-
-  /**
-   * @default null
-   */
-  entry?: null | Entry;
-
-  /**
+   * `true` if the observed element
+   * is intersecting the viewport.
    * @default false
    */
   intersecting?: boolean;
 
   /**
+   * Specify the containing element.
+   * Defaults to the browser viewport.
+   * @default null
+   */
+  root?: null | HTMLElement;
+
+  /**
+   * Margin offset of the containing element.
+   * @default "0px"
+   */
+  rootMargin?: string;
+
+  /**
+   * Percentage of element visibility to trigger an event.
+   * Value must be between 0 and 1.
+   * @default 0
+   */
+  threshold?: number;
+
+  /**
+   * Observed element metadata.
+   * @default null
+   */
+  entry?: null | Entry;
+
+  /**
+   * `IntersectionObserver` instance.
    * @default null
    */
   observer?: null | IntersectionObserver;
-
-  /**
-   * @default false
-   */
-  once?: boolean;
 }
 
 export default class SvelteIntersectionObserver extends SvelteComponentTyped<
