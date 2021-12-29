@@ -8,7 +8,7 @@ export interface IntersectionObserverProps {
    * The HTML Element to observe.
    * @default null
    */
-  element?: null | HTMLElement;
+  element?: HTMLElement;
 
   /**
    * Set to `true` to unobserve the element
@@ -29,7 +29,7 @@ export interface IntersectionObserverProps {
    * Defaults to the browser viewport.
    * @default null
    */
-  root?: null | HTMLElement;
+  root?: HTMLElement;
 
   /**
    * Margin offset of the containing element.

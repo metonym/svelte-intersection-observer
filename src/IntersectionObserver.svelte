@@ -1,7 +1,7 @@
 <script>
   /**
    * The HTML Element to observe.
-   * @type {null | HTMLElement}
+   * @type {HTMLElement}
    */
   export let element = null;
 
@@ -21,7 +21,7 @@
   /**
    * Specify the containing element.
    * Defaults to the browser viewport.
-   * @type {null | HTMLElement}
+   * @type {HTMLElement}
    */
   export let root = null;
 
