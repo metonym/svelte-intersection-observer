@@ -161,7 +161,7 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 
 The `e.detail` dispatched by the `observe` and `intersect` events is an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) interface.
 
-Note that all properties in `IntersectionObserverEntry` are read only.
+Note that all properties in `IntersectionObserverEntry` are read-only.
 
 <details>
  <summary><code>IntersectionObserverEntry</code></summary>
