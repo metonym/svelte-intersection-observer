@@ -1,41 +1,49 @@
 <script>
   /**
-   * The HTML Element to observe
+   * The HTML Element to observe.
    * @type {null | HTMLElement}
    */
   export let element = null;
 
   /**
-   * Set to `true` to unobserve the element after it intersects the viewport
+   * Set to `true` to unobserve the element
+   * after it intersects the viewport.
    * @type {boolean}
    */
   export let once = false;
 
   /**
-   * Containing element
-   * Defaults to the browser viewport
+   * `true` if the observed element
+   * is intersecting the viewport.
+   */
+  export let intersecting = false;
+
+  /**
+   * Specify the containing element.
+   * Defaults to the browser viewport.
    * @type {null | HTMLElement}
    */
   export let root = null;
 
-  /** Margin offset of the containing element */
+  /** Margin offset of the containing element. */
   export let rootMargin = "0px";
 
   /**
-   * Percentage of element visibility to trigger an event
-   * Value must be between 0 and 1
+   * Percentage of element visibility to trigger an event.
+   * Value must be between 0 and 1.
    */
   export let threshold = 0;
 
-  /** @type {null | IntersectionObserverEntry} */
+  /**
+   * Observed element metadata.
+   * @type {null | IntersectionObserverEntry}
+   */
   export let entry = null;
 
   /**
-   * `true` is the observed element is intersecting the element
+   * `IntersectionObserver` instance.
+   * @type {null | IntersectionObserver}
    */
-  export let intersecting = false;
-
-  /** @type {null | IntersectionObserver} */
   export let observer = null;
 
   import { tick, createEventDispatcher, afterUpdate, onMount } from "svelte";
