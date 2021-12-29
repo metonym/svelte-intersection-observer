@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0](https://github.com/metonym/svelte-intersection-observer/releases/tag/v0.10.0) - 2021-12-29
+
+**Features**
+
+- mark `observer` for garbage collection after disconnecting
+
+**Documentation**
+
+- make prop descriptions consistent with docs
+
+**Refactoring**
+
+- omit redundant `null` from `element` and `root` types as `HTMLElement` is already nullable
+
 ## [0.9.2](https://github.com/metonym/svelte-intersection-observer/releases/tag/v0.9.2) - 2021-11-26
 
 **Documentation**
