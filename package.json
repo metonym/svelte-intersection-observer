@@ -17,11 +17,11 @@
     "format": "prettier --write '.'"
   },
   "devDependencies": {
-    "prettier": "^2.5.0",
-    "prettier-plugin-svelte": "^2.5.0",
-    "svelte": "^3.44.2",
-    "svelte-check": "^2.2.10",
-    "svelte-readme": "^3.6.1"
+    "prettier": "^2.5.1",
+    "prettier-plugin-svelte": "^2.6.0",
+    "svelte": "^3.46.1",
+    "svelte-check": "^2.3.0",
+    "svelte-readme": "^3.6.2"
   },
   "repository": {
     "type": "git",
