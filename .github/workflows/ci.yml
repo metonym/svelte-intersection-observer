@@ -1,5 +1,5 @@
 name: CI
-on: [push, pull_request]
+on: [pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,5 +9,7 @@ jobs:
         run: |
           yarn
           yarn prepack
-      - name: Validate the TypeScript definitions
-        run: yarn test
+      - name: Validate TypeScript definitions using svelte-check
+        run: yarn test:types
+      - name: Build examples
+        run: yarn test:examples

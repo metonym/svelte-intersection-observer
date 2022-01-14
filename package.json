@@ -13,7 +13,8 @@
     "dev": "rollup -cw",
     "build": "rollup -c",
     "prepack": "BUNDLE=true rollup -c",
-    "test": "svelte-check --workspace test",
+    "test:types": "svelte-check --workspace test",
+    "test:examples": "node test/examples",
     "format": "prettier --write '.'"
   },
   "devDependencies": {
