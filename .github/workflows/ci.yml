@@ -1,15 +1,27 @@
 name: CI
-on: [pull_request]
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install dependencies and build the library
+
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Build and test the library
         run: |
           yarn
           yarn prepack
-      - name: Validate TypeScript definitions using svelte-check
-        run: yarn test:types
+          yarn test:types
+
       - name: Build examples
         run: yarn test:examples
