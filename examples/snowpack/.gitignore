@@ -1,3 +1,3 @@
-/.snowpack
-/build
-/node_modules
+.snowpack
+build
+node_modules

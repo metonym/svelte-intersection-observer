@@ -41,18 +41,14 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       templateContent: `
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="utf-8" />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-          />
-        </head>
-        <body></body>
-      </html>
-      `,
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+          </head>
+          <body></body>
+        </html>`,
     }),
   ],
   stats: "errors-only",
