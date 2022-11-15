@@ -214,8 +214,6 @@ The [examples folder](examples/) contains sample set-ups.
 
 - [examples/sveltekit](examples/sveltekit)
 - [examples/vite](examples/vite)
-- [examples/sapper](examples/sapper)
-- [examples/snowpack](examples/snowpack)
 - [examples/rollup](examples/rollup)
 - [examples/webpack](examples/webpack)
 
