@@ -44,7 +44,8 @@
 <h2>Dynamic rootMargin</h2>
 
 <div class="code-fence">
-  <header
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+<header
     class:intersecting={intersecting3}
     on:click={() => {
       rootMargin = rootMargin ? undefined : "-200px";
