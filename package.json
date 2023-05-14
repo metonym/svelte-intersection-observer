@@ -18,10 +18,10 @@
     "format": "prettier --ignore-path .gitignore --write '.'"
   },
   "devDependencies": {
-    "prettier": "^2.7.1",
-    "prettier-plugin-svelte": "^2.8.0",
-    "svelte": "^3.52.0",
-    "svelte-check": "^2.9.2",
+    "prettier": "^2.8.8",
+    "prettier-plugin-svelte": "^2.10.0",
+    "svelte": "^3.59.1",
+    "svelte-check": "^3.3.2",
     "svelte-readme": "^3.6.3"
   },
   "repository": {
