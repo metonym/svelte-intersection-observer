@@ -1,4 +1,4 @@
-const { ESBuildMinifyPlugin } = require("esbuild-loader");
+const { EsbuildPlugin } = require("esbuild-loader");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
@@ -8,15 +8,19 @@ const PROD = NODE_ENV === "production";
 module.exports = {
   entry: { "build/bundle": ["./src/index.js"] },
   resolve: {
-    alias: { svelte: path.dirname(require.resolve("svelte/package.json")) },
+    alias: {
+      svelte: path.resolve("node_modules", "svelte/src/runtime"),
+    },
     extensions: [".mjs", ".js", ".svelte"],
     mainFields: ["svelte", "browser", "module", "main"],
+    conditionNames: ["svelte", "browser", "import"],
   },
   output: {
     publicPath: "/",
     path: path.join(__dirname, "/public"),
     filename: PROD ? "[name].[contenthash].js" : "[name].js",
     chunkFilename: "[name].[id].js",
+    clean: true,
   },
   module: {
     rules: [
@@ -34,6 +38,13 @@ module.exports = {
       {
         test: /node_modules\/svelte\/.*\.mjs$/,
         resolve: { fullySpecified: false },
+      },
+      {
+        test: /\.[jt]sx?$/,
+        loader: "esbuild-loader",
+        options: {
+          target: "es2015",
+        },
       },
     ],
   },
@@ -55,6 +66,6 @@ module.exports = {
   devtool: PROD ? false : "source-map",
   devServer: { hot: true, historyApiFallback: true },
   optimization: {
-    minimizer: [new ESBuildMinifyPlugin({ target: "es2015" })],
+    minimizer: [new EsbuildPlugin({ target: "es2015" })],
   },
 };

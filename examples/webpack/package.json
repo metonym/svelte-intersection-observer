@@ -2,16 +2,16 @@
   "private": true,
   "scripts": {
     "dev": "webpack serve",
-    "build": "rm -rf public && NODE_ENV=production webpack"
+    "build": "NODE_ENV=production webpack"
   },
   "devDependencies": {
-    "esbuild-loader": "^2.20.0",
-    "html-webpack-plugin": "^5.5.0",
-    "svelte": "^3.53.1",
+    "esbuild-loader": "^3.0.1",
+    "html-webpack-plugin": "^5.5.3",
+    "svelte": "^4.1.0",
     "svelte-intersection-observer": "^0.10.0",
-    "svelte-loader": "^3.1.4",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1"
+    "svelte-loader": "^3.1.9",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   }
 }
