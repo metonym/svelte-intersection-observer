@@ -8,7 +8,6 @@
   "main": "./lib/index.js",
   "module": "./lib/index.mjs",
   "types": "./types/index.d.ts",
-  "sideEffects": false,
   "scripts": {
     "dev": "rollup -cw",
     "build": "rollup -c",
@@ -18,10 +17,10 @@
     "format": "prettier --ignore-path .gitignore --write '.'"
   },
   "devDependencies": {
-    "prettier": "^2.8.8",
-    "prettier-plugin-svelte": "^2.10.0",
-    "svelte": "^3.59.1",
-    "svelte-check": "^3.3.2",
+    "prettier": "^3.0.0",
+    "prettier-plugin-svelte": "^3.0.0",
+    "svelte": "^4.1.0",
+    "svelte-check": "^3.4.6",
     "svelte-readme": "^3.6.3"
   },
   "repository": {
