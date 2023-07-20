@@ -39,10 +39,10 @@ export interface IntersectionObserverProps {
 
   /**
    * Percentage of element visibility to trigger an event.
-   * Value must be between 0 and 1.
+   * Value must be a number between 0 and 1, or an array of numbers between 0 and 1.
    * @default 0
    */
-  threshold?: number;
+  threshold?: number | number[];
 
   /**
    * Observed element metadata.
