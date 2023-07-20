@@ -3,4 +3,6 @@ lib
 dist
 /node_modules
 build
-.svelte-kit
+/test-results/
+/playwright-report/
+/playwright/.cache/

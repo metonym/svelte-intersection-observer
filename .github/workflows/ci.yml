@@ -23,5 +23,8 @@ jobs:
           yarn prepack
           yarn test:types
 
-      - name: Build examples
-        run: yarn test:examples
+      - name: Install Playwright Browsers
+        run: yarn playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: yarn test:e2e
