@@ -150,7 +150,7 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 | intersecting | `true` if the observed element is intersecting the viewport | `boolean`                                                                                                 | `false`       |
 | root         | Containing element                                          | `null` or `HTMLElement`                                                                                   | `null`        |
 | rootMargin   | Margin offset of the containing element                     | `string`                                                                                                  | `"0px"`       |
-| threshold    | Percentage of element visibile to trigger an event          | `number` between 0 and 1                                                                                  | `0`           |
+| threshold    | Percentage of element visibile to trigger an event          | `number` between 0 and 1, or an array of `number`s between 0 and 1                                        | `0`           |
 | entry        | Observed element metadata                                   | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
 | observer     | `IntersectionObserver` instance                             | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
 
