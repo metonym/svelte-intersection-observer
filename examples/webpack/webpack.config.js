@@ -1,4 +1,3 @@
-const { EsbuildPlugin } = require("esbuild-loader");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
@@ -39,13 +38,6 @@ module.exports = {
         test: /node_modules\/svelte\/.*\.mjs$/,
         resolve: { fullySpecified: false },
       },
-      {
-        test: /\.[jt]sx?$/,
-        loader: "esbuild-loader",
-        options: {
-          target: "es2015",
-        },
-      },
     ],
   },
   mode: NODE_ENV,
@@ -65,7 +57,4 @@ module.exports = {
   stats: "errors-only",
   devtool: PROD ? false : "source-map",
   devServer: { hot: true, historyApiFallback: true },
-  optimization: {
-    minimizer: [new EsbuildPlugin({ target: "es2015" })],
-  },
 };

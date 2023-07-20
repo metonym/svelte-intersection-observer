@@ -5,7 +5,6 @@
     "build": "NODE_ENV=production webpack"
   },
   "devDependencies": {
-    "esbuild-loader": "^3.0.1",
     "html-webpack-plugin": "^5.5.3",
     "svelte": "^4.1.0",
     "svelte-intersection-observer": "^0.10.0",
