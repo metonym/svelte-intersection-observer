@@ -1,10 +1,9 @@
-// @ts-check
 import { test, expect } from "@playwright/experimental-ct-svelte";
 import Basic from "./Basic.svelte";
 import Once from "./Once.svelte";
 import RootMargin from "./RootMargin.svelte";
 
-test.use({ viewport: { width: 1200, height: 900 } });
+test.use({ viewport: { width: 1200, height: 600 } });
 
 test("Basic", async ({ mount, page }) => {
   const component = await mount(Basic);

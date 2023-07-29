@@ -5,25 +5,26 @@
   "description": "Detect if an element is in the viewport using the Intersection Observer API",
   "author": "Eric Liu (https://github.com/metonym)",
   "svelte": "./src/index.js",
-  "main": "./lib/index.js",
-  "module": "./lib/index.mjs",
-  "types": "./types/index.d.ts",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "type": "module",
   "scripts": {
     "dev": "rollup -cw",
     "build": "rollup -c",
-    "prepack": "BUNDLE=true rollup -c",
-    "test:types": "svelte-check --workspace test",
+    "test:types": "svelte-check --workspace tests",
     "test:e2e": "playwright test",
     "format": "prettier --ignore-path .gitignore --write '.'"
   },
   "devDependencies": {
     "@playwright/experimental-ct-svelte": "^1.36.2",
     "@playwright/test": "^1.36.2",
+    "@sveltejs/vite-plugin-svelte": "^2.4.3",
     "prettier": "^3.0.0",
     "prettier-plugin-svelte": "^3.0.3",
     "svelte": "^4.1.1",
     "svelte-check": "^3.4.6",
-    "svelte-readme": "^3.6.3"
+    "svelte-readme": "^3.6.3",
+    "typescript": "^5.1.6"
   },
   "repository": {
     "type": "git",
@@ -32,16 +33,14 @@
   "homepage": "https://github.com/metonym/svelte-intersection-observer",
   "bugs": "https://github.com/metonym/svelte-intersection-observer/issues",
   "keywords": [
+    "svelte",
+    "svelte component",
     "intersection observer",
     "viewport",
     "lazy-loading",
-    "conditional",
-    "svelte",
-    "svelte component"
+    "conditional"
   ],
   "files": [
-    "lib",
-    "src",
-    "types"
+    "src"
   ]
 }

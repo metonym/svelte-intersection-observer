@@ -296,6 +296,19 @@
     svelte-hmr "^0.15.2"
     vitefu "^0.2.4"
 
+"@sveltejs/vite-plugin-svelte@^2.4.3":
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-2.4.3.tgz#ef865d7c2553ec06406b0be3b8da851aac07a03a"
+  integrity sha512-NY2h+B54KHZO3kDURTdARqthn6D4YSIebtfW75NvZ/fwyk4G+AJw3V/i0OBjyN4406Ht9yZcnNWMuRUFnDNNiA==
+  dependencies:
+    "@sveltejs/vite-plugin-svelte-inspector" "^1.0.3"
+    debug "^4.3.4"
+    deepmerge "^4.3.1"
+    kleur "^4.1.5"
+    magic-string "^0.30.1"
+    svelte-hmr "^0.15.2"
+    vitefu "^0.2.4"
+
 "@types/estree@*", "@types/estree@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.1.tgz#aa22750962f3bf0e79d753d3cc067f010c95f194"
@@ -828,6 +841,13 @@ magic-string@^0.30.0:
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.15"
 
+magic-string@^0.30.1:
+  version "0.30.2"
+  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.2.tgz#dcf04aad3d0d1314bc743d076c50feb29b3c7aca"
+  integrity sha512-lNZdu7pewtq/ZvWUp9Wpf/x7WzMTsR26TWV03BRZrXFsv+BI6dy8RAiKgm1uM/kyR0rCfUcqvOlXKG66KhIGug==
+  dependencies:
+    "@jridgewell/sourcemap-codec" "^1.4.15"
+
 markdown-it-anchor@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/markdown-it-anchor/-/markdown-it-anchor-6.0.1.tgz#f54b78757d0b61455faf8ced775b39498bd6d6f9"
@@ -1072,7 +1092,7 @@ rimraf@^2.5.2:
   dependencies:
     glob "^7.1.3"
 
-rollup-plugin-svelte@^7.0.0, rollup-plugin-svelte@^7.1.6:
+rollup-plugin-svelte@^7.0.0:
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/rollup-plugin-svelte/-/rollup-plugin-svelte-7.1.6.tgz#44a4ea6c6e8ed976824d9fd40c78d048515e5838"
   integrity sha512-nVFRBpGWI2qUY1OcSiEEA/kjCY2+vAjO9BI8SzA7NRrh2GTunLd6w2EYmnMt/atgdg8GvcNjLsmZmbQs/u4SQA==
@@ -1284,6 +1304,11 @@ typescript@^5.0.3:
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
   integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
+
+typescript@^5.1.6:
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.6.tgz#02f8ac202b6dad2c0dd5e0913745b47a37998274"
+  integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.6"

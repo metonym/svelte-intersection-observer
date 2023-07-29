@@ -1,8 +1,6 @@
 .DS_Store
-lib
-dist
+/dist
 /node_modules
-build
 /test-results/
 /playwright-report/
 /playwright/.cache/
