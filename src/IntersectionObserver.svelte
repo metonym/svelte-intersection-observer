@@ -1,7 +1,9 @@
 <script>
+  // @ts-check
+
   /**
    * The HTML Element to observe.
-   * @type {HTMLElement}
+   * @type {null | HTMLElement}
    */
   export let element = null;
 
@@ -21,7 +23,7 @@
   /**
    * Specify the containing element.
    * Defaults to the browser viewport.
-   * @type {HTMLElement}
+   * @type {null | HTMLElement}
    */
   export let root = null;
 
@@ -50,7 +52,10 @@
 
   const dispatch = createEventDispatcher();
 
+  /** @type {null | string} */
   let prevRootMargin = null;
+
+  /** @type {null | HTMLElement} */
   let prevElement = null;
 
   const initialize = () => {
@@ -83,21 +88,21 @@
       if (entry.isIntersecting) {
         dispatch("intersect", entry);
 
-        if (once) observer.unobserve(element);
+        if (element && once) observer?.unobserve(element);
       }
     }
 
     await tick();
 
     if (element !== null && element !== prevElement) {
-      observer.observe(element);
+      observer?.observe(element);
 
-      if (prevElement !== null) observer.unobserve(prevElement);
+      if (prevElement !== null) observer?.unobserve(prevElement);
       prevElement = element;
     }
 
     if (prevRootMargin && rootMargin !== prevRootMargin) {
-      observer.disconnect();
+      observer?.disconnect();
       prevElement = null;
       initialize();
     }

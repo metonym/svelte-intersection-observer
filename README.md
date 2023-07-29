@@ -208,21 +208,6 @@ interface IntersectionObserverEntry {
 
 </details>
 
-## Examples
-
-The [examples folder](examples/) contains sample set-ups.
-
-- [examples/sveltekit](examples/sveltekit)
-- [examples/vite](examples/vite)
-- [examples/rollup](examples/rollup)
-- [examples/webpack](examples/webpack)
-
-## TypeScript support
-
-Svelte version 3.31 or greater is required to use this module with TypeScript.
-
-TypeScript definitions for this component are located in the [types folder](types/).
-
 ## Changelog
 
 [Changelog](CHANGELOG.md)

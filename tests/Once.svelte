@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
   import IntersectionObserver from "svelte-intersection-observer";
 
-  let element;
-  let intersecting;
+  let element: null | HTMLDivElement = null;
+  let intersecting = false;
 </script>
 
 <header class:intersecting>
@@ -10,7 +10,7 @@
 </header>
 
 <IntersectionObserver {element} bind:intersecting once>
-  <div bind:this="{element}">Hello world</div>
+  <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
 
 <style>
@@ -29,20 +29,5 @@
     padding: 1rem;
     background-color: #376462;
     color: #fff;
-  }
-
-  header:before {
-    content: "Scroll down.";
-    display: block;
-    color: #111;
-  }
-
-  header {
-    font-weight: bold;
-    color: #d54309;
-  }
-
-  header.intersecting {
-    color: #00a91c;
   }
 </style>
