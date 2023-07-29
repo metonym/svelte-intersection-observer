@@ -10,18 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - uses: actions/cache@v3
         id: yarn-cache
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Build and test the library
+      - name: Run tests
         run: |
           yarn
-          yarn prepack
+          yarn playwright install --with-deps
           yarn test:types
-
-      - name: Build examples
-        run: yarn test:examples
+          yarn test:e2e
