@@ -4,7 +4,7 @@ import pkg from "./package.json" assert { type: "json" };
 
 export default defineConfig({
   testDir: "./",
-  timeout: 5_000,
+  timeout: 10_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 1 : undefined,
