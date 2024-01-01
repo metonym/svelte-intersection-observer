@@ -24,4 +24,6 @@ jobs:
         # https://docs.npmjs.com/generating-provenance-statements
         run: |
           npm install --force
+          npm run package
+          cd package
           npm publish --provenance --access public

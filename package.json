@@ -5,26 +5,27 @@
   "description": "Detect if an element is in the viewport using the Intersection Observer API",
   "author": "Eric Liu (https://github.com/metonym)",
   "type": "module",
-  "svelte": "./src/index.js",
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "svelte": "./index.js",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
-      "svelte": "./src/index.js"
+      "types": "./index.d.ts",
+      "svelte": "./index.js"
     },
-    "./src/*.svelte": {
-      "types": "./src/*.svelte.d.ts",
-      "import": "./src/*.svelte"
+    "./*.svelte": {
+      "types": "./*.svelte.d.ts",
+      "import": "./*.svelte"
     },
-    "./src/*": {
-      "types": "./src/*.d.ts",
-      "import": "./src/*.js"
+    "./*": {
+      "types": "./*.d.ts",
+      "import": "./*.js"
     }
   },
   "scripts": {
     "dev": "rollup -cw",
     "build": "rollup -c",
+    "package": "node scripts/npm-package",
     "test:types": "svelte-check --workspace tests",
     "test:e2e": "playwright test",
     "format": "prettier --write '.'"
@@ -53,9 +54,6 @@
     "viewport",
     "lazy-loading",
     "conditional"
-  ],
-  "files": [
-    "src"
   ],
   "prettier": {
     "plugins": [
