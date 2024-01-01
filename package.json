@@ -8,6 +8,20 @@
   "main": "./lib/index.js",
   "module": "./lib/index.mjs",
   "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "svelte": "./src/index.js"
+    },
+    "./src/*.svelte": {
+      "types": "./types/*.svelte.d.ts",
+      "import": "./src/*.svelte"
+    },
+    "./src/*": {
+      "types": "./types/*.d.ts",
+      "import": "./src/*.js"
+    }
+  },
   "scripts": {
     "dev": "rollup -cw",
     "build": "rollup -c",
