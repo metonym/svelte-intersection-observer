@@ -16,7 +16,7 @@ export default defineConfig({
       plugins: [svelte({ preprocess: vitePreprocess() })],
       resolve: {
         alias: {
-          [pkg.name]: pkg.main,
+          [pkg.name]: "./src/index.js",
         },
       },
     },
