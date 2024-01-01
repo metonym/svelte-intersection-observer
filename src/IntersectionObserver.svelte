@@ -66,7 +66,7 @@
           intersecting = _entry.isIntersecting;
         });
       },
-      { root, rootMargin, threshold }
+      { root, rootMargin, threshold },
     );
   };
 
