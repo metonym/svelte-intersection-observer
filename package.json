@@ -27,18 +27,18 @@
     "build": "rollup -c",
     "test:types": "svelte-check --workspace tests",
     "test:e2e": "playwright test",
-    "format": "prettier --ignore-path .gitignore --write '.'"
+    "format": "prettier --write '.'"
   },
   "devDependencies": {
-    "@playwright/experimental-ct-svelte": "^1.38.1",
-    "@playwright/test": "^1.38.1",
+    "@playwright/experimental-ct-svelte": "^1.40.1",
+    "@playwright/test": "^1.40.1",
     "@sveltejs/vite-plugin-svelte": "^2.4.6",
-    "prettier": "^3.0.3",
-    "prettier-plugin-svelte": "^3.0.3",
+    "prettier": "^3.1.1",
+    "prettier-plugin-svelte": "^3.1.2",
     "svelte": "3.59.1",
-    "svelte-check": "^3.5.2",
+    "svelte-check": "^3.6.2",
     "svelte-readme": "^3.6.3",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "repository": {
     "type": "git",
@@ -56,5 +56,10 @@
   ],
   "files": [
     "src"
-  ]
+  ],
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-svelte"
+    ]
+  }
 }
