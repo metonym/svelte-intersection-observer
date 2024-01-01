@@ -5,23 +5,7 @@
   "description": "Detect if an element is in the viewport using the Intersection Observer API",
   "author": "Eric Liu (https://github.com/metonym)",
   "type": "module",
-  "svelte": "./index.js",
-  "main": "./index.js",
-  "types": "./index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "svelte": "./index.js"
-    },
-    "./*.svelte": {
-      "types": "./*.svelte.d.ts",
-      "import": "./*.svelte"
-    },
-    "./*": {
-      "types": "./*.d.ts",
-      "import": "./*.js"
-    }
-  },
+  "svelte": "./src/index.js",
   "scripts": {
     "dev": "rollup -cw",
     "build": "rollup -c",

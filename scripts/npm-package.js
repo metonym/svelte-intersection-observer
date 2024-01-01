@@ -25,6 +25,23 @@ import fsp from "node:fs/promises";
   delete pkgJson.devDependencies;
   delete pkgJson.prettier;
 
+  pkgJson.main = "./index.js";
+  pkgJson.types = "./index.d.ts";
+  pkgJson.exports = {
+    ".": {
+      types: "./index.d.ts",
+      svelte: "./index.js",
+    },
+    "./*.svelte": {
+      types: "./*.svelte.d.ts",
+      import: "./*.svelte",
+    },
+    "./*": {
+      types: "./*.d.ts",
+      import: "./*.js",
+    },
+  };
+
   await fsp.writeFile(
     "./package/package.json",
     JSON.stringify(pkgJson, null, 2),
