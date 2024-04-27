@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * Run `yarn test:types` to test the type definitions of the component using `svelte-check`.
+   * Run `bun test:types` to test the type definitions of the component using `svelte-check`.
    */
 
   import SvelteIntersectionObserver from "svelte-intersection-observer";
@@ -9,7 +9,7 @@
   type Props = ComponentProps<SvelteIntersectionObserver>;
 
   let intersecting: Props["intersecting"] = false;
-  let entry: Props["entry"] = null;
+  let entry: Props["entry"];
   let element: Props["element"];
   let observer: Props["observer"];
 
