@@ -7,21 +7,22 @@
   "type": "module",
   "svelte": "./src/index.js",
   "scripts": {
-    "dev": "rollup -cw",
-    "build": "rollup -c",
-    "package": "node scripts/npm-package",
-    "test:types": "svelte-check --workspace tests",
+    "dev": "bun --bun rollup -cw",
+    "build": "bun --bun rollup -c",
+    "package": "bun scripts/npm-package.ts",
+    "test:types": "bun --bun svelte-check --workspace tests",
     "test:e2e": "playwright test",
-    "format": "prettier --write '.'"
+    "format": "bun --bun prettier --write . --cache"
   },
   "devDependencies": {
-    "@playwright/experimental-ct-svelte": "^1.41.1",
-    "@playwright/test": "^1.41.1",
-    "@sveltejs/vite-plugin-svelte": "^3.0.1",
-    "prettier": "^3.2.4",
-    "prettier-plugin-svelte": "^3.1.2",
+    "@playwright/experimental-ct-svelte": "1.43.0",
+    "@playwright/test": "1.43.0",
+    "@sveltejs/vite-plugin-svelte": "^3.1.0",
+    "@types/bun": "^1.1.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-svelte": "^3.2.3",
     "svelte": "3.59.1",
-    "svelte-check": "^3.6.3",
+    "svelte-check": "^3.7.0",
     "svelte-readme": "^3.6.3",
     "typescript": "^5.3.3"
   },
