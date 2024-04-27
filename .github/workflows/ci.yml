@@ -1,24 +1,44 @@
-name: CI
-
 on:
   pull_request:
   push:
     branches: [master]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Run tests
-        run: |
-          yarn
-          yarn playwright install --with-deps
-          yarn test:types
-          yarn test:e2e
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.1.5
+
+      - uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: /home/runner/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-1.43.0
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Install Playwright binaries
+        run: bun playwright install --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - name: Run unit tests
+        run: bun test:types
+
+      - name: Run e2e tests
+        run: bun test:e2e
+
+      - name: Build docs
+        if: github.ref == 'refs/heads/master'
+        run: bun run build
+
+      - name: Deploy docs
+        if: github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist
