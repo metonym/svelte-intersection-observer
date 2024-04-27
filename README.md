@@ -12,22 +12,19 @@ Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999b
 
 ## Installation
 
-**Yarn**
-
-```bash
-yarn add -D svelte-intersection-observer
-```
-
-**NPM**
-
-```bash
+```sh
+# npm
 npm i -D svelte-intersection-observer
-```
 
-**pnpm**
-
-```bash
+# pnpm
 pnpm i -D svelte-intersection-observer
+
+# Bun
+bun i -D svelte-intersection-observer
+
+# Yarn
+yarn add -D svelte-intersection-observer
+
 ```
 
 ## Usage
