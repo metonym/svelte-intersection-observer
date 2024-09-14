@@ -13,17 +13,17 @@ Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999b
 ## Installation
 
 ```sh
-# npm
-npm i -D svelte-intersection-observer
+# NPM
+npm i svelte-intersection-observer
 
 # pnpm
-pnpm i -D svelte-intersection-observer
+pnpm i svelte-intersection-observer
 
 # Bun
-bun i -D svelte-intersection-observer
+bun i svelte-intersection-observer
 
 # Yarn
-yarn add -D svelte-intersection-observer
+yarn add svelte-intersection-observer
 
 ```
 
