@@ -18,7 +18,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Build package
-        run: bun package
+        run: bun run package
 
       - name: Publish package
         env:
