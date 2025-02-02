@@ -15,8 +15,8 @@
     "format": "bun --bun prettier --write . --cache"
   },
   "devDependencies": {
-    "@playwright/experimental-ct-svelte": "1.47.1",
-    "@playwright/test": "1.47.1",
+    "@playwright/experimental-ct-svelte": "1.50.1",
+    "@playwright/test": "1.50.1",
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
     "@types/bun": "^1.1.14",
     "prettier": "^3.4.2",
