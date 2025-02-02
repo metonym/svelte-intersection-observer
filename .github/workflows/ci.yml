@@ -19,7 +19,7 @@ jobs:
         run: bun install
 
       - name: Install Playwright binaries
-        run: bun playwright install --with-deps
+        run: bunx playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: Run unit tests
