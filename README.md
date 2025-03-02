@@ -136,29 +136,109 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 </IntersectionObserver>
 ```
 
+### Multiple elements
+
+For performance, use `MultipleIntersectionObserver` to observe multiple elements.
+
+This avoids instantiating a new observer for every element.
+
+```svelte
+<script>
+  import { MultipleIntersectionObserver } from "svelte-intersection-observer";
+
+  let ref1;
+  let ref2;
+
+  $: elements = [ref1, ref2];
+</script>
+
+<MultipleIntersectionObserver {elements} let:elementIntersections>
+  <header>
+    <div class:intersecting={elementIntersections.get(ref1)}>
+      Item 1: {elementIntersections.get(ref1) ? "✓" : "✗"}
+    </div>
+    <div class:intersecting={elementIntersections.get(ref2)}>
+      Item 2: {elementIntersections.get(ref2) ? "✓" : "✗"}
+    </div>
+  </header>
+
+  <div bind:this={ref1}>Item 1</div>
+  <div bind:this={ref2}>Item 2</div>
+</MultipleIntersectionObserver>
+```
+
 ## API
 
-### Props
+### IntersectionObserver
 
-| Name         | Description                                                 | Type                                                                                                      | Default value |
-| :----------- | :---------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :------------ |
-| element      | Observed element                                            | `HTMLElement`                                                                                             | `null`        |
-| once         | Unobserve the element after the first intersection event    | `boolean`                                                                                                 | `false`       |
-| intersecting | `true` if the observed element is intersecting the viewport | `boolean`                                                                                                 | `false`       |
-| root         | Containing element                                          | `null` or `HTMLElement`                                                                                   | `null`        |
-| rootMargin   | Margin offset of the containing element                     | `string`                                                                                                  | `"0px"`       |
-| threshold    | Percentage of element visibile to trigger an event          | `number` between 0 and 1, or an array of `number`s between 0 and 1                                        | `0`           |
-| entry        | Observed element metadata                                   | [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
-| observer     | `IntersectionObserver` instance                             | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
+#### Props
 
-### Dispatched events
+| Name         | Description                                                 | Type                                                                                                                | Default value |
+| :----------- | :---------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :------------ |
+| element      | Observed element                                            | `null` or `HTMLElement`                                                                                             | `null`        |
+| once         | Unobserve the element after the first intersection event    | `boolean`                                                                                                           | `false`       |
+| intersecting | `true` if the observed element is intersecting the viewport | `boolean`                                                                                                           | `false`       |
+| root         | Containing element                                          | `null` or `HTMLElement`                                                                                             | `null`        |
+| rootMargin   | Margin offset of the containing element                     | `string`                                                                                                            | `"0px"`       |
+| threshold    | Percentage of element visibility to trigger an event        | `number` between 0 and 1, or an array of `number`s between 0 and 1                                                  | `0`           |
+| entry        | Observed element metadata                                   | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
+| observer     | `IntersectionObserver` instance                             | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
+
+#### Dispatched events
 
 - **on:observe**: fired when the element is first observed or whenever an intersection change occurs
 - **on:intersect**: fired when the element is intersecting the viewport
 
 The `e.detail` dispatched by the `observe` and `intersect` events is an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) interface.
 
-Note that all properties in `IntersectionObserverEntry` are read-only.
+#### Slot props
+
+| Name         | Type                                                                                                                |
+| :----------- | :------------------------------------------------------------------------------------------------------------------ |
+| intersecting | `boolean`                                                                                                           |
+| entry        | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
+| observer     | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)                     |
+
+### MultipleIntersectionObserver
+
+#### Props
+
+| Name                 | Description                                           | Type                                                                                                                                    | Default value |
+| :------------------- | :---------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
+| elements             | Array of HTML elements to observe                     | `Array<HTMLElement \| null>`                                                                                                            | `[]`          |
+| once                 | Unobserve elements after the first intersection event | `boolean`                                                                                                                               | `false`       |
+| root                 | Containing element                                    | `null` or `HTMLElement`                                                                                                                 | `null`        |
+| rootMargin           | Margin offset of the containing element               | `string`                                                                                                                                | `"0px"`       |
+| threshold            | Percentage of element visibility to trigger an event  | `number` between 0 and 1, or an array of `number`s between 0 and 1                                                                      | `0`           |
+| elementIntersections | Map of each element to its intersection state         | `Map<HTMLElement \| null, boolean>`                                                                                                     | `new Map()`   |
+| elementEntries       | Map of each element to its latest entry               | `Map<HTMLElement \| null,` [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)`>` | `new Map()`   |
+| observer             | `IntersectionObserver` instance                       | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)                               | `null`        |
+
+#### Dispatched events
+
+- **on:observe**: fired when an element is first observed or whenever an intersection change occurs
+- **on:intersect**: fired when an element is intersecting the viewport
+
+The `e.detail` for both events includes:
+
+```ts
+{
+  entry: IntersectionObserverEntry;
+  target: HTMLElement;
+}
+```
+
+#### Slot props
+
+| Name                 | Type                                                                                                                                    |
+| :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+| observer             | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)                                         |
+| elementIntersections | `Map<HTMLElement \| null, boolean>`                                                                                                     |
+| elementEntries       | `Map<HTMLElement \| null,` [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)`>` |
+
+### `IntersectionObserverEntry` interface
+
+Note that all properties in [IntersectionObserverEntry](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) are read-only.
 
 <details>
  <summary><code>IntersectionObserverEntry</code></summary>
