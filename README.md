@@ -136,6 +136,35 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 </IntersectionObserver>
 ```
 
+### Multiple elements
+
+For performance, use `MultipleIntersectionObserver` to observe multiple elements.
+
+This avoids instantiating a new observer for every element.
+
+```svelte
+<script>
+  import { MultipleIntersectionObserver } from "svelte-intersection-observer";
+
+  let ref1;
+  let ref2;
+
+  $: elements = [ref1, ref2];
+</script>
+
+<header />
+
+<MultipleIntersectionObserver {elements} let:elementIntersections>
+  {#each elements as element, index}
+    {@const visible = elementIntersections.get(element)}
+
+    <div bind:this={element} class:visible>
+      Item {index + 1}
+    </div>
+  {/each}
+</MultipleIntersectionObserver>
+```
+
 ## API
 
 ### Props
