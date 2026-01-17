@@ -3,7 +3,7 @@ import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig({
-  testDir: "./",
+  testDir: "./tests",
   timeout: 10_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -13,7 +13,11 @@ export default defineConfig({
     trace: "on-first-retry",
     ctPort: 3100,
     ctViteConfig: {
-      plugins: [svelte({ preprocess: vitePreprocess() })],
+      plugins: [
+        svelte({
+          preprocess: vitePreprocess(),
+        }),
+      ],
       resolve: {
         alias: {
           [pkg.name]: pkg.svelte,
