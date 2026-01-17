@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/experimental-ct-svelte";
 import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
-import pkg from "./package.json" assert { type: "json" };
+import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig({
   testDir: "./",
