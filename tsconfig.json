@@ -6,6 +6,7 @@
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "module": "ESNext",
     "moduleResolution": "node",
     "strict": true,
     "types": ["svelte"],
