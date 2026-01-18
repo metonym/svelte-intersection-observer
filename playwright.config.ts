@@ -22,6 +22,16 @@ export default defineConfig({
         alias: {
           [pkg.name]: pkg.svelte,
         },
+        extensions: [
+          ".mjs",
+          ".js",
+          ".mts",
+          ".ts",
+          ".jsx",
+          ".tsx",
+          ".json",
+          ".svelte",
+        ],
       },
     },
   },
