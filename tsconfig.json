@@ -2,12 +2,13 @@
   "compilerOptions": {
     "noEmit": true,
     "checkJs": true,
+    "module": "ESNext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "types": ["svelte"],
     "paths": {
