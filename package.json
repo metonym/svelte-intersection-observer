@@ -1,6 +1,6 @@
 {
   "name": "svelte-intersection-observer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "description": "Detect if an element is in the viewport using the Intersection Observer API",
   "author": "Eric Liu (https://github.com/metonym)",
