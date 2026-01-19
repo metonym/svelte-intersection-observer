@@ -10,7 +10,7 @@ await Bun.write("./package/package.json", pkg);
 await Bun.write("./package/README.md", Bun.file("./README.md"));
 await Bun.write("./package/LICENSE", Bun.file("./LICENSE"));
 
-await $`cp -r ./src/ ./package`;
+await $`cp -r ./src/* ./package/`;
 
 const pkgJson = await pkg.json();
 
