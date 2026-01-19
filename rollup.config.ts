@@ -4,7 +4,8 @@ export default svelteReadme({
   style: `
     .code-fence {
       overflow-y: scroll;
-      height: 380px;
+      height: 50vh;
+      min-height: 380px;
       padding: 0;
     }
 
@@ -26,8 +27,8 @@ export default svelteReadme({
     }
 
     .code-fence header ~ div {
-      margin-top: calc(380px - 80px);
-      height: 200px;
+      margin-top: 50vh;
+      height: 25vh;
       padding: 1rem;
       background-color: #376462;
       color: #fff;
@@ -38,7 +39,7 @@ export default svelteReadme({
       color: #d54309;
     }
 
-    .code-fence header.intersecting {
+    .code-fence .intersecting {
       color: #00a91c;
     }
   `,
