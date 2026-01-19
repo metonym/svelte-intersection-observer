@@ -1,6 +1,4 @@
 <script>
-  // @ts-check
-
   /**
    * The HTML Element to observe.
    * @type {null | HTMLElement}
