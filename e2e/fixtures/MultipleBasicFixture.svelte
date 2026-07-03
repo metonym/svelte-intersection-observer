@@ -7,7 +7,10 @@
   $: elements = [ref1, ref2];
 </script>
 
-<MultipleIntersectionObserver {elements} let:elementIntersections>
+<MultipleIntersectionObserver
+  {elements}
+  let:elementIntersections
+>
   <header>
     <div
       data-testid="item-1-indicator"
@@ -23,8 +26,18 @@
     </div>
   </header>
 
-  <div bind:this={ref1} data-testid="item-1">Item 1</div>
-  <div bind:this={ref2} data-testid="item-2">Item 2</div>
+  <div
+    bind:this={ref1}
+    data-testid="item-1"
+  >
+    Item 1
+  </div>
+  <div
+    bind:this={ref2}
+    data-testid="item-2"
+  >
+    Item 2
+  </div>
 </MultipleIntersectionObserver>
 
 <style>

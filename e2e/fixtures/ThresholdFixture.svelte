@@ -9,7 +9,11 @@
   {intersecting ? "Element is in view" : "Element is not in view"}
 </header>
 
-<IntersectionObserver {element} bind:intersecting threshold={0.5}>
+<IntersectionObserver
+  {element}
+  bind:intersecting
+  threshold={0.5}
+>
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
 

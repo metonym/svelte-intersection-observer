@@ -10,7 +10,10 @@
 <header class:intersecting>
   {intersecting ? "Element is in view" : "Element is not in view"}
   <p data-testid="intersect-count">Intersect count: {intersectCount}</p>
-  <button data-testid="unrelated-button" on:click={() => (unrelated += 1)}>
+  <button
+    data-testid="unrelated-button"
+    on:click={() => (unrelated += 1)}
+  >
     Unrelated: {unrelated}
   </button>
 </header>

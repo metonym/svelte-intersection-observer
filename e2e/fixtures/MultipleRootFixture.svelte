@@ -17,7 +17,11 @@
   data-testid="container"
   style="height: 200px; overflow-y: auto;"
 >
-  <MultipleIntersectionObserver {elements} root={container} bind:elementIntersections>
+  <MultipleIntersectionObserver
+    {elements}
+    root={container}
+    bind:elementIntersections
+  >
     <div
       bind:this={ref1}
       style="margin-top: 400px; height: 100px; background-color: #376462; color: #fff;"

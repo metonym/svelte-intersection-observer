@@ -47,7 +47,7 @@
    */
   export let observer = null;
 
-  import { tick, createEventDispatcher, afterUpdate, onMount } from "svelte";
+  import { afterUpdate, createEventDispatcher, onMount, tick } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -60,7 +60,7 @@
   const initialize = () => {
     observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((_entry) => {
+        for (const _entry of entries) {
           const target = /** @type {HTMLElement} */ (_entry.target);
 
           elementIntersections.set(target, _entry.isIntersecting);
@@ -76,7 +76,7 @@
             dispatch("intersect", { entry: _entry, target });
             if (once) observer?.unobserve(target);
           }
-        });
+        }
       },
       { root, rootMargin, threshold },
     );
@@ -97,19 +97,15 @@
     await tick();
 
     if (elements.length > 0) {
-      const newElements = elements.filter(
-        (el) => el && !prevElements.includes(el),
-      );
-      newElements.forEach((el) => {
+      const newElements = elements.filter((el) => el && !prevElements.includes(el));
+      for (const el of newElements) {
         if (el) observer?.observe(el);
-      });
+      }
 
-      const removedElements = prevElements.filter(
-        (el) => el && !elements.includes(el),
-      );
-      removedElements.forEach((el) => {
+      const removedElements = prevElements.filter((el) => el && !elements.includes(el));
+      for (const el of removedElements) {
         if (el) observer?.unobserve(el);
-      });
+      }
 
       prevElements = [...elements];
     }
@@ -119,15 +115,17 @@
       prevElements = [];
       initialize();
 
-      elements
-        .filter((el) => el)
-        .forEach((el) => {
-          if (el) observer?.observe(el);
-        });
+      for (const el of elements.filter((el) => el)) {
+        if (el) observer?.observe(el);
+      }
     }
 
     prevRootMargin = rootMargin;
   });
 </script>
 
-<slot {observer} {elementIntersections} {elementEntries} />
+<slot
+  {observer}
+  {elementIntersections}
+  {elementEntries}
+/>

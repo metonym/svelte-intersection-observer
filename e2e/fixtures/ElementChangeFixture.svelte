@@ -8,16 +8,32 @@
 
 <header class:intersecting>
   {intersecting ? "Element is in view" : "Element is not in view"}
-  <button data-testid="switch" on:click={() => (element = elementB)}>
+  <button
+    data-testid="switch"
+    on:click={() => (element = elementB)}
+  >
     Switch
   </button>
 </header>
 
-<IntersectionObserver {element} bind:intersecting>
-  <div data-testid="element-a" bind:this={element}>A</div>
+<IntersectionObserver
+  {element}
+  bind:intersecting
+>
+  <div
+    data-testid="element-a"
+    bind:this={element}
+  >
+    A
+  </div>
 </IntersectionObserver>
 
-<div data-testid="element-b" bind:this={elementB}>B</div>
+<div
+  data-testid="element-b"
+  bind:this={elementB}
+>
+  B
+</div>
 
 <style>
   header {

@@ -7,7 +7,11 @@
   $: elements = [ref1];
 </script>
 
-<MultipleIntersectionObserver {elements} {rootMargin} let:elementIntersections>
+<MultipleIntersectionObserver
+  {elements}
+  {rootMargin}
+  let:elementIntersections
+>
   <header>
     {elementIntersections.get(ref1) ? "Element is in view" : "Element is not in view"}
     <button
