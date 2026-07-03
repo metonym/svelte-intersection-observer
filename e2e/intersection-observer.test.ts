@@ -1,51 +1,37 @@
-import { test, expect } from "@playwright/experimental-ct-svelte";
-import Basic from "./Basic.svelte";
-import ElementChange from "./ElementChange.svelte";
-import Once from "./Once.svelte";
-import Root from "./Root.svelte";
-import RootMargin from "./RootMargin.svelte";
-import RootMarginChange from "./RootMarginChange.svelte";
-import Multiple from "./Multiple.svelte";
-import MultipleBasic from "./MultipleBasic.svelte";
-import MultipleBinding from "./MultipleBinding.svelte";
-import MultipleElementsChange from "./MultipleElementsChange.svelte";
-import MultipleOnce from "./MultipleOnce.svelte";
-import MultipleRoot from "./MultipleRoot.svelte";
-import MultipleRootMarginChange from "./MultipleRootMarginChange.svelte";
-import Threshold from "./Threshold.svelte";
-import MultipleThreshold from "./MultipleThreshold.svelte";
+import { test, expect } from "@playwright/test";
 
 test.use({ viewport: { width: 1200, height: 600 } });
 
-test("Basic", async ({ mount, page }) => {
-  const component = await mount(Basic);
+test("Basic", async ({ page }) => {
+  await page.goto("/basic.html");
+  const app = page.locator("#app");
 
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
   await expect(page.locator("header")).toHaveText(/Element is in view/);
-  await expect(component).toHaveText(/Hello world/);
+  await expect(app).toHaveText(/Hello world/);
 });
 
-test("Once", async ({ mount, page }) => {
-  const component = await mount(Once);
+test("Once", async ({ page }) => {
+  await page.goto("/once.html");
+  const app = page.locator("#app");
 
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
   await expect(page.locator("header")).toHaveText(/Element is in view/);
-  await expect(component).toHaveText(/Hello world/);
+  await expect(app).toHaveText(/Hello world/);
 
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(page.locator("header")).toHaveText(/Element is in view/);
-  await expect(component).toHaveText(/Hello world/);
+  await expect(app).toHaveText(/Hello world/);
 });
 
 test("Once - does not re-dispatch intersect on unrelated updates", async ({
-  mount,
   page,
 }) => {
-  await mount(Once);
+  await page.goto("/once.html");
 
   await expect(page.getByTestId("intersect-count")).toHaveText(
     /Intersect count: 0/,
@@ -66,8 +52,9 @@ test("Once - does not re-dispatch intersect on unrelated updates", async ({
   );
 });
 
-test("Root margin", async ({ mount, page }) => {
-  const component = await mount(RootMargin);
+test("Root margin", async ({ page }) => {
+  await page.goto("/root-margin.html");
+  const app = page.locator("#app");
 
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
   await page.evaluate(() => window.scrollTo(0, 200));
@@ -75,14 +62,13 @@ test("Root margin", async ({ mount, page }) => {
 
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await expect(page.locator("header")).toHaveText(/Element is in view/);
-  await expect(component).toHaveText(/Hello world/);
+  await expect(app).toHaveText(/Hello world/);
 });
 
 test("Element - switching the observed element retargets the observer", async ({
-  mount,
   page,
 }) => {
-  await mount(ElementChange);
+  await page.goto("/element-change.html");
 
   await expect(page.locator("header")).toHaveText(/Element is in view/);
 
@@ -94,10 +80,9 @@ test("Element - switching the observed element retargets the observer", async ({
 });
 
 test("Root margin - reinitializes the observer when changed at runtime", async ({
-  mount,
   page,
 }) => {
-  await mount(RootMarginChange);
+  await page.goto("/root-margin-change.html");
 
   await page.evaluate(() => window.scrollTo(0, 200));
   await expect(page.locator("header")).toHaveText(/Element is in view/);
@@ -107,10 +92,9 @@ test("Root margin - reinitializes the observer when changed at runtime", async (
 });
 
 test("Multiple elements - reinitializes the observer when root margin changes at runtime", async ({
-  mount,
   page,
 }) => {
-  await mount(MultipleRootMarginChange);
+  await page.goto("/multiple-root-margin-change.html");
 
   await page.evaluate(() => window.scrollTo(0, 200));
   await expect(page.locator("header")).toHaveText(/Element is in view/);
@@ -120,10 +104,10 @@ test("Multiple elements - reinitializes the observer when root margin changes at
 });
 
 test("Root - uses a custom scroll container instead of the viewport", async ({
-  mount,
   page,
 }) => {
-  const component = await mount(Root);
+  await page.goto("/root.html");
+  const app = page.locator("#app");
 
   await expect(page.getByTestId("status")).toHaveText(
     /Element is not in view/,
@@ -134,14 +118,13 @@ test("Root - uses a custom scroll container instead of the viewport", async ({
   });
 
   await expect(page.getByTestId("status")).toHaveText(/Element is in view/);
-  await expect(component).toHaveText(/Hello world/);
+  await expect(app).toHaveText(/Hello world/);
 });
 
 test("Multiple elements - uses a custom scroll container instead of the viewport", async ({
-  mount,
   page,
 }) => {
-  await mount(MultipleRoot);
+  await page.goto("/multiple-root.html");
 
   await expect(page.getByTestId("status")).toHaveText(
     /Element is not in view/,
@@ -155,10 +138,10 @@ test("Multiple elements - uses a custom scroll container instead of the viewport
 });
 
 test("Threshold - requires a minimum visible ratio before intersecting", async ({
-  mount,
   page,
 }) => {
-  const component = await mount(Threshold);
+  await page.goto("/threshold.html");
+  const app = page.locator("#app");
 
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
 
@@ -167,14 +150,13 @@ test("Threshold - requires a minimum visible ratio before intersecting", async (
 
   await page.evaluate(() => window.scrollTo(0, 550));
   await expect(page.locator("header")).toHaveText(/Element is in view/);
-  await expect(component).toHaveText(/Hello world/);
+  await expect(app).toHaveText(/Hello world/);
 });
 
 test("Multiple elements - threshold requires a minimum visible ratio", async ({
-  mount,
   page,
 }) => {
-  await mount(MultipleThreshold);
+  await page.goto("/multiple-threshold.html");
 
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
 
@@ -185,8 +167,8 @@ test("Multiple elements - threshold requires a minimum visible ratio", async ({
   await expect(page.locator("header")).toHaveText(/Element is in view/);
 });
 
-test("Multiple elements", async ({ mount, page }) => {
-  await mount(Multiple);
+test("Multiple elements", async ({ page }) => {
+  await page.goto("/multiple.html");
 
   await expect(page.getByTestId("item-1-status")).toHaveText(
     /Item 1 is not visible/,
@@ -243,8 +225,8 @@ test("Multiple elements", async ({ mount, page }) => {
   );
 });
 
-test("Multiple elements - once", async ({ mount, page }) => {
-  await mount(MultipleOnce);
+test("Multiple elements - once", async ({ page }) => {
+  await page.goto("/multiple-once.html");
 
   await expect(page.getByTestId("item-1-status")).toHaveText(
     /Item 1 is not visible/,
@@ -278,10 +260,9 @@ test("Multiple elements - once", async ({ mount, page }) => {
 });
 
 test("Multiple elements - elements array add/remove retargets the observer", async ({
-  mount,
   page,
 }) => {
-  await mount(MultipleElementsChange);
+  await page.goto("/multiple-elements-change.html");
 
   await expect(page.getByTestId("item-1-status")).toHaveText(
     /Item 1 is not visible/,
@@ -314,8 +295,8 @@ test("Multiple elements - elements array add/remove retargets the observer", asy
   );
 });
 
-test("Multiple elements - basic pattern", async ({ mount, page }) => {
-  await mount(MultipleBasic);
+test("Multiple elements - basic pattern", async ({ page }) => {
+  await page.goto("/multiple-basic.html");
 
   await expect(page.getByTestId("item-1-indicator")).toHaveText(/Item 1: ✗/);
   await expect(page.getByTestId("item-2-indicator")).toHaveText(/Item 2: ✗/);
@@ -343,8 +324,8 @@ test("Multiple elements - basic pattern", async ({ mount, page }) => {
   await expect(page.getByTestId("item-2-indicator")).toHaveText(/Item 2: ✗/);
 });
 
-test("Multiple elements - binding pattern", async ({ mount, page }) => {
-  await mount(MultipleBinding);
+test("Multiple elements - binding pattern", async ({ page }) => {
+  await page.goto("/multiple-binding.html");
 
   await expect(page.getByTestId("header-status")).toHaveText(
     /No items visible/,
