@@ -12,15 +12,15 @@
     "package": "bun scripts/npm-package.ts",
     "test:types": "bun --bun svelte-check --workspace tests --tsgo",
     "test:e2e": "playwright test",
-    "format": "bun --bun prettier --write . --cache"
+    "lint": "biome check --write .",
+    "lint:changed": "biome check --write --changed --since=master --no-errors-on-unmatched ."
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.2",
     "@playwright/test": "^1.61.1",
     "@sveltejs/vite-plugin-svelte": "^2.5.3",
     "@types/bun": "^1.3.6",
     "@typescript/native-preview": "^7.0.0-dev.20260703.1",
-    "prettier": "^3.8.0",
-    "prettier-plugin-svelte": "^3.4.1",
     "svelte": "3.59.2",
     "svelte-check": "^4.7.1",
     "svelte-readme": "^3.6.3",
@@ -40,10 +40,5 @@
     "viewport",
     "lazy-loading",
     "conditional"
-  ],
-  "prettier": {
-    "plugins": [
-      "prettier-plugin-svelte"
-    ]
-  }
+  ]
 }
