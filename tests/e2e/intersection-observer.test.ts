@@ -79,6 +79,16 @@ test("Root margin - reinitializes the observer when changed at runtime", async (
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
 });
 
+test("Threshold - reinitializes the observer when changed at runtime", async ({ page }) => {
+  await page.goto("/threshold-change.html");
+
+  await page.evaluate(() => window.scrollTo(0, 300));
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
+
+  await page.getByTestId("raise-threshold").click();
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+});
+
 test("Action - use:intersect dispatches observe/intersect events and honors once", async ({ page }) => {
   await page.goto("/action.html");
   const app = page.locator("#app");
