@@ -1,12 +1,14 @@
 import { test, expect } from "@playwright/experimental-ct-svelte";
 import Basic from "./Basic.svelte";
 import Once from "./Once.svelte";
+import Root from "./Root.svelte";
 import RootMargin from "./RootMargin.svelte";
 import RootMarginChange from "./RootMarginChange.svelte";
 import Multiple from "./Multiple.svelte";
 import MultipleBasic from "./MultipleBasic.svelte";
 import MultipleBinding from "./MultipleBinding.svelte";
 import MultipleOnce from "./MultipleOnce.svelte";
+import MultipleRoot from "./MultipleRoot.svelte";
 import MultipleRootMarginChange from "./MultipleRootMarginChange.svelte";
 import Threshold from "./Threshold.svelte";
 import MultipleThreshold from "./MultipleThreshold.svelte";
@@ -98,6 +100,41 @@ test("Multiple elements - reinitializes the observer when root margin changes at
 
   await page.getByTestId("shrink-root-margin").click();
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
+});
+
+test("Root - uses a custom scroll container instead of the viewport", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(Root);
+
+  await expect(page.getByTestId("status")).toHaveText(
+    /Element is not in view/,
+  );
+
+  await page.getByTestId("container").evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+
+  await expect(page.getByTestId("status")).toHaveText(/Element is in view/);
+  await expect(component).toHaveText(/Hello world/);
+});
+
+test("Multiple elements - uses a custom scroll container instead of the viewport", async ({
+  mount,
+  page,
+}) => {
+  await mount(MultipleRoot);
+
+  await expect(page.getByTestId("status")).toHaveText(
+    /Element is not in view/,
+  );
+
+  await page.getByTestId("container").evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+
+  await expect(page.getByTestId("status")).toHaveText(/Element is in view/);
 });
 
 test("Threshold - requires a minimum visible ratio before intersecting", async ({
