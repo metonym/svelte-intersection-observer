@@ -176,22 +176,22 @@ As an alternative to the `IntersectionObserver` component, use the `intersect` a
 <script>
   import { intersect } from "svelte-intersection-observer";
 
-  let intersecting = false;
+  let actionIntersecting = false;
 </script>
 
-<header class:intersecting>
-  {intersecting ? "Element is in view" : "Element is not in view"}
+<header class:intersecting={actionIntersecting}>
+  {actionIntersecting ? "Element is in view" : "Element is not in view"}
 </header>
 
 <div
   use:intersect={{ once: true }}
-  on:observe={(e) => (intersecting = e.detail.isIntersecting)}
+  on:observe={(e) => (actionIntersecting = e.detail.isIntersecting)}
 >
   Hello world
 </div>
 ```
 
-Options passed to `use:intersect={{ ... }}` are reactive — updating `root`, `rootMargin`, or `threshold` re-initializes the underlying observer.
+Options passed to `use:intersect` are reactive — updating `root`, `rootMargin`, or `threshold` re-initializes the underlying observer.
 
 ### Multiple elements
 
