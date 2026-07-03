@@ -12,12 +12,14 @@
   let entry: Props["entry"];
   let element: Props["element"];
   let observer: Props["observer"];
+  let skip: Props["skip"] = false;
 
   $: entry?.isIntersecting;
 </script>
 
 <SvelteIntersectionObserver
   {element}
+  {skip}
   bind:observer
   bind:intersecting
   on:observe={(e) => {

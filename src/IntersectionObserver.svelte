@@ -46,6 +46,14 @@
    */
   export let observer = null;
 
+  /**
+   * Set to `true` to pause observing without disconnecting the
+   * observer or losing `entry`/`intersecting` state. Set back to
+   * `false` to resume.
+   * @type {boolean}
+   */
+  export let skip = false;
+
   import { afterUpdate, createEventDispatcher, onMount, tick } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -59,6 +67,8 @@
 
   /** @type {null | HTMLElement} */
   let prevElement = null;
+
+  let prevSkip = skip;
 
   const initialize = () => {
     observer = new IntersectionObserver(
@@ -95,10 +105,15 @@
     await tick();
 
     if (element !== null && element !== prevElement) {
-      observer?.observe(element);
+      if (!skip) observer?.observe(element);
 
       if (prevElement !== null) observer?.unobserve(prevElement);
       prevElement = element;
+    }
+
+    if (skip !== prevSkip && element !== null) {
+      if (skip) observer?.unobserve(element);
+      else observer?.observe(element);
     }
 
     if (rootMargin !== prevRootMargin || threshold !== prevThreshold || root !== prevRoot) {
@@ -110,6 +125,7 @@
     prevRootMargin = rootMargin;
     prevThreshold = threshold;
     prevRoot = root;
+    prevSkip = skip;
   });
 </script>
 

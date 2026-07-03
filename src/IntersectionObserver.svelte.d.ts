@@ -53,6 +53,14 @@ export default class extends SvelteComponentTyped<
      * @default null
      */
     observer?: null | IntersectionObserver;
+
+    /**
+     * Set to `true` to pause observing without disconnecting the
+     * observer or losing `entry`/`intersecting` state. Set back to
+     * `false` to resume.
+     * @default false
+     */
+    skip?: boolean;
   },
   {
     /**
