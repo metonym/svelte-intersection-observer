@@ -6,6 +6,7 @@ import RootMarginChange from "./RootMarginChange.svelte";
 import Multiple from "./Multiple.svelte";
 import MultipleBasic from "./MultipleBasic.svelte";
 import MultipleBinding from "./MultipleBinding.svelte";
+import MultipleOnce from "./MultipleOnce.svelte";
 import MultipleRootMarginChange from "./MultipleRootMarginChange.svelte";
 
 test.use({ viewport: { width: 1200, height: 600 } });
@@ -152,6 +153,40 @@ test("Multiple elements", async ({ mount, page }) => {
   );
   await expect(page.getByTestId("item-3-status")).toHaveText(
     /Item 3 is not visible/,
+  );
+});
+
+test("Multiple elements - once", async ({ mount, page }) => {
+  await mount(MultipleOnce);
+
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+  await expect(page.getByTestId("item-1-count")).toHaveText(
+    /Item 1 intersect count: 0/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight + 50));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
+  );
+  await expect(page.getByTestId("item-1-count")).toHaveText(
+    /Item 1 intersect count: 1/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
+  );
+  await expect(page.getByTestId("item-1-count")).toHaveText(
+    /Item 1 intersect count: 1/,
+  );
+
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+  await expect(page.getByTestId("item-2-count")).toHaveText(
+    /Item 2 intersect count: 0/,
   );
 });
 
