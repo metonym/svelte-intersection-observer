@@ -5,7 +5,8 @@ export default defineConfig({
   timeout: 10_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : undefined,
+  retries: process.env.CI ? 2 : 0,
   reporter: "html",
   use: {
     baseURL: "http://localhost:4173",
