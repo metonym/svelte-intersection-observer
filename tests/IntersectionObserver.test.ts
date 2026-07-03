@@ -8,6 +8,8 @@ import MultipleBasic from "./MultipleBasic.svelte";
 import MultipleBinding from "./MultipleBinding.svelte";
 import MultipleOnce from "./MultipleOnce.svelte";
 import MultipleRootMarginChange from "./MultipleRootMarginChange.svelte";
+import Threshold from "./Threshold.svelte";
+import MultipleThreshold from "./MultipleThreshold.svelte";
 
 test.use({ viewport: { width: 1200, height: 600 } });
 
@@ -96,6 +98,37 @@ test("Multiple elements - reinitializes the observer when root margin changes at
 
   await page.getByTestId("shrink-root-margin").click();
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
+});
+
+test("Threshold - requires a minimum visible ratio before intersecting", async ({
+  mount,
+  page,
+}) => {
+  const component = await mount(Threshold);
+
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+  await page.evaluate(() => window.scrollTo(0, 200));
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+  await page.evaluate(() => window.scrollTo(0, 550));
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
+  await expect(component).toHaveText(/Hello world/);
+});
+
+test("Multiple elements - threshold requires a minimum visible ratio", async ({
+  mount,
+  page,
+}) => {
+  await mount(MultipleThreshold);
+
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+  await page.evaluate(() => window.scrollTo(0, 200));
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+  await page.evaluate(() => window.scrollTo(0, 550));
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
 });
 
 test("Multiple elements", async ({ mount, page }) => {
