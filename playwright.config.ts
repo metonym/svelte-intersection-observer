@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: "./tests/e2e",
   timeout: 10_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -32,8 +32,8 @@ export default defineConfig({
     // which transforms modules on demand through a single process. Locally,
     // keep the dev server for fast iteration (HMR, no build step).
     command: process.env.CI
-      ? "bunx vite build --config e2e/vite.config.ts && bunx vite preview --config e2e/vite.config.ts --port 4173 --strictPort"
-      : "bunx vite --config e2e/vite.config.ts --port 4173",
+      ? "bunx vite build --config tests/e2e/vite.config.ts && bunx vite preview --config tests/e2e/vite.config.ts --port 4173 --strictPort"
+      : "bunx vite --config tests/e2e/vite.config.ts --port 4173",
     port: 4173,
     reuseExistingServer: !process.env.CI,
   },
