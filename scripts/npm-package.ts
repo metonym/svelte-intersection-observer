@@ -12,11 +12,7 @@ await Bun.write("./package/LICENSE", Bun.file("./LICENSE"));
 
 await $`cp -r ./src/* ./package/`;
 
-const pkgJson = await pkg.json();
-
-delete pkgJson.scripts;
-delete pkgJson.devDependencies;
-delete pkgJson.prettier;
+const { scripts, devDependencies, ...pkgJson } = await pkg.json();
 
 pkgJson.main = "./index.js";
 pkgJson.types = "./index.d.ts";

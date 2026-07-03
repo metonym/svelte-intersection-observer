@@ -3,8 +3,8 @@
    * Run `bun test:types` to test the type definitions of the component using `svelte-check`.
    */
 
-  import SvelteIntersectionObserver from "svelte-intersection-observer";
   import type { ComponentProps } from "svelte";
+  import SvelteIntersectionObserver from "svelte-intersection-observer";
 
   type Props = ComponentProps<SvelteIntersectionObserver>;
 

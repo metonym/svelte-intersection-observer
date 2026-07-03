@@ -46,7 +46,7 @@
    */
   export let observer = null;
 
-  import { tick, createEventDispatcher, afterUpdate, onMount } from "svelte";
+  import { afterUpdate, createEventDispatcher, onMount, tick } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -59,7 +59,7 @@
   const initialize = () => {
     observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((_entry) => {
+        for (const _entry of entries) {
           entry = _entry;
           intersecting = _entry.isIntersecting;
 
@@ -70,7 +70,7 @@
 
             if (element && once) observer?.unobserve(element);
           }
-        });
+        }
       },
       { root, rootMargin, threshold },
     );
@@ -107,4 +107,8 @@
   });
 </script>
 
-<slot {intersecting} {entry} {observer} />
+<slot
+  {intersecting}
+  {entry}
+  {observer}
+/>

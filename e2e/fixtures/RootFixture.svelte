@@ -15,7 +15,11 @@
   data-testid="container"
   style="height: 200px; overflow-y: auto;"
 >
-  <IntersectionObserver {element} root={container} bind:intersecting>
+  <IntersectionObserver
+    {element}
+    root={container}
+    bind:intersecting
+  >
     <div
       bind:this={element}
       style="margin-top: 400px; height: 100px; background-color: #376462; color: #fff;"

@@ -1,4 +1,4 @@
-import RootFixture from "./RootFixture.svelte";
 import { mount } from "./mount";
+import RootFixture from "./RootFixture.svelte";
 
 mount(RootFixture);

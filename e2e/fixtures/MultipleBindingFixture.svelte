@@ -6,9 +6,7 @@
   let elementIntersections = new Map<HTMLElement | null, boolean>();
 
   $: elements = [ref1, ref2];
-  $: anyItemVisible = Array.from(elementIntersections.values()).some(
-    (visible) => visible,
-  );
+  $: anyItemVisible = Array.from(elementIntersections.values()).some((visible) => visible);
 </script>
 
 <MultipleIntersectionObserver
@@ -29,9 +27,7 @@
     {#each elements as element, index}
       {@const visible = elementIntersections.get(element)}
       {#if visible}
-        <p data-testid="item-{index + 1}-status">
-          Item {index + 1} is visible
-        </p>
+        <p data-testid="item-{index + 1}-status">Item {index + 1} is visible</p>
       {/if}
     {/each}
   </header>
