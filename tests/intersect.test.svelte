@@ -5,7 +5,7 @@
 
   import { type IntersectActionOptions, intersect } from "svelte-intersection-observer";
 
-  let options: IntersectActionOptions = { once: true, rootMargin: "0px", threshold: 0 };
+  let options: IntersectActionOptions = { once: true, rootMargin: "0px", threshold: 0, skip: false };
 </script>
 
 <div

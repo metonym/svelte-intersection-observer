@@ -191,7 +191,7 @@ As an alternative to the `IntersectionObserver` component, use the `intersect` a
 </div>
 ```
 
-Options passed to `use:intersect` are reactive — updating `root`, `rootMargin`, or `threshold` re-initializes the underlying observer.
+Options passed to `use:intersect` are reactive — updating `root`, `rootMargin`, or `threshold` re-initializes the underlying observer. Updating `skip` toggles observing on the existing observer without re-initializing it.
 
 ### Multiple elements
 
@@ -348,6 +348,7 @@ The `e.detail` for both events includes:
 | rootMargin | Margin offset of the containing element                       | `string`                                                            | `"0px"`        |
 | threshold  | Percentage of element visibility to trigger an event          | `number` between 0 and 1, or an array of `number`s between 0 and 1 | `0`            |
 | once       | Unobserve the element after the first intersection event      | `boolean`                                                           | `false`        |
+| skip       | Pause observing without disconnecting the observer            | `boolean`                                                           | `false`        |
 
 #### Dispatched events
 

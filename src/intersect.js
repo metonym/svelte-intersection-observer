@@ -6,7 +6,7 @@
  * @param {import("./intersect.d.ts").IntersectActionOptions} [options]
  */
 export function intersect(node, options = {}) {
-  let { root = null, rootMargin = "0px", threshold = 0, once = false } = options;
+  let { root = null, rootMargin = "0px", threshold = 0, once = false, skip = false } = options;
 
   /** @type {IntersectionObserver} */
   let observer;
@@ -27,12 +27,14 @@ export function intersect(node, options = {}) {
     );
 
   observer = createObserver();
-  observer.observe(node);
+  if (!skip) observer.observe(node);
 
   return {
     /** @param {import("./intersect.d.ts").IntersectActionOptions} [newOptions] */
     update(newOptions = {}) {
       once = newOptions.once ?? false;
+
+      const newSkip = newOptions.skip ?? false;
 
       const configChanged =
         (newOptions.root ?? null) !== root ||
@@ -46,8 +48,13 @@ export function intersect(node, options = {}) {
 
         observer.disconnect();
         observer = createObserver();
-        observer.observe(node);
+        if (!newSkip) observer.observe(node);
+      } else if (newSkip !== skip) {
+        if (newSkip) observer.unobserve(node);
+        else observer.observe(node);
       }
+
+      skip = newSkip;
     },
     destroy() {
       observer.disconnect();
