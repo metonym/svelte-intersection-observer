@@ -111,14 +111,18 @@
     await tick();
 
     if (elements.length > 0) {
-      const newElements = elements.filter((el) => el && !prevElements.includes(el));
+      const newElements = elements.filter(
+        (el) => el && !prevElements.includes(el),
+      );
       if (!skip) {
         for (const el of newElements) {
           if (el) observer?.observe(el);
         }
       }
 
-      const removedElements = prevElements.filter((el) => el && !elements.includes(el));
+      const removedElements = prevElements.filter(
+        (el) => el && !elements.includes(el),
+      );
       for (const el of removedElements) {
         if (el) observer?.unobserve(el);
       }
@@ -134,7 +138,11 @@
       }
     }
 
-    if (rootMargin !== prevRootMargin || threshold !== prevThreshold || root !== prevRoot) {
+    if (
+      rootMargin !== prevRootMargin ||
+      threshold !== prevThreshold ||
+      root !== prevRoot
+    ) {
       observer?.disconnect();
       prevElements = [];
       initialize();

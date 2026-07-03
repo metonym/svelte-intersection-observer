@@ -26,8 +26,12 @@
     >
       Remove item 1
     </button>
-    <p data-testid="item-1-status">Item 1 {elementIntersections.get(ref1) ? "is visible" : "is not visible"}</p>
-    <p data-testid="item-2-status">Item 2 {elementIntersections.get(ref2) ? "is visible" : "is not visible"}</p>
+    <p data-testid="item-1-status">
+      Item 1 {elementIntersections.get(ref1) ? "is visible" : "is not visible"}
+    </p>
+    <p data-testid="item-2-status">
+      Item 2 {elementIntersections.get(ref2) ? "is visible" : "is not visible"}
+    </p>
   </header>
 
   <div style="display: flex; margin-top: calc(100vh + 1px);">

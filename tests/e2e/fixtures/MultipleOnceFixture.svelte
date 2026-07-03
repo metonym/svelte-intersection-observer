@@ -19,8 +19,12 @@
   }}
 >
   <header>
-    <p data-testid="item-1-status">Item 1 {elementIntersections.get(ref1) ? "is visible" : "is not visible"}</p>
-    <p data-testid="item-2-status">Item 2 {elementIntersections.get(ref2) ? "is visible" : "is not visible"}</p>
+    <p data-testid="item-1-status">
+      Item 1 {elementIntersections.get(ref1) ? "is visible" : "is not visible"}
+    </p>
+    <p data-testid="item-2-status">
+      Item 2 {elementIntersections.get(ref2) ? "is visible" : "is not visible"}
+    </p>
     <p data-testid="item-1-count">Item 1 intersect count: {intersectCount1}</p>
     <p data-testid="item-2-count">Item 2 intersect count: {intersectCount2}</p>
   </header>

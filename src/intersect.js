@@ -6,7 +6,13 @@
  * @param {import("./intersect.d.ts").IntersectActionOptions} [options]
  */
 export function intersect(node, options = {}) {
-  let { root = null, rootMargin = "0px", threshold = 0, once = false, skip = false } = options;
+  let {
+    root = null,
+    rootMargin = "0px",
+    threshold = 0,
+    once = false,
+    skip = false,
+  } = options;
 
   /** @type {IntersectionObserver} */
   let observer;
