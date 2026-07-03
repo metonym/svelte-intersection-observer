@@ -4,7 +4,8 @@ on:
     branches: [master]
 
 jobs:
-  test:
+  test-and-deploy-docs:
+    name: Test & Deploy Docs
     runs-on: ubuntu-latest
     # Official image includes Chromium/Firefox/WebKit + system deps.
     # Bump tag with @playwright/test in package.json.
@@ -15,30 +16,33 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
       HOME: /root
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       # Playwright image is minimal; setup-bun extracts a zip and needs unzip.
       # Try installing first (fast path) and only refresh apt lists if needed.
-      - run: DEBIAN_FRONTEND=noninteractive apt-get install -y unzip || { apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y unzip; }
+      - name: Install unzip
+        run: DEBIAN_FRONTEND=noninteractive apt-get install -y unzip || { apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y unzip; }
 
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+      - name: Set up bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
 
       # --ignore-scripts skips Playwright's browser download since browsers
       # are already baked into the image at PLAYWRIGHT_BROWSERS_PATH.
       - name: Install dependencies
         run: bun ci --ignore-scripts
 
-      - name: Run unit tests
+      - name: Check types
         run: bun run test:types
 
       - name: Run e2e tests
         run: bun run test:e2e
 
-      - name: Build docs
+      - name: Build documentation
         if: github.ref == 'refs/heads/master'
         run: bun run build
 
-      - name: Deploy docs
+      - name: Deploy documentation
         if: github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
