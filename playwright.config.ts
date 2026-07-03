@@ -1,25 +1,15 @@
-import { defineConfig, devices } from "@playwright/experimental-ct-svelte";
-import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
-import pkg from "./package.json" with { type: "json" };
+import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./",
+  testDir: "./e2e",
   timeout: 10_000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
+    baseURL: "http://localhost:4173",
     trace: "on-first-retry",
-    ctPort: 3100,
-    ctViteConfig: {
-      plugins: [svelte({ preprocess: vitePreprocess() })],
-      resolve: {
-        alias: {
-          [pkg.name]: pkg.svelte,
-        },
-      },
-    },
   },
   projects: [
     {
@@ -35,4 +25,15 @@ export default defineConfig({
       use: { ...devices["Desktop Safari"] },
     },
   ],
+  webServer: {
+    // In CI, serve a production build via `vite preview`: bundled static
+    // assets load far faster and with less variance than the dev server,
+    // which transforms modules on demand through a single process. Locally,
+    // keep the dev server for fast iteration (HMR, no build step).
+    command: process.env.CI
+      ? "bunx vite build --config e2e/vite.config.ts && bunx vite preview --config e2e/vite.config.ts --port 4173 --strictPort"
+      : "bunx vite --config e2e/vite.config.ts --port 4173",
+    port: 4173,
+    reuseExistingServer: !process.env.CI,
+  },
 });
