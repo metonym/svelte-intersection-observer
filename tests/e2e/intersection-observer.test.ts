@@ -105,6 +105,21 @@ test("Skip - pauses observing without losing state, resumes on toggle", async ({
   await expect(header).toHaveText(/Element is not in view/);
 });
 
+test("Multiple elements - skip pauses observing without losing state, resumes on toggle", async ({ page }) => {
+  await page.goto("/multiple-skip.html");
+
+  await expect(page.getByTestId("item-1-status")).toHaveText(/Item 1 is not visible/);
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight + 50));
+  await expect(page.getByTestId("item-1-status")).toHaveText(/Item 1 is visible/);
+
+  await page.getByTestId("toggle-skip").click();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(page.getByTestId("item-1-status")).toHaveText(/Item 1 is visible/);
+
+  await page.getByTestId("toggle-skip").click();
+  await expect(page.getByTestId("item-1-status")).toHaveText(/Item 1 is not visible/);
+});
+
 test("Action - skip pauses observing without losing state, resumes on toggle", async ({ page }) => {
   await page.goto("/action-skip.html");
   const header = page.locator("header");

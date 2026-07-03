@@ -47,6 +47,14 @@
    */
   export let observer = null;
 
+  /**
+   * Set to `true` to pause observing all elements without disconnecting
+   * the observer or losing `elementIntersections`/`elementEntries` state.
+   * Set back to `false` to resume.
+   * @type {boolean}
+   */
+  export let skip = false;
+
   import { afterUpdate, createEventDispatcher, onMount, tick } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -60,6 +68,8 @@
 
   /** @type {(HTMLElement | null)[]} */
   let prevElements = [];
+
+  let prevSkip = skip;
 
   const initialize = () => {
     observer = new IntersectionObserver(
@@ -102,8 +112,10 @@
 
     if (elements.length > 0) {
       const newElements = elements.filter((el) => el && !prevElements.includes(el));
-      for (const el of newElements) {
-        if (el) observer?.observe(el);
+      if (!skip) {
+        for (const el of newElements) {
+          if (el) observer?.observe(el);
+        }
       }
 
       const removedElements = prevElements.filter((el) => el && !elements.includes(el));
@@ -114,19 +126,30 @@
       prevElements = [...elements];
     }
 
+    if (skip !== prevSkip) {
+      for (const el of elements.filter((el) => el)) {
+        if (!el) continue;
+        if (skip) observer?.unobserve(el);
+        else observer?.observe(el);
+      }
+    }
+
     if (rootMargin !== prevRootMargin || threshold !== prevThreshold || root !== prevRoot) {
       observer?.disconnect();
       prevElements = [];
       initialize();
 
-      for (const el of elements.filter((el) => el)) {
-        if (el) observer?.observe(el);
+      if (!skip) {
+        for (const el of elements.filter((el) => el)) {
+          if (el) observer?.observe(el);
+        }
       }
     }
 
     prevRootMargin = rootMargin;
     prevThreshold = threshold;
     prevRoot = root;
+    prevSkip = skip;
   });
 </script>
 
