@@ -66,10 +66,6 @@
           elementIntersections.set(target, _entry.isIntersecting);
           elementEntries.set(target, _entry);
 
-          // Trigger reactivity.
-          elementIntersections = new Map(elementIntersections);
-          elementEntries = new Map(elementEntries);
-
           dispatch("observe", { entry: _entry, target });
 
           if (_entry.isIntersecting) {
@@ -77,6 +73,10 @@
             if (once) observer?.unobserve(target);
           }
         }
+
+        // Trigger reactivity once per batch, not once per entry.
+        elementIntersections = new Map(elementIntersections);
+        elementEntries = new Map(elementEntries);
       },
       { root, rootMargin, threshold },
     );
