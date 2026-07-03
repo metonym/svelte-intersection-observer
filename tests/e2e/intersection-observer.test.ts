@@ -89,6 +89,22 @@ test("Threshold - reinitializes the observer when changed at runtime", async ({ 
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
 });
 
+test("Skip - pauses observing without losing state, resumes on toggle", async ({ page }) => {
+  await page.goto("/skip.html");
+  const header = page.locator("header");
+
+  await expect(header).toHaveText(/Element is not in view/);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(header).toHaveText(/Element is in view/);
+
+  await page.getByTestId("toggle-skip").click();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(header).toHaveText(/Element is in view/);
+
+  await page.getByTestId("toggle-skip").click();
+  await expect(header).toHaveText(/Element is not in view/);
+});
+
 test("Action - skip pauses observing without losing state, resumes on toggle", async ({ page }) => {
   await page.goto("/action-skip.html");
   const header = page.locator("header");

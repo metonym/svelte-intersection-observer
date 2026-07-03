@@ -77,6 +77,27 @@ Set `once` to `true` for the intersection event to occur only once. The `element
 </IntersectionObserver>
 ```
 
+### Pausing with `skip`
+
+Set `skip` to `true` to unobserve without disconnecting the underlying observer or losing `entry`/`intersecting` state — useful for pausing tracking on an off-screen carousel panel or a closed modal. Set `skip` back to `false` to resume; unlike `once`, this can be toggled back and forth. `MultipleIntersectionObserver` and the `intersect` action support the same `skip` option.
+
+```svelte
+<script>
+  import IntersectionObserver from "svelte-intersection-observer";
+
+  let element;
+  let paused = false;
+</script>
+
+<button on:click={() => (paused = !paused)}>
+  {paused ? "Resume" : "Pause"}
+</button>
+
+<IntersectionObserver {element} skip={paused} let:intersecting>
+  <div bind:this={element}>{intersecting ? "In view" : "Not in view"}</div>
+</IntersectionObserver>
+```
+
 ### `let:intersecting`
 
 An alternative to binding to the `intersecting` prop is to use the `let:` directive.
@@ -283,6 +304,7 @@ This avoids instantiating a new observer for every element.
 | threshold    | Percentage of element visibility to trigger an event        | `number` between 0 and 1, or an array of `number`s between 0 and 1                                                  | `0`           |
 | entry        | Observed element metadata                                   | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
 | observer     | `IntersectionObserver` instance                             | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
+| skip         | Pause observing without losing `entry`/`intersecting` state | `boolean`                                                                                                           | `false`       |
 
 **Note**: the observed `element` must render with a non-zero width and height for `threshold` values greater than `0` to have any effect — this is a constraint of the underlying [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), not something this component controls.
 
