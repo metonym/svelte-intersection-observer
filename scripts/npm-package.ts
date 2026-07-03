@@ -24,6 +24,7 @@ pkgJson.exports = {
   ".": {
     types: "./index.d.ts",
     svelte: "./index.js",
+    import: "./index.js",
   },
   "./*.svelte": {
     types: "./*.svelte.d.ts",
