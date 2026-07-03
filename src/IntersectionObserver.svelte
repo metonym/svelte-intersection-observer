@@ -62,6 +62,14 @@
         entries.forEach((_entry) => {
           entry = _entry;
           intersecting = _entry.isIntersecting;
+
+          dispatch("observe", entry);
+
+          if (_entry.isIntersecting) {
+            dispatch("intersect", entry);
+
+            if (element && once) observer?.unobserve(element);
+          }
         });
       },
       { root, rootMargin, threshold },
@@ -80,16 +88,6 @@
   });
 
   afterUpdate(async () => {
-    if (entry !== null) {
-      dispatch("observe", entry);
-
-      if (entry.isIntersecting) {
-        dispatch("intersect", entry);
-
-        if (element && once) observer?.unobserve(element);
-      }
-    }
-
     await tick();
 
     if (element !== null && element !== prevElement) {

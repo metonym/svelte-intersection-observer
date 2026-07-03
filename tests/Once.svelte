@@ -3,13 +3,24 @@
 
   let element: null | HTMLDivElement = null;
   let intersecting = false;
+  let intersectCount = 0;
+  let unrelated = 0;
 </script>
 
 <header class:intersecting>
   {intersecting ? "Element is in view" : "Element is not in view"}
+  <p data-testid="intersect-count">Intersect count: {intersectCount}</p>
+  <button data-testid="unrelated-button" on:click={() => (unrelated += 1)}>
+    Unrelated: {unrelated}
+  </button>
 </header>
 
-<IntersectionObserver {element} bind:intersecting once>
+<IntersectionObserver
+  {element}
+  bind:intersecting
+  once
+  on:intersect={() => (intersectCount += 1)}
+>
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>
 
