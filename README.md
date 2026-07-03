@@ -168,6 +168,31 @@ To detect when a user has scrolled to the end of a scrollable container, place a
 </div>
 ```
 
+### `use:intersect` action
+
+As an alternative to the `IntersectionObserver` component, use the `intersect` action to observe an element directly with `use:`, without a `bind:this` reference or wrapper markup. Listen for `on:observe`/`on:intersect` on the observed element itself.
+
+```svelte
+<script>
+  import { intersect } from "svelte-intersection-observer";
+
+  let intersecting = false;
+</script>
+
+<header class:intersecting>
+  {intersecting ? "Element is in view" : "Element is not in view"}
+</header>
+
+<div
+  use:intersect={{ once: true }}
+  on:observe={(e) => (intersecting = e.detail.isIntersecting)}
+>
+  Hello world
+</div>
+```
+
+Options passed to `use:intersect={{ ... }}` are reactive — updating `root`, `rootMargin`, or `threshold` re-initializes the underlying observer.
+
 ### Multiple elements
 
 For performance, use `MultipleIntersectionObserver` to observe multiple elements.
@@ -312,6 +337,24 @@ The `e.detail` for both events includes:
 | observer             | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)                                         |
 | elementIntersections | `Map<HTMLElement \| null, boolean>`                                                                                                     |
 | elementEntries       | `Map<HTMLElement \| null,` [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)`>` |
+
+### `intersect` action
+
+#### Options
+
+| Name       | Description                                                  | Type                                                                | Default value |
+| :--------- | :------------------------------------------------------------ | :------------------------------------------------------------------- | :------------- |
+| root       | Containing element                                            | `null` or `HTMLElement`                                             | `null`         |
+| rootMargin | Margin offset of the containing element                       | `string`                                                            | `"0px"`        |
+| threshold  | Percentage of element visibility to trigger an event          | `number` between 0 and 1, or an array of `number`s between 0 and 1 | `0`            |
+| once       | Unobserve the element after the first intersection event      | `boolean`                                                           | `false`        |
+
+#### Dispatched events
+
+- **on:observe**: fired on the element when it is first observed or whenever an intersection change occurs
+- **on:intersect**: fired on the element when it is intersecting the viewport
+
+The `e.detail` dispatched by the `observe` and `intersect` events is an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) interface.
 
 ### `IntersectionObserverEntry` interface
 

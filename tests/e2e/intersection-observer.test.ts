@@ -79,6 +79,34 @@ test("Root margin - reinitializes the observer when changed at runtime", async (
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
 });
 
+test("Action - use:intersect dispatches observe/intersect events and honors once", async ({ page }) => {
+  await page.goto("/action.html");
+  const app = page.locator("#app");
+
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+  await expect(page.getByTestId("intersect-count")).toHaveText(/Intersect count: 0/);
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
+  await expect(app).toHaveText(/Hello world/);
+  await expect(page.getByTestId("intersect-count")).toHaveText(/Intersect count: 1/);
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("intersect-count")).toHaveText(/Intersect count: 1/);
+});
+
+test("Action - reinitializes the observer when the parameter changes at runtime", async ({ page }) => {
+  await page.goto("/action-root-margin-change.html");
+
+  await page.evaluate(() => window.scrollTo(0, 200));
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
+
+  await page.getByTestId("shrink-root-margin").click();
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+});
+
 test("Multiple elements - reinitializes the observer when root margin changes at runtime", async ({ page }) => {
   await page.goto("/multiple-root-margin-change.html");
 
