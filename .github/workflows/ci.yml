@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: bun ci --ignore-scripts
 
+      - name: Run Biome
+        run: bunx biome ci --error-on-warnings
+
       - name: Check types
         run: bun run test:types
 
