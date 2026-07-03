@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/experimental-ct-svelte";
 import Basic from "./Basic.svelte";
+import ElementChange from "./ElementChange.svelte";
 import Once from "./Once.svelte";
 import Root from "./Root.svelte";
 import RootMargin from "./RootMargin.svelte";
@@ -7,6 +8,7 @@ import RootMarginChange from "./RootMarginChange.svelte";
 import Multiple from "./Multiple.svelte";
 import MultipleBasic from "./MultipleBasic.svelte";
 import MultipleBinding from "./MultipleBinding.svelte";
+import MultipleElementsChange from "./MultipleElementsChange.svelte";
 import MultipleOnce from "./MultipleOnce.svelte";
 import MultipleRoot from "./MultipleRoot.svelte";
 import MultipleRootMarginChange from "./MultipleRootMarginChange.svelte";
@@ -74,6 +76,21 @@ test("Root margin", async ({ mount, page }) => {
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await expect(page.locator("header")).toHaveText(/Element is in view/);
   await expect(component).toHaveText(/Hello world/);
+});
+
+test("Element - switching the observed element retargets the observer", async ({
+  mount,
+  page,
+}) => {
+  await mount(ElementChange);
+
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
+
+  await page.getByTestId("switch").click();
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
 });
 
 test("Root margin - reinitializes the observer when changed at runtime", async ({
@@ -257,6 +274,43 @@ test("Multiple elements - once", async ({ mount, page }) => {
   );
   await expect(page.getByTestId("item-2-count")).toHaveText(
     /Item 2 intersect count: 0/,
+  );
+});
+
+test("Multiple elements - elements array add/remove retargets the observer", async ({
+  mount,
+  page,
+}) => {
+  await mount(MultipleElementsChange);
+
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+
+  await page.getByTestId("add-item-2").click();
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is visible/,
+  );
+
+  await page.getByTestId("remove-item-1").click();
+  await page.evaluate(() => window.scrollTo(0, 0));
+
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
   );
 });
 
