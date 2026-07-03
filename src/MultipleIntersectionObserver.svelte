@@ -51,8 +51,12 @@
 
   const dispatch = createEventDispatcher();
 
-  /** @type {null | string} */
-  let prevRootMargin = null;
+  let prevRootMargin = rootMargin;
+
+  let prevThreshold = threshold;
+
+  /** @type {null | HTMLElement} */
+  let prevRoot = root;
 
   /** @type {(HTMLElement | null)[]} */
   let prevElements = [];
@@ -110,7 +114,7 @@
       prevElements = [...elements];
     }
 
-    if (prevRootMargin && rootMargin !== prevRootMargin) {
+    if (rootMargin !== prevRootMargin || threshold !== prevThreshold || root !== prevRoot) {
       observer?.disconnect();
       prevElements = [];
       initialize();
@@ -121,6 +125,8 @@
     }
 
     prevRootMargin = rootMargin;
+    prevThreshold = threshold;
+    prevRoot = root;
   });
 </script>
 
