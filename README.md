@@ -259,6 +259,8 @@ This avoids instantiating a new observer for every element.
 | entry        | Observed element metadata                                   | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
 | observer     | `IntersectionObserver` instance                             | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
 
+**Note**: the observed `element` must render with a non-zero width and height for `threshold` values greater than `0` to have any effect — this is a constraint of the underlying [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), not something this component controls.
+
 #### Dispatched events
 
 - **on:observe**: fired when the element is first observed or whenever an intersection change occurs
