@@ -32,6 +32,31 @@ test("Once", async ({ mount, page }) => {
   await expect(component).toHaveText(/Hello world/);
 });
 
+test("Once - does not re-dispatch intersect on unrelated updates", async ({
+  mount,
+  page,
+}) => {
+  await mount(Once);
+
+  await expect(page.getByTestId("intersect-count")).toHaveText(
+    /Intersect count: 0/,
+  );
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
+  await expect(page.getByTestId("intersect-count")).toHaveText(
+    /Intersect count: 1/,
+  );
+
+  await page.getByTestId("unrelated-button").click();
+  await page.getByTestId("unrelated-button").click();
+  await page.getByTestId("unrelated-button").click();
+
+  await expect(page.getByTestId("intersect-count")).toHaveText(
+    /Intersect count: 1/,
+  );
+});
+
 test("Root margin", async ({ mount, page }) => {
   const component = await mount(RootMargin);
 
