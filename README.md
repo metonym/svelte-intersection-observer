@@ -199,6 +199,47 @@ This avoids instantiating a new observer for every element.
 </MultipleIntersectionObserver>
 ```
 
+### Using with `#each`
+
+`MultipleIntersectionObserver` also handles a dynamic, `#each`-driven list — give every item its own slot in an array/object instead of one shared variable.
+
+```svelte
+<script>
+  import { MultipleIntersectionObserver } from "svelte-intersection-observer";
+
+  let items = [
+    { id: 1, text: "Item 1" },
+    { id: 2, text: "Item 2" },
+    { id: 3, text: "Item 3" },
+  ];
+
+  let refs = [];
+  let itemsContainer;
+
+  $: itemElements = refs;
+</script>
+
+<MultipleIntersectionObserver
+  elements={itemElements}
+  root={itemsContainer}
+  let:elementIntersections
+>
+  <header>
+    {#each items as item, i}
+      <div class:intersecting={elementIntersections.get(refs[i])}>
+        {item.text}: {elementIntersections.get(refs[i]) ? "✓" : "✗"}
+      </div>
+    {/each}
+  </header>
+
+  <div bind:this={itemsContainer}>
+    {#each items as item, i (item.id)}
+      <div bind:this={refs[i]}>{item.text}</div>
+    {/each}
+  </div>
+</MultipleIntersectionObserver>
+```
+
 ## API
 
 ### IntersectionObserver
