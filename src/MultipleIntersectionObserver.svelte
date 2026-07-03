@@ -54,9 +54,6 @@
   /** @type {null | string} */
   let prevRootMargin = null;
 
-  /** @type {null | HTMLElement} */
-  let prevElement = null;
-
   /** @type {(HTMLElement | null)[]} */
   let prevElements = [];
 
@@ -119,7 +116,6 @@
 
     if (prevRootMargin && rootMargin !== prevRootMargin) {
       observer?.disconnect();
-      prevElement = null;
       prevElements = [];
       initialize();
 
