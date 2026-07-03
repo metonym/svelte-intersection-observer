@@ -230,6 +230,31 @@ test("Multiple elements - basic pattern", async ({ page }) => {
   await expect(page.getByTestId("item-2-indicator")).toHaveText(/Item 2: ✗/);
 });
 
+test("Each block - bind:this + bind:intersecting per item does not deadlock and tracks independently", async ({
+  page,
+}) => {
+  await page.goto("/each-binding.html", { timeout: 5_000 });
+
+  await expect(page.getByTestId("section-one")).toHaveText(/not visible/);
+  await expect(page.getByTestId("section-two")).toHaveText(/not visible/);
+  await expect(page.getByTestId("section-three")).toHaveText(/not visible/);
+
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight + 50));
+  await expect(page.getByTestId("section-one")).toHaveText(/visible/, { timeout: 5_000 });
+  await expect(page.getByTestId("section-two")).toHaveText(/not visible/);
+  await expect(page.getByTestId("section-three")).toHaveText(/not visible/);
+
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2.5 + 50));
+  await expect(page.getByTestId("section-two")).toHaveText(/visible/, { timeout: 5_000 });
+  await expect(page.getByTestId("section-one")).toHaveText(/not visible/);
+  await expect(page.getByTestId("section-three")).toHaveText(/not visible/);
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("section-three")).toHaveText(/visible/, { timeout: 5_000 });
+  await expect(page.getByTestId("section-one")).toHaveText(/not visible/);
+  await expect(page.getByTestId("section-two")).toHaveText(/not visible/);
+});
+
 test("Multiple elements - binding pattern", async ({ page }) => {
   await page.goto("/multiple-binding.html");
 
