@@ -337,6 +337,7 @@ The `e.detail` dispatched by the `observe` and `intersect` events is an [`Inters
 | elementIntersections | Map of each element to its intersection state         | `Map<HTMLElement \| null, boolean>`                                                                                                     | `new Map()`   |
 | elementEntries       | Map of each element to its latest entry               | `Map<HTMLElement \| null,` [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)`>` | `new Map()`   |
 | observer             | `IntersectionObserver` instance                       | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)                               | `null`        |
+| skip                 | Pause observing all elements without losing state     | `boolean`                                                                                                                               | `false`       |
 
 #### Dispatched events
 

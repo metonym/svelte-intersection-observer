@@ -12,6 +12,7 @@
   let elementIntersections: Props["elementIntersections"] = new Map();
   let elementEntries: Props["elementEntries"] = new Map();
   let observer: Props["observer"];
+  let skip: Props["skip"] = false;
 
   let ref1: null | HTMLDivElement = null;
   let ref2: null | HTMLDivElement = null;
@@ -21,6 +22,7 @@
 
 <MultipleIntersectionObserver
   {elements}
+  {skip}
   bind:observer
   bind:elementIntersections
   bind:elementEntries
