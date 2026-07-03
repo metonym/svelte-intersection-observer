@@ -136,6 +136,38 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 </IntersectionObserver>
 ```
 
+### Detecting scroll to end
+
+To detect when a user has scrolled to the end of a scrollable container, place a sentinel element after the content and set `root` to the container. `intersecting` becomes `true` once the sentinel scrolls into view.
+
+```svelte
+<script>
+  import IntersectionObserver from "svelte-intersection-observer";
+
+  let container;
+  let sentinel;
+  let reachedEnd;
+</script>
+
+<header class:intersecting={reachedEnd}>
+  {reachedEnd ? "You've reached the end" : "Keep scrolling..."}
+</header>
+
+<div bind:this={container} style:height="auto">
+  {#each Array.from({ length: 20 }) as _, i}
+    <p>Paragraph {i + 1}</p>
+  {/each}
+
+  <IntersectionObserver
+    element={sentinel}
+    root={container}
+    bind:intersecting={reachedEnd}
+  >
+    <div bind:this={sentinel} style="height: 1px;" />
+  </IntersectionObserver>
+</div>
+```
+
 ### Multiple elements
 
 For performance, use `MultipleIntersectionObserver` to observe multiple elements.
