@@ -27,6 +27,13 @@ export interface IntersectActionOptions {
    * @default false
    */
   once?: boolean;
+
+  /**
+   * Set to `true` to pause observing without disconnecting the
+   * observer. Set back to `false` to resume.
+   * @default false
+   */
+  skip?: boolean;
 }
 
 /**
