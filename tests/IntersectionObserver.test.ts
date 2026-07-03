@@ -2,9 +2,11 @@ import { test, expect } from "@playwright/experimental-ct-svelte";
 import Basic from "./Basic.svelte";
 import Once from "./Once.svelte";
 import RootMargin from "./RootMargin.svelte";
+import RootMarginChange from "./RootMarginChange.svelte";
 import Multiple from "./Multiple.svelte";
 import MultipleBasic from "./MultipleBasic.svelte";
 import MultipleBinding from "./MultipleBinding.svelte";
+import MultipleRootMarginChange from "./MultipleRootMarginChange.svelte";
 
 test.use({ viewport: { width: 1200, height: 600 } });
 
@@ -67,6 +69,32 @@ test("Root margin", async ({ mount, page }) => {
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await expect(page.locator("header")).toHaveText(/Element is in view/);
   await expect(component).toHaveText(/Hello world/);
+});
+
+test("Root margin - reinitializes the observer when changed at runtime", async ({
+  mount,
+  page,
+}) => {
+  await mount(RootMarginChange);
+
+  await page.evaluate(() => window.scrollTo(0, 200));
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
+
+  await page.getByTestId("shrink-root-margin").click();
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+});
+
+test("Multiple elements - reinitializes the observer when root margin changes at runtime", async ({
+  mount,
+  page,
+}) => {
+  await mount(MultipleRootMarginChange);
+
+  await page.evaluate(() => window.scrollTo(0, 200));
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
+
+  await page.getByTestId("shrink-root-margin").click();
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
 });
 
 test("Multiple elements", async ({ mount, page }) => {
