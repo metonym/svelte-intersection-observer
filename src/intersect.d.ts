@@ -46,6 +46,8 @@ export const intersect: Action<
   IntersectActionOptions | undefined,
   {
     "on:observe"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
-    "on:intersect"?: (event: CustomEvent<IntersectionObserverEntry & { isIntersecting: true }>) => void;
+    "on:intersect"?: (
+      event: CustomEvent<IntersectionObserverEntry & { isIntersecting: true }>,
+    ) => void;
   }
 >;

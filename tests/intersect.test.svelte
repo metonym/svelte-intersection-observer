@@ -3,9 +3,17 @@
    * Run `bun test:types` to test the type definitions of the action using `svelte-check`.
    */
 
-  import { type IntersectActionOptions, intersect } from "svelte-intersection-observer";
+  import {
+    type IntersectActionOptions,
+    intersect,
+  } from "svelte-intersection-observer";
 
-  let options: IntersectActionOptions = { once: true, rootMargin: "0px", threshold: 0, skip: false };
+  let options: IntersectActionOptions = {
+    once: true,
+    rootMargin: "0px",
+    threshold: 0,
+    skip: false,
+  };
 </script>
 
 <div

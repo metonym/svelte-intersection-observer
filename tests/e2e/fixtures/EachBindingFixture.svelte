@@ -2,9 +2,21 @@
   import IntersectionObserver from "svelte-intersection-observer";
 
   const sections = [
-    { id: "one", node: undefined as undefined | HTMLElement, intersecting: undefined as undefined | boolean },
-    { id: "two", node: undefined as undefined | HTMLElement, intersecting: undefined as undefined | boolean },
-    { id: "three", node: undefined as undefined | HTMLElement, intersecting: undefined as undefined | boolean },
+    {
+      id: "one",
+      node: undefined as undefined | HTMLElement,
+      intersecting: undefined as undefined | boolean,
+    },
+    {
+      id: "two",
+      node: undefined as undefined | HTMLElement,
+      intersecting: undefined as undefined | boolean,
+    },
+    {
+      id: "three",
+      node: undefined as undefined | HTMLElement,
+      intersecting: undefined as undefined | boolean,
+    },
   ];
 </script>
 

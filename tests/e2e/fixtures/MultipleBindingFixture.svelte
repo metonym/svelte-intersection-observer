@@ -6,7 +6,9 @@
   let elementIntersections = new Map<HTMLElement | null, boolean>();
 
   $: elements = [ref1, ref2];
-  $: anyItemVisible = Array.from(elementIntersections.values()).some((visible) => visible);
+  $: anyItemVisible = Array.from(elementIntersections.values()).some(
+    (visible) => visible,
+  );
 </script>
 
 <MultipleIntersectionObserver

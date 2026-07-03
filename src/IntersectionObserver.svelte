@@ -116,7 +116,11 @@
       else observer?.observe(element);
     }
 
-    if (rootMargin !== prevRootMargin || threshold !== prevThreshold || root !== prevRoot) {
+    if (
+      rootMargin !== prevRootMargin ||
+      threshold !== prevThreshold ||
+      root !== prevRoot
+    ) {
       observer?.disconnect();
       prevElement = null;
       initialize();

@@ -73,7 +73,9 @@ export default class extends SvelteComponentTyped<
      * Dispatched only when the element is intersecting the viewport.
      * `event.detail.isIntersecting` will only be `true`
      */
-    intersect: CustomEvent<IntersectionObserverEntry & { isIntersecting: true }>;
+    intersect: CustomEvent<
+      IntersectionObserverEntry & { isIntersecting: true }
+    >;
   },
   {
     default: {

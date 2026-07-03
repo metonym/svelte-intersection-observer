@@ -10,8 +10,7 @@
   },
   "formatter": {
     "attributePosition": "multiline",
-    "indentStyle": "space",
-    "lineWidth": 120
+    "indentStyle": "space"
   },
   "html": {
     "experimentalFullSupportEnabled": true,

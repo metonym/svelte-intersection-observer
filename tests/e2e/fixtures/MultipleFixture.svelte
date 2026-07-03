@@ -18,7 +18,9 @@
       {#if visible}
         <p data-testid="item-{index + 1}-status">Item {index + 1} is visible</p>
       {:else}
-        <p data-testid="item-{index + 1}-status">Item {index + 1} is not visible</p>
+        <p data-testid="item-{index + 1}-status">
+          Item {index + 1} is not visible
+        </p>
       {/if}
     {/each}
   </header>
