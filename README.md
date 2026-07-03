@@ -240,6 +240,8 @@ This avoids instantiating a new observer for every element.
 </MultipleIntersectionObserver>
 ```
 
+**Avoid** using the single-element `IntersectionObserver` component inside an `#each` block with one variable shared across iterations (e.g. `let node;` declared outside the loop and bound via `bind:this={node}` inside it). Every iteration overwrites the same `node`, so each observer instance keeps re-observing a moving target, which can produce an infinite update loop. Use `MultipleIntersectionObserver` with a per-item ref, as shown above, instead.
+
 ## API
 
 ### IntersectionObserver
