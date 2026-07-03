@@ -1,0 +1,56 @@
+/**
+ * Svelte action that observes `node` with the Intersection Observer API.
+ * Dispatches `observe` (on every change) and `intersect` (on entering the
+ * viewport) `CustomEvent`s on `node` — listen with `on:observe`/`on:intersect`.
+ * @param {HTMLElement} node
+ * @param {import("./intersect.d.ts").IntersectActionOptions} [options]
+ */
+export function intersect(node, options = {}) {
+  let { root = null, rootMargin = "0px", threshold = 0, once = false } = options;
+
+  /** @type {IntersectionObserver} */
+  let observer;
+
+  const createObserver = () =>
+    new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          node.dispatchEvent(new CustomEvent("observe", { detail: entry }));
+
+          if (entry.isIntersecting) {
+            node.dispatchEvent(new CustomEvent("intersect", { detail: entry }));
+            if (once) observer.unobserve(node);
+          }
+        }
+      },
+      { root, rootMargin, threshold },
+    );
+
+  observer = createObserver();
+  observer.observe(node);
+
+  return {
+    /** @param {import("./intersect.d.ts").IntersectActionOptions} [newOptions] */
+    update(newOptions = {}) {
+      once = newOptions.once ?? false;
+
+      const configChanged =
+        (newOptions.root ?? null) !== root ||
+        (newOptions.rootMargin ?? "0px") !== rootMargin ||
+        JSON.stringify(newOptions.threshold ?? 0) !== JSON.stringify(threshold);
+
+      if (configChanged) {
+        root = newOptions.root ?? null;
+        rootMargin = newOptions.rootMargin ?? "0px";
+        threshold = newOptions.threshold ?? 0;
+
+        observer.disconnect();
+        observer = createObserver();
+        observer.observe(node);
+      }
+    },
+    destroy() {
+      observer.disconnect();
+    },
+  };
+}
