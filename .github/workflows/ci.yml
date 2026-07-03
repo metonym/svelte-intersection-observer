@@ -6,21 +6,27 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Official image includes Chromium/Firefox/WebKit + system deps.
+    # Bump tag with @playwright/test in package.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      options: --ipc=host --init
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+      HOME: /root
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      # Playwright image is minimal; setup-bun extracts a zip and needs unzip.
+      # Try installing first (fast path) and only refresh apt lists if needed.
+      - run: DEBIAN_FRONTEND=noninteractive apt-get install -y unzip || { apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y unzip; }
+
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        id: playwright-cache
-        with:
-          path: /home/runner/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/bun.lock') }}
 
+      # --ignore-scripts skips Playwright's browser download since browsers
+      # are already baked into the image at PLAYWRIGHT_BROWSERS_PATH.
       - name: Install dependencies
-        run: bun ci
-
-      - name: Install Playwright binaries
-        run: bunx playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: bun ci --ignore-scripts
 
       - name: Run unit tests
         run: bun run test:types
