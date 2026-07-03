@@ -31,7 +31,7 @@
     "type": "git",
     "url": "git+https://github.com/metonym/svelte-intersection-observer.git"
   },
-  "homepage": "https://github.com/metonym/svelte-intersection-observer",
+  "homepage": "https://metonym.github.io/svelte-intersection-observer/",
   "bugs": "https://github.com/metonym/svelte-intersection-observer/issues",
   "keywords": [
     "svelte",
