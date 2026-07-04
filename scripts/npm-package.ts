@@ -18,6 +18,7 @@ delete pkgJson.scripts;
 delete pkgJson.devDependencies;
 delete pkgJson.prettier;
 
+pkgJson.svelte = "./index.js";
 pkgJson.main = "./index.js";
 pkgJson.types = "./index.d.ts";
 pkgJson.exports = {
