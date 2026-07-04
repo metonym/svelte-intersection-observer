@@ -122,8 +122,10 @@
       root !== prevRoot
     ) {
       observer?.disconnect();
-      prevElement = null;
       initialize();
+
+      if (element !== null && !skip) observer?.observe(element);
+      prevElement = element;
     }
 
     prevRootMargin = rootMargin;
