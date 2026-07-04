@@ -112,7 +112,7 @@ In the following example, the "Hello world" element will fade in when its contai
   let node;
 </script>
 
-<header />
+<header></header>
 
 <IntersectionObserver element={node} let:intersecting>
   <div bind:this={node}>
