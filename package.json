@@ -7,8 +7,9 @@
   "type": "module",
   "svelte": "./src/index.js",
   "scripts": {
-    "dev": "bun rollup -cw",
-    "build": "bun rollup -c",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "package": "bun scripts/npm-package.ts",
     "test:types": "svelte-check --workspace tests --tsgo",
     "test:e2e": "playwright test",
@@ -18,13 +19,13 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.2",
     "@playwright/test": "^1.61.1",
-    "@sveltejs/vite-plugin-svelte": "^2.5.3",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@types/bun": "^1.3.14",
     "@typescript/native-preview": "^7.0.0-dev.20260703.1",
-    "svelte": "3.59.2",
+    "svelte": "5.56.4",
     "svelte-check": "^4.7.1",
-    "svelte-readme": "^3.6.3",
-    "vite": "^4.5.14"
+    "svelte-readme": "^4.0.1",
+    "vite": "^8.1.3"
   },
   "repository": {
     "type": "git",

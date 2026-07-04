@@ -39,8 +39,8 @@ export default defineConfig({
     // which transforms modules on demand through a single process. Locally,
     // keep the dev server for fast iteration (HMR, no build step).
     command: process.env.CI
-      ? "bunx vite build --config tests/e2e/vite.config.ts && bunx vite preview --config tests/e2e/vite.config.ts --port 4173 --strictPort"
-      : "bunx vite --config tests/e2e/vite.config.ts --port 4173",
+      ? "bunx vite build --config tests/e2e/playwright.vite.config.ts && bunx vite preview --config tests/e2e/playwright.vite.config.ts --port 4173 --strictPort"
+      : "bunx vite --config tests/e2e/playwright.vite.config.ts --port 4173",
     port: 4173,
     reuseExistingServer: !process.env.CI,
   },
