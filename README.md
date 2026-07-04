@@ -255,11 +255,10 @@ This avoids instantiating a new observer for every element.
 <script>
   import { MultipleIntersectionObserver } from "svelte-intersection-observer";
 
-  let items = [
-    { id: 1, text: "Item 1" },
-    { id: 2, text: "Item 2" },
-    { id: 3, text: "Item 3" },
-  ];
+  let items = Array.from({ length: 10 }, (_, i) => ({
+    id: i + 1,
+    text: `Item ${i + 1}`,
+  }));
 
   let refs = [];
   let itemsContainer;
@@ -280,11 +279,14 @@ This avoids instantiating a new observer for every element.
     {/each}
   </header>
 
-  <div bind:this={itemsContainer} style="height: 150px; overflow-y: auto;">
+  <div
+    bind:this={itemsContainer}
+    style="height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem;"
+  >
     {#each items as item, i (item.id)}
       <div
         bind:this={refs[i]}
-        style="height: 100px; display: flex; align-items: center;"
+        style="height: 100px; display: flex; align-items: center; flex-shrink: 0;"
       >
         {item.text}
       </div>
@@ -374,13 +376,13 @@ The `e.detail` for both events includes:
 
 #### Options
 
-| Name       | Description                                                  | Type                                                                | Default value |
-| :--------- | :------------------------------------------------------------ | :------------------------------------------------------------------- | :------------- |
-| root       | Containing element                                            | `null` or `HTMLElement`                                             | `null`         |
-| rootMargin | Margin offset of the containing element                       | `string`                                                            | `"0px"`        |
-| threshold  | Percentage of element visibility to trigger an event          | `number` between 0 and 1, or an array of `number`s between 0 and 1 | `0`            |
-| once       | Unobserve the element after the first intersection event      | `boolean`                                                           | `false`        |
-| skip       | Pause observing without disconnecting the observer            | `boolean`                                                           | `false`        |
+| Name       | Description                                              | Type                                                               | Default value |
+| :--------- | :------------------------------------------------------- | :----------------------------------------------------------------- | :------------ |
+| root       | Containing element                                       | `null` or `HTMLElement`                                            | `null`        |
+| rootMargin | Margin offset of the containing element                  | `string`                                                           | `"0px"`       |
+| threshold  | Percentage of element visibility to trigger an event     | `number` between 0 and 1, or an array of `number`s between 0 and 1 | `0`           |
+| once       | Unobserve the element after the first intersection event | `boolean`                                                          | `false`       |
+| skip       | Pause observing without disconnecting the observer       | `boolean`                                                          | `false`       |
 
 #### Dispatched events
 
