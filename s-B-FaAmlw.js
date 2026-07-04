@@ -65,7 +65,7 @@ var e=Array.isArray,t=Array.prototype.indexOf,n=Array.prototype.includes,r=Array
   <span class="token keyword">let</span> <span class="token identifier">node</span><span class="token punctuation">;</span>
 <span class="token punctuation">&lt;/</span><span class="token tag">script</span><span class="token punctuation">&gt;</span>
 
-<span class="token punctuation">&lt;</span><span class="token tag">header</span> <span class="token punctuation">/&gt;</span>
+<span class="token punctuation">&lt;</span><span class="token tag">header</span><span class="token punctuation">&gt;</span><span class="token punctuation">&lt;/</span><span class="token tag">header</span><span class="token punctuation">&gt;</span>
 
 <span class="token punctuation">&lt;</span><span class="token tag">IntersectionObserver</span> <span class="token attr-name">element</span><span class="token operator">=</span><span class="token punctuation">{</span><span class="token identifier">node</span><span class="token punctuation">}</span> <span class="token attr-name">let:intersecting</span><span class="token punctuation">&gt;</span>
   <span class="token punctuation">&lt;</span><span class="token tag">div</span> <span class="token attr-name">bind:this</span><span class="token operator">=</span><span class="token punctuation">{</span><span class="token identifier">node</span><span class="token punctuation">}</span><span class="token punctuation">&gt;</span>
