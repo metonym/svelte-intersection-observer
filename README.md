@@ -85,7 +85,7 @@ Set `skip` to `true` to unobserve without disconnecting the underlying observer 
 <script>
   import IntersectionObserver from "svelte-intersection-observer";
 
-  let element;
+  let elementSkip;
   let paused = false;
 </script>
 
@@ -93,8 +93,8 @@ Set `skip` to `true` to unobserve without disconnecting the underlying observer 
   {paused ? "Resume" : "Pause"}
 </button>
 
-<IntersectionObserver {element} skip={paused} let:intersecting>
-  <div bind:this={element}>{intersecting ? "In view" : "Not in view"}</div>
+<IntersectionObserver element={elementSkip} skip={paused} let:intersecting>
+  <div bind:this={elementSkip}>{intersecting ? "In view" : "Not in view"}</div>
 </IntersectionObserver>
 ```
 
