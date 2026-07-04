@@ -191,6 +191,40 @@ To detect when a user has scrolled to the end of a scrollable container, place a
 </div>
 ```
 
+### Scrolling to a conditionally revealed element
+
+Keep the `bind:this` element outside the `{#if intersecting}` block, and only gate the animated content inside it. The bound element then stays in the DOM, so you can call `scrollIntoView()` on it whenever you want, whether or not its reveal animation has played yet.
+
+```svelte
+<script>
+  import IntersectionObserver from "svelte-intersection-observer";
+  import { fly } from "svelte/transition";
+
+  let node;
+  let intersecting;
+</script>
+
+<header class:intersecting>
+  <button
+    on:click={() => {
+      node.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }}
+  >
+    Scroll to section
+  </button>
+</header>
+
+<IntersectionObserver element={node} once bind:intersecting>
+  <div bind:this={node}>
+    {#if intersecting}
+      <section transition:fly={{ y: 50, delay: 200, duration: 300 }}>
+        Hello world
+      </section>
+    {/if}
+  </div>
+</IntersectionObserver>
+```
+
 ### `use:intersect` action
 
 As an alternative to the `IntersectionObserver` component, use the `intersect` action to observe an element directly with `use:`, without a `bind:this` reference or wrapper markup. Listen for `on:observe`/`on:intersect` on the observed element itself.
