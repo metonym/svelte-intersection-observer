@@ -14,6 +14,7 @@ await $`cp -r ./src/* ./package/`;
 
 const { scripts, devDependencies, ...pkgJson } = await pkg.json();
 
+pkgJson.svelte = "./index.js";
 pkgJson.main = "./index.js";
 pkgJson.types = "./index.d.ts";
 pkgJson.exports = {
