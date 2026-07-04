@@ -161,6 +161,8 @@ As an alternative to binding the `intersecting` prop, you can listen to the `int
 
 To detect when a user has scrolled to the end of a scrollable container, place a sentinel element after the content and set `root` to the container. `intersecting` becomes `true` once the sentinel scrolls into view.
 
+**Note**: `root` must be the scrollable element itself (i.e. it has its own `overflow`/fixed `height`), not just an ancestor of one. If `root` merely sits inside a scrollable ancestor, the sentinel scrolls along with `root` and never changes position relative to it, so it reports as permanently intersecting.
+
 ```svelte
 <script>
   import IntersectionObserver from "svelte-intersection-observer";
@@ -174,7 +176,7 @@ To detect when a user has scrolled to the end of a scrollable container, place a
   {reachedEnd ? "You've reached the end" : "Keep scrolling..."}
 </header>
 
-<div bind:this={container} style:height="auto">
+<div bind:this={container} style="height: 200px; overflow-y: auto;">
   {#each Array.from({ length: 20 }) as _, i}
     <p>Paragraph {i + 1}</p>
   {/each}
@@ -184,7 +186,7 @@ To detect when a user has scrolled to the end of a scrollable container, place a
     root={container}
     bind:intersecting={reachedEnd}
   >
-    <div bind:this={sentinel} style="height: 1px;" />
+    <div bind:this={sentinel} style="height: 1px;"></div>
   </IntersectionObserver>
 </div>
 ```
@@ -271,20 +273,27 @@ This avoids instantiating a new observer for every element.
   let:elementIntersections
 >
   <header>
-    {#each items as item, i}
+    {#each items as item, i (item.id)}
       <div class:intersecting={elementIntersections.get(refs[i])}>
         {item.text}: {elementIntersections.get(refs[i]) ? "✓" : "✗"}
       </div>
     {/each}
   </header>
 
-  <div bind:this={itemsContainer}>
+  <div bind:this={itemsContainer} style="height: 150px; overflow-y: auto;">
     {#each items as item, i (item.id)}
-      <div bind:this={refs[i]}>{item.text}</div>
+      <div
+        bind:this={refs[i]}
+        style="height: 100px; display: flex; align-items: center;"
+      >
+        {item.text}
+      </div>
     {/each}
   </div>
 </MultipleIntersectionObserver>
 ```
+
+As with the scroll-to-end example, `root` must be an element that scrolls on its own — here, `itemsContainer` has an explicit `height` and `overflow-y: auto`.
 
 **Avoid** using the single-element `IntersectionObserver` component inside an `#each` block with one variable shared across iterations (e.g. `let node;` declared outside the loop and bound via `bind:this={node}` inside it). Every iteration overwrites the same `node`, so each observer instance keeps re-observing a moving target, which can produce an infinite update loop. Use `MultipleIntersectionObserver` with a per-item ref, as shown above, instead.
 
