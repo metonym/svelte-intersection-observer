@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2](https://github.com/metonym/svelte-intersection-observer/releases/tag/v1.1.2) - 2026-07-04
+
+**Fixes**
+
+- Dispatch `observe`/`intersect` from the observer callback, not `afterUpdate` (#106)
+- `MultipleIntersectionObserver`: remove unused variable
+- Add import fallback to root package export (#118)
+- `IntersectionObserver`: reinitialize observer on threshold/root change
+- `MultipleIntersectionObserver`: reinitialize observer on threshold/root change
+- `package`: rewrite `svelte` field to match flattened package layout (#123)
+
 ## [1.1.1](https://github.com/metonym/svelte-intersection-observer/releases/tag/v1.1.1) - 2026-01-19
 
 **Fixes**
