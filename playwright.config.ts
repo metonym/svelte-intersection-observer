@@ -12,20 +12,27 @@ export default defineConfig({
     baseURL: "http://localhost:4173",
     trace: "on-first-retry",
   },
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
-  ],
+  projects: process.env.CI
+    ? [
+        {
+          name: "chromium",
+          use: { ...devices["Desktop Chrome"] },
+        },
+        {
+          name: "firefox",
+          use: { ...devices["Desktop Firefox"] },
+        },
+        {
+          name: "webkit",
+          use: { ...devices["Desktop Safari"] },
+        },
+      ]
+    : [
+        {
+          name: "chromium",
+          use: { ...devices["Desktop Chrome"] },
+        },
+      ],
   webServer: {
     // In CI, serve a production build via `vite preview`: bundled static
     // assets load far faster and with less variance than the dev server,
