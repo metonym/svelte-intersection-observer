@@ -13,6 +13,10 @@
   let elementEntries: Props["elementEntries"] = new Map();
   let observer: Props["observer"];
   let skip: Props["skip"] = false;
+  let once: Props["once"] = false;
+  let root: Props["root"] = null;
+  let rootMargin: Props["rootMargin"] = "0px";
+  let threshold: Props["threshold"] = 0;
 
   let ref1: null | HTMLDivElement = null;
   let ref2: null | HTMLDivElement = null;
@@ -22,6 +26,10 @@
 
 <MultipleIntersectionObserver
   {elements}
+  {once}
+  {root}
+  {rootMargin}
+  {threshold}
   {skip}
   bind:observer
   bind:elementIntersections
