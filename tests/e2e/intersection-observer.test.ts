@@ -103,6 +103,24 @@ test("Threshold - reinitializes the observer when changed at runtime", async ({
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
 });
 
+test("Threshold - value-equal but referentially-new arrays do not recreate the observer", async ({
+  page,
+}) => {
+  await page.goto("/threshold-stable.html");
+
+  await expect(page.getByTestId("observer-count")).toHaveText(
+    /Observer count: 1/,
+  );
+
+  await page.getByTestId("unrelated-button").click();
+  await page.getByTestId("unrelated-button").click();
+  await page.getByTestId("unrelated-button").click();
+
+  await expect(page.getByTestId("observer-count")).toHaveText(
+    /Observer count: 1/,
+  );
+});
+
 test("Skip - pauses observing without losing state, resumes on toggle", async ({
   page,
 }) => {

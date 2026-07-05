@@ -33,10 +33,14 @@
     children,
   } = $props();
 
-  /** @type {(HTMLElement | null)[]} */
-  let prevElements = [];
+  /** @type {Set<HTMLElement | null>} */
+  let prevElements = new Set();
 
   let prevSkip = untrack(() => skip);
+
+  const configKey = $derived(
+    `${root}|${rootMargin}|${JSON.stringify(threshold)}`,
+  );
 
   const initialize = () => {
     observer = new IntersectionObserver(
@@ -70,8 +74,12 @@
   };
 
   $effect(() => {
-    prevElements = [];
-    initialize();
+    configKey;
+
+    untrack(() => {
+      prevElements = new Set();
+      initialize();
+    });
 
     return () => {
       observer?.disconnect();
@@ -84,11 +92,13 @@
     const isSkipped = skip;
     const activeObserver = observer;
 
+    const currentSet = new Set(currentElements);
+
     const newElements = currentElements.filter(
-      (el) => el && !prevElements.includes(el),
+      (el) => el && !prevElements.has(el),
     );
-    const removedElements = prevElements.filter(
-      (el) => el && !currentElements.includes(el),
+    const removedElements = [...prevElements].filter(
+      (el) => el && !currentSet.has(el),
     );
 
     if (!isSkipped) {
@@ -109,7 +119,7 @@
       elementEntries = new Map(elementEntries);
     }
 
-    prevElements = [...currentElements];
+    prevElements = currentSet;
 
     if (isSkipped !== prevSkip) {
       for (const el of currentElements) {
