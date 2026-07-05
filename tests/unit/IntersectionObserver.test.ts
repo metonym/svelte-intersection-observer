@@ -4,6 +4,7 @@ import BasicFixture from "../e2e/fixtures/BasicFixture.svelte";
 import EachBindingFixture from "../e2e/fixtures/EachBindingFixture.svelte";
 import ElementChangeFixture from "../e2e/fixtures/ElementChangeFixture.svelte";
 import ElementNullFixture from "../e2e/fixtures/ElementNullFixture.svelte";
+import ElementUndefinedFixture from "../e2e/fixtures/ElementUndefinedFixture.svelte";
 import OnceElementChangeFixture from "../e2e/fixtures/OnceElementChangeFixture.svelte";
 import OnceFixture from "../e2e/fixtures/OnceFixture.svelte";
 import RootChangeFixture from "../e2e/fixtures/RootChangeFixture.svelte";
@@ -282,6 +283,39 @@ describe("IntersectionObserver", () => {
 
   test("element becoming null unobserves it and resets intersecting/entry; restoring re-observes", () => {
     const rendered = render(ElementNullFixture);
+    cleanup = rendered.cleanup;
+    const el = rendered.target.querySelector("div");
+    const header = rendered.target.querySelector("header");
+    const clearButton = rendered.target.querySelector('[data-testid="clear"]');
+    const restoreButton = rendered.target.querySelector(
+      '[data-testid="restore"]',
+    );
+    if (
+      !el ||
+      !header ||
+      !(clearButton instanceof HTMLButtonElement) ||
+      !(restoreButton instanceof HTMLButtonElement)
+    ) {
+      throw new Error("fixture markup missing");
+    }
+
+    const observer = MockIntersectionObserver.last();
+    flushSync(() => observer.trigger([{ target: el, isIntersecting: true }]));
+    expect(header.textContent).toContain("Element is in view");
+
+    clearButton.click();
+    flushSync();
+
+    expect(observer.observedElements.has(el)).toBe(false);
+    expect(header.textContent).toContain("Element is not in view");
+
+    restoreButton.click();
+    flushSync();
+    expect(observer.observedElements.has(el)).toBe(true);
+  });
+
+  test("element becoming undefined unobserves it and resets intersecting/entry; restoring re-observes", () => {
+    const rendered = render(ElementUndefinedFixture);
     cleanup = rendered.cleanup;
     const el = rendered.target.querySelector("div");
     const header = rendered.target.querySelector("header");

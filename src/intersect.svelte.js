@@ -4,7 +4,7 @@ import { fromAction } from "svelte/attachments";
  * Svelte action that observes `node` with the Intersection Observer API.
  * Dispatches `observe` (on every change) and `intersect` (on entering the
  * viewport) `CustomEvent`s on `node` — listen with `onobserve`/`onintersect`.
- * @param {HTMLElement} node
+ * @param {Element} node
  * @param {import("./intersect.svelte.d.ts").IntersectActionOptions} [options]
  */
 export function intersect(node, options = {}) {

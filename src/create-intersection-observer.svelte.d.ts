@@ -9,7 +9,7 @@ export interface IntersectionObserverState {
   readonly entry: null | IntersectionObserverEntry;
 
   /** Attachment to apply to the observed element via `{@attach}`. */
-  attach: Attachment<HTMLElement>;
+  attach: Attachment<Element>;
 }
 
 /**

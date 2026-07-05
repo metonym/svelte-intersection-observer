@@ -130,10 +130,10 @@ In this example, "Hello world" fades in when its containing element intersects t
 
 | Name         | Description                                                 | Type                                                                                                                | Default value |
 | :----------- | :---------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :------------ |
-| element      | Observed element                                            | `null` or `HTMLElement`                                                                                             | `null`        |
+| element      | Observed element                                            | `null` \| `undefined` \| `Element`                                                                                   | `null`        |
 | once         | Unobserve the element after the first intersection event    | `boolean`                                                                                                           | `false`       |
 | intersecting | `true` if the observed element is intersecting the viewport | `boolean`                                                                                                           | `false`       |
-| root         | Containing element                                          | `null` or `HTMLElement`                                                                                             | `null`        |
+| root         | Containing element                                          | `Element` \| `Document` \| `null`                                                                                    | `null`        |
 | rootMargin   | Margin offset of the containing element                     | `string`                                                                                                            | `"0px"`       |
 | threshold    | Percentage of element visibility to trigger an event        | `number` between 0 and 1, or an array of `number`s between 0 and 1                                                  | `0`           |
 | entry        | Observed element metadata                                   | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
@@ -237,9 +237,9 @@ As with the scroll-to-end example, `root` must be an element that scrolls on its
 
 | Name                 | Description                                           | Type                                                                                                                                    | Default value |
 | :------------------- | :---------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
-| elements             | Array of HTML elements to observe                     | `Array<HTMLElement \| null>`                                                                                                            | `[]`          |
+| elements             | Array of elements to observe                          | `ReadonlyArray<Element \| null \| undefined>`                                                                                           | `[]`          |
 | once                 | Unobserve elements after the first intersection event | `boolean`                                                                                                                               | `false`       |
-| root                 | Containing element                                    | `null` or `HTMLElement`                                                                                                                 | `null`        |
+| root                 | Containing element                                    | `Element` \| `Document` \| `null`                                                                                                        | `null`        |
 | rootMargin           | Margin offset of the containing element               | `string`                                                                                                                                | `"0px"`       |
 | threshold            | Percentage of element visibility to trigger an event  | `number` between 0 and 1, or an array of `number`s between 0 and 1                                                                      | `0`           |
 | elementIntersections | Map of each element to its intersection state         | `Map<HTMLElement \| null, boolean>`                                                                                                     | `new Map()`   |

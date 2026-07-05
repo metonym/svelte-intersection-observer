@@ -21,7 +21,7 @@ import { expectTypeOf, test } from "vitest";
 
 test("IntersectActionOptions accepts the documented shape", () => {
   expectTypeOf<IntersectActionOptions>().toEqualTypeOf<{
-    root?: null | HTMLElement;
+    root?: Element | Document | null;
     rootMargin?: string;
     threshold?: number | number[];
     once?: boolean;
@@ -32,7 +32,7 @@ test("IntersectActionOptions accepts the documented shape", () => {
 test("intersect is a Svelte action dispatching observe/intersect handlers", () => {
   expectTypeOf(intersect).toEqualTypeOf<
     Action<
-      HTMLElement,
+      Element,
       IntersectActionOptions | undefined,
       {
         onobserve?: (event: CustomEvent<IntersectionObserverEntry>) => void;
@@ -46,15 +46,22 @@ test("intersect is a Svelte action dispatching observe/intersect handlers", () =
   >();
 });
 
-test("intersectAttachment returns an Attachment<HTMLElement>", () => {
+test("intersect is usable on SVGElement", () => {
+  expectTypeOf(intersect).toBeCallableWith(
+    {} as SVGElement,
+    {} as IntersectActionOptions,
+  );
+});
+
+test("intersectAttachment returns an Attachment<Element>", () => {
   expectTypeOf(intersectAttachment).toEqualTypeOf<
-    (getOptions?: () => IntersectActionOptions) => Attachment<HTMLElement>
+    (getOptions?: () => IntersectActionOptions) => Attachment<Element>
   >();
 });
 
 test("IntersectGroupSharedOptions covers only the observer-wide options", () => {
   expectTypeOf<IntersectGroupSharedOptions>().toEqualTypeOf<{
-    root?: null | HTMLElement;
+    root?: Element | Document | null;
     rootMargin?: string;
     threshold?: number | number[];
   }>();
@@ -75,7 +82,7 @@ test("IntersectionGroup.attach accepts node options and returns an Attachment", 
   expectTypeOf<IntersectionGroup>()
     .toHaveProperty("attach")
     .toEqualTypeOf<
-      (options?: IntersectGroupNodeOptions) => Attachment<HTMLElement>
+      (options?: IntersectGroupNodeOptions) => Attachment<Element>
     >();
 });
 
@@ -89,7 +96,7 @@ test("IntersectionObserverState exposes readonly intersecting/entry and an attac
   expectTypeOf<IntersectionObserverState>().toEqualTypeOf<{
     readonly intersecting: boolean;
     readonly entry: null | IntersectionObserverEntry;
-    attach: Attachment<HTMLElement>;
+    attach: Attachment<Element>;
   }>();
 });
 
@@ -123,4 +130,37 @@ test("MultipleIntersectionObserver component exposes its bindable props", () => 
   expectTypeOf<
     ComponentProps<typeof MultipleIntersectionObserver>
   >().toEqualTypeOf<MultipleIntersectionObserverProps>();
+});
+
+test("IntersectionObserverProps.element accepts SVGElement | undefined and null", () => {
+  expectTypeOf<SVGElement | undefined>().toExtend<
+    IntersectionObserverProps["element"]
+  >();
+  expectTypeOf<null>().toExtend<IntersectionObserverProps["element"]>();
+});
+
+test("IntersectionObserverProps.root accepts Document", () => {
+  expectTypeOf<Document>().toExtend<IntersectionObserverProps["root"]>();
+});
+
+test("MultipleIntersectionObserverProps.elements accepts (HTMLElement | undefined)[]", () => {
+  expectTypeOf<(HTMLElement | undefined)[]>().toExtend<
+    MultipleIntersectionObserverProps["elements"]
+  >();
+});
+
+test("MultipleIntersectionObserverProps.root accepts Document", () => {
+  expectTypeOf<Document>().toExtend<
+    MultipleIntersectionObserverProps["root"]
+  >();
+});
+
+test("elementIntersections.get type-checks with an HTMLElement | undefined ref", () => {
+  const ref = {} as HTMLElement | undefined;
+  const elementIntersections = {} as NonNullable<
+    MultipleIntersectionObserverProps["elementIntersections"]
+  >;
+  expectTypeOf(elementIntersections.get(ref)).toEqualTypeOf<
+    boolean | undefined
+  >();
 });

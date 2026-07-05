@@ -2,11 +2,11 @@ import type { Component, Snippet } from "svelte";
 
 export interface MultipleIntersectionObserverProps {
   /**
-   * Array of HTML Elements to observe.
+   * Array of Elements to observe.
    * Use this for better performance when observing multiple elements.
    * @default []
    */
-  elements?: (HTMLElement | null)[];
+  elements?: ReadonlyArray<Element | null | undefined>;
 
   /**
    * Set to `true` to unobserve the element
@@ -20,7 +20,7 @@ export interface MultipleIntersectionObserverProps {
    * Defaults to the browser viewport.
    * @default null
    */
-  root?: null | HTMLElement;
+  root?: Element | Document | null | undefined;
 
   /**
    * Margin offset of the containing element.
@@ -39,13 +39,13 @@ export interface MultipleIntersectionObserverProps {
    * Map of element to its intersection state.
    * @default new Map()
    */
-  elementIntersections?: Map<HTMLElement | null, boolean>;
+  elementIntersections?: Map<Element | null | undefined, boolean>;
 
   /**
    * Map of element to its latest entry.
    * @default new Map()
    */
-  elementEntries?: Map<HTMLElement | null, IntersectionObserverEntry>;
+  elementEntries?: Map<Element | null | undefined, IntersectionObserverEntry>;
 
   /**
    * `IntersectionObserver` instance.
@@ -67,7 +67,7 @@ export interface MultipleIntersectionObserverProps {
    */
   onobserve?: (detail: {
     entry: IntersectionObserverEntry;
-    target: HTMLElement;
+    target: Element;
   }) => void;
 
   /**
@@ -75,15 +75,18 @@ export interface MultipleIntersectionObserverProps {
    */
   onintersect?: (detail: {
     entry: IntersectionObserverEntry & { isIntersecting: true };
-    target: HTMLElement;
+    target: Element;
   }) => void;
 
   children?: Snippet<
     [
       {
         observer: null | IntersectionObserver;
-        elementIntersections: Map<HTMLElement | null, boolean>;
-        elementEntries: Map<HTMLElement | null, IntersectionObserverEntry>;
+        elementIntersections: Map<Element | null | undefined, boolean>;
+        elementEntries: Map<
+          Element | null | undefined,
+          IntersectionObserverEntry
+        >;
       },
     ]
   >;
