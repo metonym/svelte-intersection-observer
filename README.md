@@ -405,7 +405,7 @@ A bare `intersect`/`intersectAttachment` inside an `#each` block creates one nat
 {/each}
 ```
 
-`root`/`rootMargin`/`threshold` configure the one shared observer, so they're passed once to `createIntersectionGroup` itself (as a function, for the same reactive-dependency-tracking reason `intersectAttachment` takes one) rather than per element:
+`root`/`rootMargin`/`threshold` configure the one shared observer, so they're passed once to `createIntersectionGroup` itself (as a function) rather than per element:
 
 ```js
 const group = createIntersectionGroup(() => ({
@@ -414,6 +414,8 @@ const group = createIntersectionGroup(() => ({
   threshold: 0.5,
 }));
 ```
+
+Shared options are reactive: when `root`, `rootMargin`, or `threshold` changes, the group rebuilds its single shared observer and re-observes every element. Note that elements whose `once` has already fired are re-observed as well.
 
 `once`, `skip`, `onobserve`, and `onintersect` are the only options that make sense per element, so those are what `group.attach(...)` accepts.
 

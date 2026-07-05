@@ -92,13 +92,19 @@ export function intersectAttachment(getOptions = () => ({})) {
  *
  * `root`/`rootMargin`/`threshold` are shared across every node in the group
  * (they configure the one underlying observer); only `once`/`skip` and the
- * `onobserve`/`onintersect` callbacks are meaningful per node.
+ * `onobserve`/`onintersect` callbacks are meaningful per node. Changing
+ * shared options rebuilds the single shared observer and re-observes every
+ * element in the group; elements whose `once` already fired are re-observed
+ * as well, so their callbacks may fire again under the new config.
  * @param {() => import("./intersect.svelte.d.ts").IntersectGroupSharedOptions} [getSharedOptions]
  * @returns {import("./intersect.svelte.d.ts").IntersectionGroup}
  */
 export function createIntersectionGroup(getSharedOptions = () => ({})) {
   /** @type {IntersectionObserver | undefined} */
   let observer;
+
+  /** Key of the shared options `observer` was last built from. */
+  let configKey = "";
 
   /** @type {Map<Element, import("./intersect.svelte.d.ts").IntersectGroupNodeOptions>} */
   const callbacks = new Map();
@@ -128,17 +134,30 @@ export function createIntersectionGroup(getSharedOptions = () => ({})) {
    */
   function attach(nodeOptions = {}) {
     return (/** @type {Element} */ node) => {
-      if (!observer && typeof IntersectionObserver !== "undefined") {
-        const {
-          root = null,
-          rootMargin = "0px",
-          threshold = 0,
-        } = getSharedOptions();
+      const {
+        root = null,
+        rootMargin = "0px",
+        threshold = 0,
+      } = getSharedOptions();
+      const key = `${rootMargin}|${JSON.stringify(threshold)}`;
+      const rootChanged =
+        observer !== null && observer !== undefined && observer.root !== root;
+
+      if (
+        typeof IntersectionObserver !== "undefined" &&
+        (!observer || key !== configKey || rootChanged)
+      ) {
+        observer?.disconnect();
         observer = new IntersectionObserver(handleEntries, {
           root,
           rootMargin,
           threshold,
         });
+        configKey = key;
+
+        for (const [el, opts] of callbacks) {
+          if (!opts.skip) observer.observe(el);
+        }
       }
 
       callbacks.set(node, nodeOptions);
@@ -151,6 +170,7 @@ export function createIntersectionGroup(getSharedOptions = () => ({})) {
         if (callbacks.size === 0) {
           observer?.disconnect();
           observer = undefined;
+          configKey = "";
         }
       };
     };
