@@ -60,3 +60,16 @@ export const intersect: Action<
 export function intersectAttachment(
   getOptions?: () => IntersectActionOptions,
 ): Attachment<HTMLElement>;
+
+// `Action`'s attribute generic only teaches svelte2tsx about `onobserve`/`onintersect`
+// for `use:intersect`; attachments have no equivalent mechanism, so `onobserve`/
+// `onintersect` must be declared as HTML attributes here for `{@attach intersectAttachment(...)}`
+// to type-check.
+declare module "svelte/elements" {
+  export interface HTMLAttributes<T> {
+    onobserve?: (event: CustomEvent<IntersectionObserverEntry>) => void;
+    onintersect?: (
+      event: CustomEvent<IntersectionObserverEntry & { isIntersecting: true }>,
+    ) => void;
+  }
+}
