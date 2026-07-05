@@ -50,6 +50,10 @@ export class MockIntersectionObserver implements IntersectionObserver {
     return this.options.rootMargin ?? "0px";
   }
 
+  get scrollMargin(): string {
+    return this.options.scrollMargin ?? "0px";
+  }
+
   get thresholds(): number[] {
     const threshold = this.options.threshold ?? 0;
     return Array.isArray(threshold) ? threshold : [threshold];
