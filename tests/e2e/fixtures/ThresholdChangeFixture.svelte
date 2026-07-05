@@ -10,7 +10,7 @@
   {intersecting ? "Element is in view" : "Element is not in view"}
   <button
     data-testid="raise-threshold"
-    on:click={() => (threshold = 0.99)}
+    onclick={() => (threshold = 0.99)}
   >
     Raise threshold
   </button>

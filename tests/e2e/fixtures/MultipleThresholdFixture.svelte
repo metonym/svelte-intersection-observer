@@ -9,15 +9,16 @@
 <MultipleIntersectionObserver
   {elements}
   threshold={0.5}
-  let:elementIntersections
 >
-  <header>
-    {elementIntersections.get(ref1)
-      ? "Element is in view"
-      : "Element is not in view"}
-  </header>
+  {#snippet children({ elementIntersections })}
+    <header>
+      {elementIntersections.get(ref1)
+        ? "Element is in view"
+        : "Element is not in view"}
+    </header>
 
-  <div bind:this={ref1}>Hello world</div>
+    <div bind:this={ref1}>Hello world</div>
+  {/snippet}
 </MultipleIntersectionObserver>
 
 <style>

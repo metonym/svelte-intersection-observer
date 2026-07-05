@@ -6,7 +6,7 @@
   import type { ComponentProps } from "svelte";
   import SvelteIntersectionObserver from "svelte-intersection-observer";
 
-  type Props = ComponentProps<SvelteIntersectionObserver>;
+  type Props = ComponentProps<typeof SvelteIntersectionObserver>;
 
   let intersecting: Props["intersecting"] = false;
   let entry: Props["entry"];
@@ -22,20 +22,19 @@
   {skip}
   bind:observer
   bind:intersecting
-  on:observe={(e) => {
-    e.detail.intersectionRect; // DOMRectReadOnly
-    e.detail.isIntersecting; // boolean
+  onobserve={(entry) => {
+    entry.intersectionRect; // DOMRectReadOnly
+    entry.isIntersecting; // boolean
   }}
-  on:intersect={(e) => {
-    e.detail.isIntersecting; // true
+  onintersect={(entry) => {
+    entry.isIntersecting; // true
   }}
-  let:entry
-  let:intersecting
-  let:observer
 >
-  <div bind:this={element}>
-    {intersecting ? "Element is in view" : "Element is not in view"}
-    {entry?.boundingClientRect}
-    {observer}
-  </div>
+  {#snippet children({ entry, intersecting, observer })}
+    <div bind:this={element}>
+      {intersecting ? "Element is in view" : "Element is not in view"}
+      {entry?.boundingClientRect}
+      {observer}
+    </div>
+  {/snippet}
 </SvelteIntersectionObserver>

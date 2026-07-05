@@ -39,14 +39,14 @@ export interface IntersectActionOptions {
 /**
  * Svelte action that observes the element with the Intersection Observer API.
  * Dispatches `observe` (on every change) and `intersect` (on entering the
- * viewport) `CustomEvent`s on the element — listen with `on:observe`/`on:intersect`.
+ * viewport) `CustomEvent`s on the element — listen with `onobserve`/`onintersect`.
  */
 export const intersect: Action<
   HTMLElement,
   IntersectActionOptions | undefined,
   {
-    "on:observe"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
-    "on:intersect"?: (
+    onobserve?: (event: CustomEvent<IntersectionObserverEntry>) => void;
+    onintersect?: (
       event: CustomEvent<IntersectionObserverEntry & { isIntersecting: true }>,
     ) => void;
   }

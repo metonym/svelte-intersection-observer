@@ -10,19 +10,20 @@
 <MultipleIntersectionObserver
   {elements}
   {rootMargin}
-  let:elementIntersections
 >
-  <header>
-    {elementIntersections.get(ref1) ? "Element is in view" : "Element is not in view"}
-    <button
-      data-testid="shrink-root-margin"
-      on:click={() => (rootMargin = "-200px")}
-    >
-      Shrink root margin
-    </button>
-  </header>
+  {#snippet children({ elementIntersections })}
+    <header>
+      {elementIntersections.get(ref1) ? "Element is in view" : "Element is not in view"}
+      <button
+        data-testid="shrink-root-margin"
+        onclick={() => (rootMargin = "-200px")}
+      >
+        Shrink root margin
+      </button>
+    </header>
 
-  <div bind:this={ref1}>Hello world</div>
+    <div bind:this={ref1}>Hello world</div>
+  {/snippet}
 </MultipleIntersectionObserver>
 
 <style>

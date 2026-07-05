@@ -7,37 +7,36 @@
   $: elements = [ref1, ref2];
 </script>
 
-<MultipleIntersectionObserver
-  {elements}
-  let:elementIntersections
->
-  <header>
-    <div
-      data-testid="item-1-indicator"
-      class:intersecting={elementIntersections.get(ref1)}
-    >
-      Item 1: {elementIntersections.get(ref1) ? "✓" : "✗"}
-    </div>
-    <div
-      data-testid="item-2-indicator"
-      class:intersecting={elementIntersections.get(ref2)}
-    >
-      Item 2: {elementIntersections.get(ref2) ? "✓" : "✗"}
-    </div>
-  </header>
+<MultipleIntersectionObserver {elements}>
+  {#snippet children({ elementIntersections })}
+    <header>
+      <div
+        data-testid="item-1-indicator"
+        class:intersecting={elementIntersections.get(ref1)}
+      >
+        Item 1: {elementIntersections.get(ref1) ? "✓" : "✗"}
+      </div>
+      <div
+        data-testid="item-2-indicator"
+        class:intersecting={elementIntersections.get(ref2)}
+      >
+        Item 2: {elementIntersections.get(ref2) ? "✓" : "✗"}
+      </div>
+    </header>
 
-  <div
-    bind:this={ref1}
-    data-testid="item-1"
-  >
-    Item 1
-  </div>
-  <div
-    bind:this={ref2}
-    data-testid="item-2"
-  >
-    Item 2
-  </div>
+    <div
+      bind:this={ref1}
+      data-testid="item-1"
+    >
+      Item 1
+    </div>
+    <div
+      bind:this={ref2}
+      data-testid="item-2"
+    >
+      Item 2
+    </div>
+  {/snippet}
 </MultipleIntersectionObserver>
 
 <style>

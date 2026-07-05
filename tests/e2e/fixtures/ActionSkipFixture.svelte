@@ -9,7 +9,7 @@
   {intersecting ? "Element is in view" : "Element is not in view"}
   <button
     data-testid="toggle-skip"
-    on:click={() => (skip = !skip)}
+    onclick={() => (skip = !skip)}
   >
     {skip ? "Resume" : "Pause"}
   </button>
@@ -17,7 +17,7 @@
 
 <div
   use:intersect={{ skip }}
-  on:observe={(e) => (intersecting = e.detail.isIntersecting)}
+  onobserve={(e) => (intersecting = e.detail.isIntersecting)}
 >
   Hello world
 </div>

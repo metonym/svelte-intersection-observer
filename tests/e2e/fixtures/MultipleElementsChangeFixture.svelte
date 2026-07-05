@@ -9,47 +9,46 @@
   $: elements = [includeItem1 ? ref1 : null, includeItem2 ? ref2 : null];
 </script>
 
-<MultipleIntersectionObserver
-  {elements}
-  let:elementIntersections
->
-  <header>
-    <button
-      data-testid="add-item-2"
-      on:click={() => (includeItem2 = true)}
-    >
-      Add item 2
-    </button>
-    <button
-      data-testid="remove-item-1"
-      on:click={() => (includeItem1 = false)}
-    >
-      Remove item 1
-    </button>
-    <p data-testid="item-1-status">
-      Item 1 {elementIntersections.get(ref1) ? "is visible" : "is not visible"}
-    </p>
-    <p data-testid="item-2-status">
-      Item 2 {elementIntersections.get(ref2) ? "is visible" : "is not visible"}
-    </p>
-  </header>
+<MultipleIntersectionObserver {elements}>
+  {#snippet children({ elementIntersections })}
+    <header>
+      <button
+        data-testid="add-item-2"
+        onclick={() => (includeItem2 = true)}
+      >
+        Add item 2
+      </button>
+      <button
+        data-testid="remove-item-1"
+        onclick={() => (includeItem1 = false)}
+      >
+        Remove item 1
+      </button>
+      <p data-testid="item-1-status">
+        {`Item 1 ${elementIntersections.get(ref1) ? "is visible" : "is not visible"}`}
+      </p>
+      <p data-testid="item-2-status">
+        {`Item 2 ${elementIntersections.get(ref2) ? "is visible" : "is not visible"}`}
+      </p>
+    </header>
 
-  <div style="display: flex; margin-top: calc(100vh + 1px);">
-    <div
-      bind:this={ref1}
-      data-testid="item-1"
-      style="height: 38vh; width: 50%; background-color: #376462; color: #fff;"
-    >
-      Item 1
+    <div style="display: flex; margin-top: calc(100vh + 1px);">
+      <div
+        bind:this={ref1}
+        data-testid="item-1"
+        style="height: 38vh; width: 50%; background-color: #376462; color: #fff;"
+      >
+        Item 1
+      </div>
+      <div
+        bind:this={ref2}
+        data-testid="item-2"
+        style="height: 38vh; width: 50%; background-color: #2ecc71; color: #fff;"
+      >
+        Item 2
+      </div>
     </div>
-    <div
-      bind:this={ref2}
-      data-testid="item-2"
-      style="height: 38vh; width: 50%; background-color: #2ecc71; color: #fff;"
-    >
-      Item 2
-    </div>
-  </div>
+  {/snippet}
 </MultipleIntersectionObserver>
 
 <style>

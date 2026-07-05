@@ -10,7 +10,7 @@
   {intersecting ? "Element is in view" : "Element is not in view"}
   <button
     data-testid="switch"
-    on:click={() => (element = elementB)}
+    onclick={() => (element = elementB)}
   >
     Switch
   </button>

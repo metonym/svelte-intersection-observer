@@ -12,7 +12,7 @@
   <p data-testid="intersect-count">Intersect count: {intersectCount}</p>
   <button
     data-testid="unrelated-button"
-    on:click={() => (unrelated += 1)}
+    onclick={() => (unrelated += 1)}
   >
     Unrelated: {unrelated}
   </button>
@@ -22,7 +22,7 @@
   {element}
   bind:intersecting
   once
-  on:intersect={() => (intersectCount += 1)}
+  onintersect={() => (intersectCount += 1)}
 >
   <div bind:this={element}>Hello world</div>
 </IntersectionObserver>

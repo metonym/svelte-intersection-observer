@@ -5,17 +5,17 @@
     {
       id: "one",
       node: undefined as undefined | HTMLElement,
-      intersecting: undefined as undefined | boolean,
+      intersecting: false,
     },
     {
       id: "two",
       node: undefined as undefined | HTMLElement,
-      intersecting: undefined as undefined | boolean,
+      intersecting: false,
     },
     {
       id: "three",
       node: undefined as undefined | HTMLElement,
-      intersecting: undefined as undefined | boolean,
+      intersecting: false,
     },
   ];
 </script>
