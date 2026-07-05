@@ -1,6 +1,8 @@
 # svelte-intersection-observer
 
+<!-- HIDE_START -->
 [![NPM][npm]][npm-url]
+<!-- HIDE_END -->
 
 > Detect if an element is in the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 
