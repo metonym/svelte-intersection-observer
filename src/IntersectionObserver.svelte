@@ -63,7 +63,7 @@
               ),
             );
 
-            if (element && once) observer?.unobserve(element);
+            if (once) observer?.unobserve(_entry.target);
           }
         }
       },
