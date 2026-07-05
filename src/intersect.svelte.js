@@ -82,3 +82,79 @@ export function intersect(node, options = {}) {
 export function intersectAttachment(getOptions = () => ({})) {
   return fromAction(intersect, getOptions);
 }
+
+/**
+ * Creates a group of elements backed by a single shared `IntersectionObserver`
+ * instance, for use with `{@attach}` inside an `#each` block. This brings
+ * `MultipleIntersectionObserver`'s single-observer performance benefit to the
+ * action/attachment API, where a bare `intersect`/`intersectAttachment` inside
+ * a loop would otherwise create one `IntersectionObserver` per element.
+ *
+ * `root`/`rootMargin`/`threshold` are shared across every node in the group
+ * (they configure the one underlying observer); only `once`/`skip` and the
+ * `onobserve`/`onintersect` callbacks are meaningful per node.
+ * @param {() => import("./intersect.svelte.d.ts").IntersectGroupSharedOptions} [getSharedOptions]
+ * @returns {import("./intersect.svelte.d.ts").IntersectionGroup}
+ */
+export function createIntersectionGroup(getSharedOptions = () => ({})) {
+  /** @type {IntersectionObserver | undefined} */
+  let observer;
+
+  /** @type {Map<Element, import("./intersect.svelte.d.ts").IntersectGroupNodeOptions>} */
+  const callbacks = new Map();
+
+  const handleEntries = (
+    /** @type {IntersectionObserverEntry[]} */ entries,
+  ) => {
+    for (const entry of entries) {
+      const target = entry.target;
+      const nodeOptions = callbacks.get(target);
+
+      nodeOptions?.onobserve?.(entry);
+
+      if (entry.isIntersecting) {
+        nodeOptions?.onintersect?.(
+          /** @type {IntersectionObserverEntry & { isIntersecting: true }} */ (
+            entry
+          ),
+        );
+        if (nodeOptions?.once) observer?.unobserve(target);
+      }
+    }
+  };
+
+  /**
+   * @param {import("./intersect.svelte.d.ts").IntersectGroupNodeOptions} [nodeOptions]
+   */
+  function attach(nodeOptions = {}) {
+    return (/** @type {Element} */ node) => {
+      if (!observer) {
+        const {
+          root = null,
+          rootMargin = "0px",
+          threshold = 0,
+        } = getSharedOptions();
+        observer = new IntersectionObserver(handleEntries, {
+          root,
+          rootMargin,
+          threshold,
+        });
+      }
+
+      callbacks.set(node, nodeOptions);
+      if (!nodeOptions.skip) observer.observe(node);
+
+      return () => {
+        observer?.unobserve(node);
+        callbacks.delete(node);
+
+        if (callbacks.size === 0) {
+          observer?.disconnect();
+          observer = undefined;
+        }
+      };
+    };
+  }
+
+  return { attach };
+}

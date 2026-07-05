@@ -577,6 +577,65 @@ test("Multiple elements - basic pattern", async ({ page }) => {
   await expect(page.getByTestId("item-2-indicator")).toHaveText(/Item 2: ✗/);
 });
 
+test("Intersection group - shares a single observer and dispatches per-node callbacks", async ({
+  page,
+}) => {
+  await page.goto("/intersection-group.html");
+
+  await expect(page.getByTestId("observer-count")).toHaveText(
+    /Observer count: 1/,
+  );
+
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+  await expect(page.getByTestId("item-3-status")).toHaveText(
+    /Item 3 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight + 50));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+  await expect(page.getByTestId("item-3-status")).toHaveText(
+    /Item 3 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2 + 50));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is visible/,
+  );
+  await expect(page.getByTestId("item-3-status")).toHaveText(
+    /Item 3 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+  await expect(page.getByTestId("item-3-status")).toHaveText(
+    /Item 3 is visible/,
+  );
+
+  // Constructing the group and observing three elements should not have
+  // created any additional native `IntersectionObserver` instances.
+  await expect(page.getByTestId("observer-count")).toHaveText(
+    /Observer count: 1/,
+  );
+});
+
 test("Each block - bind:this + bind:intersecting per item does not deadlock and tracks independently", async ({
   page,
 }) => {

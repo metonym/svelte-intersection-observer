@@ -14,6 +14,7 @@ This zero-dependency library offers several ways to observe elements:
 - `MultipleIntersectionObserver`: component for observing multiple elements (shared observer for better performance)
 - `intersect`: action for observing an element directly with `use:`
 - `intersectAttachment`: attachment for observing an element directly with `{@attach}` (Svelte 5.29+)
+- `createIntersectionGroup`: factory for observing a list of elements with `{@attach}`, backed by a single shared observer (Svelte 5.29+)
 
 Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d).
 
@@ -382,6 +383,53 @@ As with the scroll-to-end example, `root` must be an element that scrolls on its
 
 **Avoid** using the single-element `IntersectionObserver` component inside an `#each` block with one variable shared across iterations (e.g. `let node;` declared outside the loop and bound via `bind:this={node}` inside it). Every iteration overwrites the same `node`, so each observer instance keeps re-observing a moving target, which can produce an infinite update loop. Use `MultipleIntersectionObserver` with a per-item ref, as shown above, instead.
 
+### `createIntersectionGroup` factory
+
+A bare `intersect`/`intersectAttachment` inside an `#each` block creates one native `IntersectionObserver` per iteration — for a long list, that's N observers instead of 1. `createIntersectionGroup` fixes this for the action/attachment API: call it once to create a group, then call `group.attach(...)` once per element to get an attachment that shares a single underlying observer across the whole group.
+
+```svelte
+<script>
+  import { createIntersectionGroup } from "svelte-intersection-observer";
+
+  let groupItems = $state(
+    Array.from({ length: 5 }, (_, i) => ({ id: i, intersecting: false })),
+  );
+
+  const group = createIntersectionGroup(); // one observer, however many items
+</script>
+
+<header>
+  {#each groupItems as item (item.id)}
+    <div class:intersecting={item.intersecting}>
+      Item {item.id}: {item.intersecting ? "✓" : "✗"}
+    </div>
+  {/each}
+</header>
+
+{#each groupItems as item (item.id)}
+  <div
+    class:intersecting={item.intersecting}
+    {@attach group.attach({
+      onobserve: (entry) => (item.intersecting = entry.isIntersecting),
+    })}
+  >
+    Item {item.id}
+  </div>
+{/each}
+```
+
+`root`/`rootMargin`/`threshold` configure the one shared observer, so they're passed once to `createIntersectionGroup` itself (as a function, for the same reactive-dependency-tracking reason `intersectAttachment` takes one) rather than per element:
+
+```js
+const group = createIntersectionGroup(() => ({
+  root: container,
+  rootMargin: "0px",
+  threshold: 0.5,
+}));
+```
+
+`once`, `skip`, `onobserve`, and `onintersect` are the only options that make sense per element, so those are what `group.attach(...)` accepts.
+
 ## API
 
 ### IntersectionObserver
@@ -475,6 +523,35 @@ Both callbacks are called with:
 - **onintersect**: fired on the element when it is intersecting the viewport
 
 The `e.detail` dispatched by the `observe` and `intersect` events is an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) interface.
+
+### `createIntersectionGroup`
+
+```ts
+function createIntersectionGroup(
+  getSharedOptions?: () => IntersectGroupSharedOptions,
+): IntersectionGroup;
+```
+
+#### Shared options
+
+Passed once to `createIntersectionGroup`; apply to every element in the group.
+
+| Name       | Description                                           | Type                                                               | Default value |
+| :--------- | :----------------------------------------------------- | :----------------------------------------------------------------- | :------------ |
+| root       | Containing element                                    | `null` or `HTMLElement`                                            | `null`        |
+| rootMargin | Margin offset of the containing element               | `string`                                                           | `"0px"`       |
+| threshold  | Percentage of element visibility to trigger an event  | `number` between 0 and 1, or an array of `number`s between 0 and 1 | `0`           |
+
+#### `group.attach(options)` per-node options
+
+Passed once per element, to `group.attach(...)`.
+
+| Name       | Description                                               | Type                                                    | Default value |
+| :--------- | :---------------------------------------------------------- | :------------------------------------------------------- | :------------ |
+| once       | Unobserve the element after the first intersection event  | `boolean`                                               | `false`       |
+| skip       | Skip observing this element without affecting the group   | `boolean`                                               | `false`       |
+| onobserve  | Called when the element is first observed or when an intersection change occurs | `(entry: IntersectionObserverEntry) => void` | `undefined` |
+| onintersect | Called when the element is intersecting the viewport      | `(entry: IntersectionObserverEntry) => void`            | `undefined`   |
 
 ### `IntersectionObserverEntry` interface
 
