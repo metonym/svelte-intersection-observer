@@ -16,26 +16,29 @@ export function intersect(node, options = {}) {
     skip = false,
   } = options;
 
-  /** @type {IntersectionObserver} */
+  /** @type {null | IntersectionObserver} */
   let observer;
 
-  const createObserver = () =>
-    new IntersectionObserver(
+  const createObserver = () => {
+    if (typeof IntersectionObserver === "undefined") return null;
+
+    return new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           node.dispatchEvent(new CustomEvent("observe", { detail: entry }));
 
           if (entry.isIntersecting) {
             node.dispatchEvent(new CustomEvent("intersect", { detail: entry }));
-            if (once) observer.unobserve(node);
+            if (once) observer?.unobserve(node);
           }
         }
       },
       { root, rootMargin, threshold },
     );
+  };
 
   observer = createObserver();
-  if (!skip) observer.observe(node);
+  if (!skip) observer?.observe(node);
 
   return {
     /** @param {import("./intersect.svelte.d.ts").IntersectActionOptions} [newOptions] */
@@ -54,18 +57,18 @@ export function intersect(node, options = {}) {
         rootMargin = newOptions.rootMargin ?? "0px";
         threshold = newOptions.threshold ?? 0;
 
-        observer.disconnect();
+        observer?.disconnect();
         observer = createObserver();
-        if (!newSkip) observer.observe(node);
+        if (!newSkip) observer?.observe(node);
       } else if (newSkip !== skip) {
-        if (newSkip) observer.unobserve(node);
-        else observer.observe(node);
+        if (newSkip) observer?.unobserve(node);
+        else observer?.observe(node);
       }
 
       skip = newSkip;
     },
     destroy() {
-      observer.disconnect();
+      observer?.disconnect();
     },
   };
 }
@@ -78,4 +81,80 @@ export function intersect(node, options = {}) {
  */
 export function intersectAttachment(getOptions = () => ({})) {
   return fromAction(intersect, getOptions);
+}
+
+/**
+ * Creates a group of elements backed by a single shared `IntersectionObserver`
+ * instance, for use with `{@attach}` inside an `#each` block. This brings
+ * `MultipleIntersectionObserver`'s single-observer performance benefit to the
+ * action/attachment API, where a bare `intersect`/`intersectAttachment` inside
+ * a loop would otherwise create one `IntersectionObserver` per element.
+ *
+ * `root`/`rootMargin`/`threshold` are shared across every node in the group
+ * (they configure the one underlying observer); only `once`/`skip` and the
+ * `onobserve`/`onintersect` callbacks are meaningful per node.
+ * @param {() => import("./intersect.svelte.d.ts").IntersectGroupSharedOptions} [getSharedOptions]
+ * @returns {import("./intersect.svelte.d.ts").IntersectionGroup}
+ */
+export function createIntersectionGroup(getSharedOptions = () => ({})) {
+  /** @type {IntersectionObserver | undefined} */
+  let observer;
+
+  /** @type {Map<Element, import("./intersect.svelte.d.ts").IntersectGroupNodeOptions>} */
+  const callbacks = new Map();
+
+  const handleEntries = (
+    /** @type {IntersectionObserverEntry[]} */ entries,
+  ) => {
+    for (const entry of entries) {
+      const target = entry.target;
+      const nodeOptions = callbacks.get(target);
+
+      nodeOptions?.onobserve?.(entry);
+
+      if (entry.isIntersecting) {
+        nodeOptions?.onintersect?.(
+          /** @type {IntersectionObserverEntry & { isIntersecting: true }} */ (
+            entry
+          ),
+        );
+        if (nodeOptions?.once) observer?.unobserve(target);
+      }
+    }
+  };
+
+  /**
+   * @param {import("./intersect.svelte.d.ts").IntersectGroupNodeOptions} [nodeOptions]
+   */
+  function attach(nodeOptions = {}) {
+    return (/** @type {Element} */ node) => {
+      if (!observer) {
+        const {
+          root = null,
+          rootMargin = "0px",
+          threshold = 0,
+        } = getSharedOptions();
+        observer = new IntersectionObserver(handleEntries, {
+          root,
+          rootMargin,
+          threshold,
+        });
+      }
+
+      callbacks.set(node, nodeOptions);
+      if (!nodeOptions.skip) observer.observe(node);
+
+      return () => {
+        observer?.unobserve(node);
+        callbacks.delete(node);
+
+        if (callbacks.size === 0) {
+          observer?.disconnect();
+          observer = undefined;
+        }
+      };
+    };
+  }
+
+  return { attach };
 }

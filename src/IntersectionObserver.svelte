@@ -38,7 +38,16 @@
 
   let prevSkip = untrack(() => skip);
 
+  const configKey = $derived(
+    `${root}|${rootMargin}|${JSON.stringify(threshold)}`,
+  );
+
   const initialize = () => {
+    if (typeof IntersectionObserver === "undefined") {
+      observer = null;
+      return;
+    }
+
     observer = new IntersectionObserver(
       (entries) => {
         for (const _entry of entries) {
@@ -63,8 +72,12 @@
   };
 
   $effect(() => {
-    prevElement = null;
-    initialize();
+    configKey;
+
+    untrack(() => {
+      prevElement = null;
+      initialize();
+    });
 
     return () => {
       observer?.disconnect();
@@ -77,10 +90,15 @@
     const isSkipped = skip;
     const activeObserver = observer;
 
-    if (target !== null && target !== prevElement) {
-      if (!isSkipped) activeObserver?.observe(target);
+    if (target !== prevElement) {
       if (prevElement !== null) activeObserver?.unobserve(prevElement);
+      if (target !== null && !isSkipped) activeObserver?.observe(target);
       prevElement = target;
+
+      if (target === null) {
+        intersecting = false;
+        entry = null;
+      }
     }
 
     if (isSkipped !== prevSkip && target !== null) {

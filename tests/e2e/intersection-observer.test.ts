@@ -79,6 +79,29 @@ test("Element - switching the observed element retargets the observer", async ({
   await expect(page.locator("header")).toHaveText(/Element is in view/);
 });
 
+test("Element - unobserves when element becomes null and re-observes when restored", async ({
+  page,
+}) => {
+  await page.goto("/element-null.html");
+  const header = page.locator("header");
+
+  await expect(header).toHaveText(/Element is not in view/);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(header).toHaveText(/Element is in view/);
+
+  await page.getByTestId("clear").click();
+  await expect(header).toHaveText(/Element is not in view/);
+
+  // Scrolling away and back must not resurrect a leaked observation of the
+  // previous element.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(header).toHaveText(/Element is not in view/);
+
+  await page.getByTestId("restore").click();
+  await expect(header).toHaveText(/Element is in view/);
+});
+
 test("Root margin - reinitializes the observer when changed at runtime", async ({
   page,
 }) => {
@@ -101,6 +124,24 @@ test("Threshold - reinitializes the observer when changed at runtime", async ({
 
   await page.getByTestId("raise-threshold").click();
   await expect(page.locator("header")).toHaveText(/Element is not in view/);
+});
+
+test("Threshold - value-equal but referentially-new arrays do not recreate the observer", async ({
+  page,
+}) => {
+  await page.goto("/threshold-stable.html");
+
+  await expect(page.getByTestId("observer-count")).toHaveText(
+    /Observer count: 1/,
+  );
+
+  await page.getByTestId("unrelated-button").click();
+  await page.getByTestId("unrelated-button").click();
+  await page.getByTestId("unrelated-button").click();
+
+  await expect(page.getByTestId("observer-count")).toHaveText(
+    /Observer count: 1/,
+  );
 });
 
 test("Skip - pauses observing without losing state, resumes on toggle", async ({
@@ -479,6 +520,55 @@ test("Multiple elements - elements array add/remove retargets the observer", asy
   await expect(page.getByTestId("item-2-status")).toHaveText(
     /Item 2 is not visible/,
   );
+  // Item 1 was removed from `elements`, so its stale map entry is cleared
+  // rather than continuing to report its last-known intersection state.
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+});
+
+test("Multiple elements - removing an element clears its map entries", async ({
+  page,
+}) => {
+  await page.goto("/multiple-elements-change.html");
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
+  );
+  await expect(page.getByTestId("item-1-map-status")).toHaveText(
+    /Item 1 is in maps/,
+  );
+
+  await page.getByTestId("remove-item-1").click();
+
+  await expect(page.getByTestId("item-1-map-status")).toHaveText(
+    /Item 1 is not in maps/,
+  );
+});
+
+test("Multiple elements - re-observes the same refs after elements becomes empty", async ({
+  page,
+}) => {
+  await page.goto("/multiple-elements-change.html");
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
+  );
+
+  await page.getByTestId("remove-item-1").click();
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.getByTestId("add-item-1").click();
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await expect(page.getByTestId("item-1-status")).toHaveText(
     /Item 1 is visible/,
   );
@@ -511,6 +601,65 @@ test("Multiple elements - basic pattern", async ({ page }) => {
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(page.getByTestId("item-1-indicator")).toHaveText(/Item 1: ✗/);
   await expect(page.getByTestId("item-2-indicator")).toHaveText(/Item 2: ✗/);
+});
+
+test("Intersection group - shares a single observer and dispatches per-node callbacks", async ({
+  page,
+}) => {
+  await page.goto("/intersection-group.html");
+
+  await expect(page.getByTestId("observer-count")).toHaveText(
+    /Observer count: 1/,
+  );
+
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+  await expect(page.getByTestId("item-3-status")).toHaveText(
+    /Item 3 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight + 50));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+  await expect(page.getByTestId("item-3-status")).toHaveText(
+    /Item 3 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2 + 50));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is visible/,
+  );
+  await expect(page.getByTestId("item-3-status")).toHaveText(
+    /Item 3 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+  await expect(page.getByTestId("item-2-status")).toHaveText(
+    /Item 2 is not visible/,
+  );
+  await expect(page.getByTestId("item-3-status")).toHaveText(
+    /Item 3 is visible/,
+  );
+
+  // Constructing the group and observing three elements should not have
+  // created any additional native `IntersectionObserver` instances.
+  await expect(page.getByTestId("observer-count")).toHaveText(
+    /Observer count: 1/,
+  );
 });
 
 test("Each block - bind:this + bind:intersecting per item does not deadlock and tracks independently", async ({
@@ -625,4 +774,63 @@ test("Multiple elements - binding pattern", async ({ page }) => {
     "data-visible",
     "false",
   );
+});
+
+test.describe("Missing IntersectionObserver support", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "IntersectionObserver", {
+        value: undefined,
+        configurable: true,
+      });
+    });
+  });
+
+  test("IntersectionObserver component - degrades gracefully without throwing", async ({
+    page,
+  }) => {
+    const pageErrors: Error[] = [];
+    page.on("pageerror", (err) => pageErrors.push(err));
+
+    await page.goto("/basic.html");
+    await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(200);
+    await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+    expect(pageErrors).toEqual([]);
+  });
+
+  test("MultipleIntersectionObserver component - degrades gracefully without throwing", async ({
+    page,
+  }) => {
+    const pageErrors: Error[] = [];
+    page.on("pageerror", (err) => pageErrors.push(err));
+
+    await page.goto("/multiple-basic.html");
+    await expect(page.getByTestId("item-1-indicator")).toHaveText(/Item 1: ✗/);
+
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight + 50));
+    await page.waitForTimeout(200);
+    await expect(page.getByTestId("item-1-indicator")).toHaveText(/Item 1: ✗/);
+
+    expect(pageErrors).toEqual([]);
+  });
+
+  test("intersect action - degrades gracefully without throwing", async ({
+    page,
+  }) => {
+    const pageErrors: Error[] = [];
+    page.on("pageerror", (err) => pageErrors.push(err));
+
+    await page.goto("/action.html");
+    await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(200);
+    await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+    expect(pageErrors).toEqual([]);
+  });
 });

@@ -33,12 +33,21 @@
     children,
   } = $props();
 
-  /** @type {(HTMLElement | null)[]} */
-  let prevElements = [];
+  /** @type {Set<HTMLElement | null>} */
+  let prevElements = new Set();
 
   let prevSkip = untrack(() => skip);
 
+  const configKey = $derived(
+    `${root}|${rootMargin}|${JSON.stringify(threshold)}`,
+  );
+
   const initialize = () => {
+    if (typeof IntersectionObserver === "undefined") {
+      observer = null;
+      return;
+    }
+
     observer = new IntersectionObserver(
       (entries) => {
         for (const _entry of entries) {
@@ -70,8 +79,12 @@
   };
 
   $effect(() => {
-    prevElements = [];
-    initialize();
+    configKey;
+
+    untrack(() => {
+      prevElements = new Set();
+      initialize();
+    });
 
     return () => {
       observer?.disconnect();
@@ -84,27 +97,34 @@
     const isSkipped = skip;
     const activeObserver = observer;
 
-    if (currentElements.length > 0) {
-      const newElements = currentElements.filter(
-        (el) => el && !prevElements.includes(el),
-      );
+    const currentSet = new Set(currentElements);
 
-      if (!isSkipped) {
-        for (const el of newElements) {
-          if (el) activeObserver?.observe(el);
-        }
+    const newElements = currentElements.filter(
+      (el) => el && !prevElements.has(el),
+    );
+    const removedElements = [...prevElements].filter(
+      (el) => el && !currentSet.has(el),
+    );
+
+    if (!isSkipped) {
+      for (const el of newElements) {
+        if (el) activeObserver?.observe(el);
       }
-
-      const removedElements = prevElements.filter(
-        (el) => el && !currentElements.includes(el),
-      );
-
-      for (const el of removedElements) {
-        if (el) activeObserver?.unobserve(el);
-      }
-
-      prevElements = [...currentElements];
     }
+
+    for (const el of removedElements) {
+      if (!el) continue;
+      activeObserver?.unobserve(el);
+      elementIntersections.delete(el);
+      elementEntries.delete(el);
+    }
+
+    if (removedElements.length > 0) {
+      elementIntersections = new Map(elementIntersections);
+      elementEntries = new Map(elementEntries);
+    }
+
+    prevElements = currentSet;
 
     if (isSkipped !== prevSkip) {
       for (const el of currentElements) {

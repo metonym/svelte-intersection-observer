@@ -6,11 +6,14 @@
   let includeItem1 = true;
   let includeItem2 = false;
 
-  $: elements = [includeItem1 ? ref1 : null, includeItem2 ? ref2 : null];
+  $: elements = [
+    ...(includeItem1 ? [ref1] : []),
+    ...(includeItem2 ? [ref2] : []),
+  ];
 </script>
 
 <MultipleIntersectionObserver {elements}>
-  {#snippet children({ elementIntersections })}
+  {#snippet children({ elementIntersections, elementEntries })}
     <header>
       <button
         data-testid="add-item-2"
@@ -24,11 +27,26 @@
       >
         Remove item 1
       </button>
+      <button
+        data-testid="remove-item-2"
+        onclick={() => (includeItem2 = false)}
+      >
+        Remove item 2
+      </button>
+      <button
+        data-testid="add-item-1"
+        onclick={() => (includeItem1 = true)}
+      >
+        Add item 1
+      </button>
       <p data-testid="item-1-status">
         {`Item 1 ${elementIntersections.get(ref1) ? "is visible" : "is not visible"}`}
       </p>
       <p data-testid="item-2-status">
         {`Item 2 ${elementIntersections.get(ref2) ? "is visible" : "is not visible"}`}
+      </p>
+      <p data-testid="item-1-map-status">
+        {`Item 1 ${elementIntersections.has(ref1) || elementEntries.has(ref1) ? "is in maps" : "is not in maps"}`}
       </p>
     </header>
 
