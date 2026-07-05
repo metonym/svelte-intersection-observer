@@ -58,10 +58,10 @@ Use the [`bind:this`](https://svelte.dev/docs#bind_element) directive to pass an
 Then bind to the reactive `intersecting` prop to check whether the element intersects the viewport.
 
 ```svelte
-<script>
+<script lang="ts">
   import IntersectionObserver from "svelte-intersection-observer";
 
-  let element = $state();
+  let element: HTMLElement | undefined = $state();
   let intersecting = $state(false);
 </script>
 
@@ -79,10 +79,10 @@ Then bind to the reactive `intersecting` prop to check whether the element inter
 Set `once` to `true` to unobserve the element after its first intersection event, useful for a one-time reveal animation, a single lazy-load, or a single analytics impression.
 
 ```svelte
-<script>
+<script lang="ts">
   import IntersectionObserver from "svelte-intersection-observer";
 
-  let elementOnce = $state();
+  let elementOnce: HTMLElement | undefined = $state();
   let intersectOnce = $state(false);
 </script>
 
@@ -106,11 +106,11 @@ An alternative to binding to the `intersecting` prop is to use the `children` sn
 In this example, "Hello world" fades in when its containing element intersects the viewport.
 
 ```svelte
-<script>
+<script lang="ts">
   import IntersectionObserver from "svelte-intersection-observer";
   import { fade } from "svelte/transition";
 
-  let node = $state();
+  let node: HTMLElement | undefined = $state();
 </script>
 
 <header></header>
@@ -159,11 +159,11 @@ Same `onobserve`/`onintersect` behavior as described in [Callbacks](#callbacks-o
 For performance, use `MultipleIntersectionObserver` to observe multiple elements with one shared observer instead of instantiating one per element.
 
 ```svelte
-<script>
+<script lang="ts">
   import { MultipleIntersectionObserver } from "svelte-intersection-observer";
 
-  let ref1 = $state();
-  let ref2 = $state();
+  let ref1: HTMLElement | undefined = $state();
+  let ref2: HTMLElement | undefined = $state();
   let elements = $derived([ref1, ref2]);
 </script>
 
@@ -189,7 +189,7 @@ For performance, use `MultipleIntersectionObserver` to observe multiple elements
 `MultipleIntersectionObserver` also handles a dynamic, `#each`-driven list: give every item its own slot in an array/object instead of one shared variable.
 
 ```svelte
-<script>
+<script lang="ts">
   import { MultipleIntersectionObserver } from "svelte-intersection-observer";
 
   let items = Array.from({ length: 5 }, (_, i) => ({
@@ -197,8 +197,8 @@ For performance, use `MultipleIntersectionObserver` to observe multiple elements
     text: `Item ${i + 1}`,
   }));
 
-  let refs = $state([]);
-  let itemsContainer = $state();
+  let refs: (HTMLElement | undefined)[] = $state([]);
+  let itemsContainer: HTMLElement | undefined = $state();
   let itemElements = $derived(refs);
 </script>
 
@@ -273,7 +273,7 @@ See [Callbacks](#callbacks-onobserve-and-onintersect) for when each one fires.
 As an alternative to the `IntersectionObserver` component, use the `intersect` action to observe an element directly with `use:`, without a `bind:this` reference or wrapper markup. Listen for `onobserve`/`onintersect` on the observed element itself.
 
 ```svelte
-<script>
+<script lang="ts">
   import { intersect } from "svelte-intersection-observer";
 
   let actionIntersecting = $state(false);
@@ -285,7 +285,9 @@ As an alternative to the `IntersectionObserver` component, use the `intersect` a
 
 <div
   use:intersect={{ once: true }}
-  onobserve={(e) => (actionIntersecting = e.detail.isIntersecting)}
+  onobserve={(e) => {
+    actionIntersecting = e.detail.isIntersecting;
+  }}
 >
   Hello world
 </div>
@@ -318,7 +320,7 @@ Attachments have a few architectural advantages over actions:
 - Can be forwarded through components as ordinary props, unlike actions
 
 ```svelte
-<script>
+<script lang="ts">
   import { intersectAttachment } from "svelte-intersection-observer";
 
   let attachmentIntersecting = $state(false);
@@ -330,7 +332,9 @@ Attachments have a few architectural advantages over actions:
 
 <div
   {@attach intersectAttachment(() => ({ once: true }))}
-  onobserve={(e) => (attachmentIntersecting = e.detail.isIntersecting)}
+  onobserve={(e) => {
+    attachmentIntersecting = e.detail.isIntersecting;
+  }}
 >
   Hello world
 </div>
@@ -345,7 +349,7 @@ Options and dispatched events are identical to the [`intersect` action](#interse
 To get intersection state without wrapping markup in a component, use `createIntersectionObserver`, a script-only rune-based composable: call it in `<script>` for reactive `intersecting`/`entry` getters, then apply `attach` to the node with `{@attach}`.
 
 ```svelte no-eval
-<script>
+<script lang="ts">
   import { createIntersectionObserver } from "svelte-intersection-observer";
 
   const observer = createIntersectionObserver(() => ({ threshold: 0.5 }));
@@ -371,14 +375,14 @@ To get intersection state without wrapping markup in a component, use `createInt
 A bare `intersect`/`intersectAttachment` inside an `#each` block creates one native `IntersectionObserver` per iteration: for a long list, that's N observers instead of 1. `createIntersectionGroup` fixes this for the action/attachment API: call it once to create a group, then call `group.attach(...)` once per element to get an attachment that shares a single underlying observer across the whole group.
 
 ```svelte
-<script>
+<script lang="ts">
   import { createIntersectionGroup } from "svelte-intersection-observer";
 
   let groupItems = $state(
     Array.from({ length: 5 }, (_, i) => ({ id: i, intersecting: false })),
   );
 
-  const group = createIntersectionGroup(); // one observer, however many items
+  const group = createIntersectionGroup();
 </script>
 
 <header>
@@ -473,7 +477,7 @@ Realistic scenarios built from the primitives above.
 Delay loading an image's real `src` until it's about to scroll into view. `rootMargin` starts the fetch slightly before the image is visible so it's ready when the user scrolls to it; `once` stops observing once it has loaded.
 
 ```svelte no-eval
-<script>
+<script lang="ts">
   import { intersectAttachment } from "svelte-intersection-observer";
 
   let loaded = $state(false);
@@ -492,16 +496,18 @@ Delay loading an image's real `src` until it's about to scroll into view. `rootM
 Play a `<video>` while it's on screen and pause it once it scrolls away. Unlike lazy-loading, this needs to react every time visibility changes, so use `onobserve` (not `onintersect`) and skip `once`.
 
 ```svelte no-eval
-<script>
+<script lang="ts">
   import { intersect } from "svelte-intersection-observer";
 
-  let video = $state();
+  let video: HTMLVideoElement | undefined = $state();
 </script>
 
 <video
   bind:this={video}
   use:intersect
-  onobserve={(e) => (e.detail.isIntersecting ? video.play() : video.pause())}
+  onobserve={(e) => {
+    e.detail.isIntersecting ? video?.play() : video?.pause();
+  }}
   src="/clip.mp4"
   muted
   loop
@@ -528,11 +534,11 @@ To detect when a user has scrolled to the end of a scrollable container, place a
 **Note**: `root` must be the scrollable element itself (i.e. it has its own `overflow`/fixed `height`), not just an ancestor of one. If `root` merely sits inside a scrollable ancestor, the sentinel scrolls along with `root` and never changes position relative to it, so it reports as permanently intersecting.
 
 ```svelte
-<script>
+<script lang="ts">
   import IntersectionObserver from "svelte-intersection-observer";
 
-  let container = $state();
-  let sentinel = $state();
+  let container: HTMLElement | undefined = $state();
+  let sentinel: HTMLElement | undefined = $state();
   let reachedEnd = $state(false);
 </script>
 
@@ -562,11 +568,11 @@ The same sentinel pattern powers infinite scroll: call a `loadMore()` function f
 Keep the `bind:this` element outside the `{#if intersecting}` block, and only gate the animated content inside it. The bound element stays in the DOM even before the reveal fires, so external triggers like `scrollIntoView()` still work, and the animation replays every time the element crosses into or out of view.
 
 ```svelte
-<script>
+<script lang="ts">
   import IntersectionObserver from "svelte-intersection-observer";
   import { fly } from "svelte/transition";
 
-  let revealNode = $state();
+  let revealNode: HTMLElement | undefined = $state();
   let revealIntersecting = $state(false);
 </script>
 
@@ -575,7 +581,7 @@ Keep the `bind:this` element outside the `{#if intersecting}` block, and only ga
   <button
     style="margin-top: 0.75rem;"
     onclick={() => {
-      revealNode.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      revealNode?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }}
   >
     Scroll to section
@@ -598,10 +604,10 @@ Keep the `bind:this` element outside the `{#if intersecting}` block, and only ga
 Set `skip` to `true` to unobserve without disconnecting the underlying observer or losing `entry`/`intersecting` state. Useful for pausing tracking on an off-screen carousel panel or a closed modal. Set `skip` back to `false` to resume; unlike `once`, this toggles back and forth freely. `MultipleIntersectionObserver` and the `intersect` action support the same `skip` option.
 
 ```svelte no-eval
-<script>
+<script lang="ts">
   import IntersectionObserver from "svelte-intersection-observer";
 
-  let elementSkip = $state();
+  let elementSkip: HTMLElement | undefined = $state();
   let paused = $state(false);
 </script>
 
