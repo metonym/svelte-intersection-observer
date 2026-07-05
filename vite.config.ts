@@ -22,38 +22,52 @@ export default defineConfig({
           display: flex;
           flex-direction: column;
           overflow-y: auto;
-          height: 50vh;
-          min-height: 380px;
+          height: 16rem;
+          min-height: 16rem;
           padding: 0;
+          background-color: var(--sr-color-canvas);
+          border: 1px solid var(--sr-color-border);
         }
 
-        header {
+        .code-fence header {
           position: sticky;
           z-index: 1;
           top: 0;
           left: 0;
-          min-height: 80px;
+          min-height: 3rem;
           width: 100%;
-          padding: 1rem;
-          background-color: #e0f7f6;
+          padding: var(--sr-box-padding);
+          background-color: var(--sr-color-canvas-subtle);
+          border-bottom: 1px solid var(--sr-color-border-muted);
           flex-shrink: 0;
+          font-family: var(--sr-font-sans);
+          font-size: var(--sr-text-sm);
+          font-weight: 600;
+          color: var(--sr-color-fg-subtle);
         }
 
-        header:before {
+        .code-fence header:before {
           content: "Scroll down.";
           display: block;
-          color: #111;
+          margin-top: 0.25rem;
+          font-size: var(--sr-text-xs);
+          font-weight: 400;
+          color: var(--sr-color-fg-muted);
         }
 
         .code-fence header ~ div {
-          padding: 1rem;
-          background-color: #376462;
-          color: #fff;
+          padding: var(--sr-box-padding);
+          background-color: var(--sr-color-canvas);
+          color: var(--sr-color-fg);
+          font-family: var(--sr-font-sans);
+          font-size: var(--sr-text-base);
         }
 
         .code-fence header ~ div:not([style*="overflow"]) {
-          margin-top: 50vh;
-          height: 25vh;
+          display: flex;
+          align-items: center;
+          margin-top: 13rem;
+          height: 4rem;
           flex-shrink: 0;
         }
 
@@ -62,13 +76,9 @@ export default defineConfig({
           min-height: 0;
         }
 
-        .code-fence header {
-          font-weight: bold;
-          color: #d54309;
-        }
-
         .code-fence .intersecting {
-          color: #00a91c;
+          color: var(--sr-color-link);
+          font-weight: 600;
         }
       `,
     }),
