@@ -1,3 +1,4 @@
+import { createIntersectionGroup } from "svelte-intersection-observer";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import ActionFixture from "../e2e/fixtures/ActionFixture.svelte";
 import BasicFixture from "../e2e/fixtures/BasicFixture.svelte";
@@ -57,5 +58,15 @@ describe("missing IntersectionObserver support", () => {
     expect(rendered?.target.querySelector("header")?.textContent).toContain(
       "Element is not in view",
     );
+  });
+
+  test("createIntersectionGroup degrades gracefully without throwing", () => {
+    const group = createIntersectionGroup();
+    const node = document.createElement("div");
+
+    expect(() => {
+      const detach = group.attach()(node);
+      detach?.();
+    }).not.toThrow();
   });
 });

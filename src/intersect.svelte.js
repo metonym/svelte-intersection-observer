@@ -128,7 +128,7 @@ export function createIntersectionGroup(getSharedOptions = () => ({})) {
    */
   function attach(nodeOptions = {}) {
     return (/** @type {Element} */ node) => {
-      if (!observer) {
+      if (!observer && typeof IntersectionObserver !== "undefined") {
         const {
           root = null,
           rootMargin = "0px",
@@ -142,7 +142,7 @@ export function createIntersectionGroup(getSharedOptions = () => ({})) {
       }
 
       callbacks.set(node, nodeOptions);
-      if (!nodeOptions.skip) observer.observe(node);
+      if (!nodeOptions.skip) observer?.observe(node);
 
       return () => {
         observer?.unobserve(node);
