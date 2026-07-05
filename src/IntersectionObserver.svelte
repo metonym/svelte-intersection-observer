@@ -38,9 +38,7 @@
 
   let prevSkip = untrack(() => skip);
 
-  const configKey = $derived(
-    `${root}|${rootMargin}|${JSON.stringify(threshold)}`,
-  );
+  const configKey = $derived(`${rootMargin}|${JSON.stringify(threshold)}`);
 
   const initialize = () => {
     if (typeof IntersectionObserver === "undefined") {
@@ -63,7 +61,7 @@
               ),
             );
 
-            if (element && once) observer?.unobserve(element);
+            if (once) observer?.unobserve(_entry.target);
           }
         }
       },
@@ -73,6 +71,7 @@
 
   $effect(() => {
     configKey;
+    root;
 
     untrack(() => {
       prevElement = null;

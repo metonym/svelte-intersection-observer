@@ -136,7 +136,10 @@ export interface IntersectionGroup {
  * Creates a group of elements backed by a single shared `IntersectionObserver`
  * instance, for use with `{@attach}` inside an `#each` block. Brings
  * `MultipleIntersectionObserver`'s single-observer performance benefit to the
- * action/attachment API.
+ * action/attachment API. Changing shared options rebuilds the single shared
+ * observer and re-observes every element in the group; elements whose `once`
+ * already fired are re-observed as well, so their callbacks may fire again
+ * under the new config.
  */
 export function createIntersectionGroup(
   getSharedOptions?: () => IntersectGroupSharedOptions,

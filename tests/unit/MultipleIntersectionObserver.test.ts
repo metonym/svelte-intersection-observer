@@ -5,6 +5,7 @@ import MultipleBindingFixture from "../e2e/fixtures/MultipleBindingFixture.svelt
 import MultipleElementsChangeFixture from "../e2e/fixtures/MultipleElementsChangeFixture.svelte";
 import MultipleFixture from "../e2e/fixtures/MultipleFixture.svelte";
 import MultipleOnceFixture from "../e2e/fixtures/MultipleOnceFixture.svelte";
+import MultipleRootChangeFixture from "../e2e/fixtures/MultipleRootChangeFixture.svelte";
 import MultipleRootFixture from "../e2e/fixtures/MultipleRootFixture.svelte";
 import MultipleRootMarginChangeFixture from "../e2e/fixtures/MultipleRootMarginChangeFixture.svelte";
 import MultipleSkipFixture from "../e2e/fixtures/MultipleSkipFixture.svelte";
@@ -216,6 +217,44 @@ describe("MultipleIntersectionObserver", () => {
     if (!container) throw new Error("fixture markup missing");
 
     expect(MockIntersectionObserver.last().options.root).toBe(container);
+  });
+
+  test("changing root to a different element of the same tag recreates the observer and re-observes all elements", () => {
+    const rendered = render(MultipleRootChangeFixture);
+    cleanup = rendered.cleanup;
+    const containerA = rendered.target.querySelector('[data-testid="root-a"]');
+    const containerB = rendered.target.querySelector('[data-testid="root-b"]');
+    const item1 = rendered.target.querySelector('[data-testid="item-1"]');
+    const item2 = rendered.target.querySelector('[data-testid="item-2"]');
+    const swapButton = rendered.target.querySelector(
+      '[data-testid="swap-root"]',
+    );
+    if (
+      !containerA ||
+      !containerB ||
+      !item1 ||
+      !item2 ||
+      !(swapButton instanceof HTMLButtonElement)
+    ) {
+      throw new Error("fixture markup missing");
+    }
+
+    const instanceCountBefore = MockIntersectionObserver.instances.length;
+    const firstObserver = MockIntersectionObserver.last();
+    expect(firstObserver.root).toBe(containerA);
+
+    swapButton.click();
+    flushSync();
+
+    expect(MockIntersectionObserver.instances.length).toBe(
+      instanceCountBefore + 1,
+    );
+    expect(firstObserver.disconnected).toBe(true);
+
+    const secondObserver = MockIntersectionObserver.last();
+    expect(secondObserver.root).toBe(containerB);
+    expect(secondObserver.observedElements.has(item1)).toBe(true);
+    expect(secondObserver.observedElements.has(item2)).toBe(true);
   });
 
   test("changing rootMargin recreates the observer and re-observes current elements", () => {

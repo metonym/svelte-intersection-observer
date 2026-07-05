@@ -5,7 +5,9 @@ import EachBindingFixture from "../e2e/fixtures/EachBindingFixture.svelte";
 import ElementChangeFixture from "../e2e/fixtures/ElementChangeFixture.svelte";
 import ElementNullFixture from "../e2e/fixtures/ElementNullFixture.svelte";
 import ElementUndefinedFixture from "../e2e/fixtures/ElementUndefinedFixture.svelte";
+import OnceElementChangeFixture from "../e2e/fixtures/OnceElementChangeFixture.svelte";
 import OnceFixture from "../e2e/fixtures/OnceFixture.svelte";
+import RootChangeFixture from "../e2e/fixtures/RootChangeFixture.svelte";
 import RootFixture from "../e2e/fixtures/RootFixture.svelte";
 import RootMarginChangeFixture from "../e2e/fixtures/RootMarginChangeFixture.svelte";
 import RootMarginFixture from "../e2e/fixtures/RootMarginFixture.svelte";
@@ -79,6 +81,36 @@ describe("IntersectionObserver", () => {
       rendered.target.querySelector('[data-testid="intersect-count"]')
         ?.textContent,
     ).toContain("Intersect count: 1");
+  });
+
+  test("once unobserves the entry's own target, not a stale element prop, when the element changes before delivery", () => {
+    const rendered = render(OnceElementChangeFixture);
+    cleanup = rendered.cleanup;
+    const elementA = rendered.target.querySelector('[data-testid="el-a"]');
+    const elementB = rendered.target.querySelector('[data-testid="el-b"]');
+    const switchButton = rendered.target.querySelector(
+      '[data-testid="switch"]',
+    );
+    if (
+      !elementA ||
+      !elementB ||
+      !(switchButton instanceof HTMLButtonElement)
+    ) {
+      throw new Error("fixture markup missing");
+    }
+
+    const observer = MockIntersectionObserver.last();
+    expect(observer.observedElements.has(elementA)).toBe(true);
+
+    switchButton.click();
+    flushSync();
+
+    flushSync(() =>
+      observer.trigger([{ target: elementA, isIntersecting: true }]),
+    );
+
+    expect(observer.observedElements.has(elementB)).toBe(true);
+    expect(observer.observedElements.has(elementA)).toBe(false);
   });
 
   test("skip pauses and resumes observation without losing state", () => {
@@ -190,6 +222,41 @@ describe("IntersectionObserver", () => {
     if (!container) throw new Error("fixture markup missing");
 
     expect(MockIntersectionObserver.last().options.root).toBe(container);
+  });
+
+  test("changing root to a different element of the same tag recreates the observer", () => {
+    const rendered = render(RootChangeFixture);
+    cleanup = rendered.cleanup;
+    const containerA = rendered.target.querySelector('[data-testid="root-a"]');
+    const containerB = rendered.target.querySelector('[data-testid="root-b"]');
+    const element = rendered.target.querySelector('[data-testid="element"]');
+    const swapButton = rendered.target.querySelector(
+      '[data-testid="swap-root"]',
+    );
+    if (
+      !containerA ||
+      !containerB ||
+      !element ||
+      !(swapButton instanceof HTMLButtonElement)
+    ) {
+      throw new Error("fixture markup missing");
+    }
+
+    const instanceCountBefore = MockIntersectionObserver.instances.length;
+    const firstObserver = MockIntersectionObserver.last();
+    expect(firstObserver.root).toBe(containerA);
+
+    swapButton.click();
+    flushSync();
+
+    expect(MockIntersectionObserver.instances.length).toBe(
+      instanceCountBefore + 1,
+    );
+    expect(firstObserver.disconnected).toBe(true);
+
+    const secondObserver = MockIntersectionObserver.last();
+    expect(secondObserver.root).toBe(containerB);
+    expect(secondObserver.observedElements.has(element)).toBe(true);
   });
 
   test("each block instances get independent observers", () => {
