@@ -26,7 +26,7 @@ See [Library](#library) for the full docs on each. Try it in the [Svelte REPL](h
 | Package version | Svelte version    | Notes                                     |
 | :--------------- | :----------------- | :----------------------------------------- |
 | [1.x](https://github.com/metonym/svelte-intersection-observer/tree/v1.2.x) | 3, 4, 5 (non-runes) | Uses `export let`, slots, and `on:` events |
-| 2.x              | 5 (runes mode only) | Uses `$props()`, snippets, and callback props |
+| 2.x              | ≥5.29 (runes mode only) | Uses `$props()`, snippets, and callback props |
 
 <!-- TOC -->
 
