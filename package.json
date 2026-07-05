@@ -42,6 +42,9 @@
     "intersection observer",
     "viewport",
     "lazy-loading",
-    "conditional"
+    "conditional",
+    "lazy load",
+    "scrollspy",
+    "in view"
   ]
 }

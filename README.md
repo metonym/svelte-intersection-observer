@@ -6,11 +6,11 @@
 
 ## About
 
-`svelte-intersection-observer` is a zero-dependency Svelte library built on the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) that detects when an element enters or exits the viewport, without expensive scroll listeners. Use it for lazy-loading, scroll animations, infinite scroll, autoplaying video, impression tracking, and more (see [Use Cases](#use-cases)).
+`svelte-intersection-observer` wraps the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API). It tells you when an element enters or leaves the viewport, without scroll listeners. Typical uses include lazy-loading, scroll animations, infinite scroll, autoplaying video, and impression tracking. See [Use cases](#use-cases).
 
-It offers six interchangeable primitives, all backed by the same shared observer logic.
+Six exports, pick by how you want to wire it up:
 
-| Primitive | Export | Use it when... |
+| Kind | Export | Use it when... |
 | :-------- | :----- | :--------------------- |
 | [Component](#intersectionobserver) | `IntersectionObserver` | you want a component with a bound `intersecting` prop |
 | [Pooled component](#multipleintersectionobserver) | `MultipleIntersectionObserver` | you're observing many elements and want one shared observer |
@@ -19,7 +19,7 @@ It offers six interchangeable primitives, all backed by the same shared observer
 | [Composable](#createintersectionobserver) | `createIntersectionObserver` | you want reactive state from `<script>`, no directive |
 | [Factory](#createintersectiongroup) | `createIntersectionGroup` | you're rendering a list with `{@attach}` and want one shared observer |
 
-See [Library](#library) for the full docs on each. Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d).
+Full docs for each are under [API](#api). Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d).
 
 ### Compatibility
 
@@ -28,9 +28,7 @@ See [Library](#library) for the full docs on each. Try it in the [Svelte REPL](h
 | [1.x](https://github.com/metonym/svelte-intersection-observer/tree/v1.2.x) | 3, 4, 5 (legacy/non-runes) | Uses `export let`, slots, and `on:` events |
 | 2.x              | ≥5.29 (legacy + runes) | Uses `$props()`, snippets, and callback props |
 
-All primitives are implemented with runes internally, but Svelte 5 lets a non-runes ("legacy") component consume them — `bind:`, callback props, snippets, and `{@attach}` all interoperate across that boundary. The one exception is [`createIntersectionObserver`](#createintersectionobserver): it exposes `intersecting`/`entry` as plain getters with no bind:/callback prop, and a legacy-mode template doesn't reactively track getter reads, so its state won't update the UI unless the consuming component is itself in runes mode.
-
-<!-- TOC -->
+Internals use runes. A legacy (non-runes) Svelte 5 component can still consume them: `bind:`, callback props, snippets, and `{@attach}` work across that boundary. One exception is [`createIntersectionObserver`](#createintersectionobserver). It exposes `intersecting`/`entry` as plain getters, with no `bind:` or callback prop. Legacy templates do not reactively track getter reads, so the UI only updates if the consuming component is in runes mode.
 
 ## Installation
 
@@ -46,18 +44,41 @@ bun i svelte-intersection-observer
 
 # Yarn
 yarn add svelte-intersection-observer
-
 ```
 
-## Library
+## API
 
-Every primitive shares the same core options (`root`, `rootMargin`, `threshold`, `once`, `skip`) and the same `onobserve`/`onintersect`/`onexit` callbacks. Only how you plug it into your markup differs. See [Use Cases](#use-cases) for realistic scenarios built from these.
+Every export takes the same core options (`root`, `rootMargin`, `threshold`, `once`, `skip`) and the same `onobserve`/`onintersect`/`onexit` callbacks. What changes is how you attach it in markup. [Use cases](#use-cases) shows concrete setups.
+
+#### Callbacks `onobserve` `onintersect` and `onexit`
+
+All six exports expose these three callbacks. Each receives an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry). Components pass the entry directly; the action and attachment put it on `event.detail`.
+
+- **onobserve**: fires when the element is first observed, then on every intersection change
+- **onintersect**: fires only while the element intersects the viewport
+- **onexit**: fires when the element leaves view; not called for the initial off-screen report
+
+```svelte no-eval
+<IntersectionObserver
+  {element}
+  onobserve={(entry) => {
+    console.log(entry); // IntersectionObserverEntry
+    console.log(entry.isIntersecting); // true | false
+  }}
+  onintersect={(entry) => {
+    console.log(entry.isIntersecting); // always true
+  }}
+  onexit={(entry) => {
+    console.log(entry.isIntersecting); // always false
+  }}
+>
+  <div bind:this={element}>Hello world</div>
+</IntersectionObserver>
+```
 
 ### `IntersectionObserver`
 
-Use the [`bind:this`](https://svelte.dev/docs#bind_element) directive to pass an element reference to the `IntersectionObserver` component.
-
-Then bind to the reactive `intersecting` prop to check whether the element intersects the viewport.
+Pass an element with [`bind:this`](https://svelte.dev/docs#bind_element), then bind `intersecting` to know whether it is in the viewport.
 
 ```svelte
 <script lang="ts">
@@ -78,7 +99,7 @@ Then bind to the reactive `intersecting` prop to check whether the element inter
 
 #### `once`
 
-Set `once` to `true` to unobserve the element after its first intersection event, useful for a one-time reveal animation, a single lazy-load, or a single analytics impression.
+Set `once` to `true` to unobserve after the first intersection. Good for a one-shot reveal, lazy-load, or analytics impression.
 
 ```svelte
 <script lang="ts">
@@ -103,9 +124,9 @@ Set `once` to `true` to unobserve the element after its first intersection event
 
 #### `children` snippet
 
-An alternative to binding to the `intersecting` prop is to use the `children` snippet, which receives `intersecting`, `entry`, and `observer`.
+Instead of binding `intersecting`, you can use the `children` snippet. It receives `intersecting`, `entry`, and `observer`.
 
-In this example, "Hello world" fades in when its containing element intersects the viewport.
+Here, "Hello world" fades in when its container enters the viewport.
 
 ```svelte
 <script lang="ts">
@@ -142,11 +163,11 @@ In this example, "Hello world" fades in when its containing element intersects t
 | observer     | `IntersectionObserver` instance                             | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
 | skip         | Pause observing without losing `entry`/`intersecting` state | `boolean`                                                                                                           | `false`       |
 
-**Note**: the observed `element` must render with a non-zero width and height for `threshold` values greater than `0` to have any effect. This is a constraint of the underlying [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), not something this component controls.
+**Note**: for `threshold` values above `0`, the observed `element` needs a non-zero width and height. That comes from the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), not this component.
 
 #### Callback props
 
-Same `onobserve`/`onintersect`/`onexit` behavior as described in [Callbacks](#callbacks-onobserve-onintersect-and-onexit) below.
+Same `onobserve`/`onintersect`/`onexit` behavior as described in [Callbacks](#callbacks-onobserve-onintersect-and-onexit) above.
 
 #### `children` snippet props
 
@@ -158,7 +179,7 @@ Same `onobserve`/`onintersect`/`onexit` behavior as described in [Callbacks](#ca
 
 ### `MultipleIntersectionObserver`
 
-For performance, use `MultipleIntersectionObserver` to observe multiple elements with one shared observer instead of instantiating one per element.
+Use `MultipleIntersectionObserver` when you have many elements and want one shared observer instead of one per element.
 
 ```svelte
 <script lang="ts">
@@ -188,7 +209,7 @@ For performance, use `MultipleIntersectionObserver` to observe multiple elements
 
 #### Using with `#each`
 
-`MultipleIntersectionObserver` also handles a dynamic, `#each`-driven list: give every item its own slot in an array/object instead of one shared variable.
+`MultipleIntersectionObserver` works with a dynamic `#each` list. Give every item its own slot in an array or object; do not reuse one shared variable.
 
 ```svelte
 <script lang="ts">
@@ -201,10 +222,9 @@ For performance, use `MultipleIntersectionObserver` to observe multiple elements
 
   let refs: (HTMLElement | undefined)[] = $state([]);
   let itemsContainer: HTMLElement | undefined = $state();
-  let itemElements = $derived(refs);
 </script>
 
-<MultipleIntersectionObserver elements={itemElements} root={itemsContainer}>
+<MultipleIntersectionObserver elements={refs} root={itemsContainer}>
   {#snippet children({ elementIntersections })}
     <header>
       {#each items as item, i (item.id)}
@@ -231,197 +251,175 @@ For performance, use `MultipleIntersectionObserver` to observe multiple elements
 </MultipleIntersectionObserver>
 ```
 
-As with the scroll-to-end example, `root` must be an element that scrolls on its own; here, `itemsContainer` has an explicit `height` and `overflow-y: auto`.
+Same rule as the scroll-to-end example: `root` must scroll on its own. Here `itemsContainer` has an explicit `height` and `overflow-y: auto`.
 
-**Avoid** using the single-element `IntersectionObserver` component inside an `#each` block with one variable shared across iterations (e.g. `let node;` declared outside the loop, bound via `bind:this={node}` inside it). Every iteration overwrites the same `node`, so each observer keeps re-observing a moving target, which can cause an infinite update loop. Use `MultipleIntersectionObserver` with a per-item ref instead.
+**Avoid** putting the single-element `IntersectionObserver` inside an `#each` with one variable shared across iterations, such as `let node;` outside the loop and `bind:this={node}` inside. Every iteration overwrites `node`, so each observer keeps chasing a moving target and can loop forever. Use `MultipleIntersectionObserver` with a per-item ref instead.
 
 #### Props
 
-| Name                 | Description                                           | Type                                                                                                                                    | Default value |
-| :------------------- | :---------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
-| elements             | Array of elements to observe                          | `ReadonlyArray<Element \| null \| undefined>`                                                                                           | `[]`          |
-| once                 | Unobserve elements after the first intersection event | `boolean`                                                                                                                               | `false`       |
-| root                 | Containing element                                    | `Element` \| `Document` \| `null`                                                                                                        | `null`        |
-| rootMargin           | Margin offset of the containing element               | `string`                                                                                                                                | `"0px"`       |
-| threshold            | Percentage of element visibility to trigger an event  | `number` between 0 and 1, or an array of `number`s between 0 and 1                                                                      | `0`           |
-| elementIntersections | Map of each element to its intersection state         | `Map<HTMLElement \| null, boolean>`                                                                                                     | `new Map()`   |
-| elementEntries       | Map of each element to its latest entry               | `Map<HTMLElement \| null,` [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)`>` | `new Map()`   |
-| observer             | `IntersectionObserver` instance                       | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)                               | `null`        |
-| skip                 | Pause observing all elements without losing state     | `boolean`                                                                                                                               | `false`       |
+| Name                  | Description                                                            | Type                                                              | Default value |
+| :-------------------- | :--------------------------------------------------------------------- | :---------------------------------------------------------------- | :------------ |
+| elements              | Array of elements to observe                                           | `Array<null \| undefined \| Element>`                             | `[]`          |
+| root                  | Containing element                                                     | `Element` \| `Document` \| `null`                                  | `null`        |
+| rootMargin            | Margin offset of the containing element                                | `string`                                                          | `"0px"`       |
+| threshold             | Percentage of element visibility to trigger an event                   | `number` between 0 and 1, or an array of `number`s between 0 and 1 | `0`           |
+| once                  | Unobserve each element after its first intersection event              | `boolean`                                                         | `false`       |
+| skip                  | Pause observing all elements without clearing current state            | `boolean`                                                         | `false`       |
+| elementIntersections  | Map of each element to its current intersecting state                  | `Map<null \| undefined \| Element, boolean>`                      | `new Map()`   |
+| elementEntries        | Map of each element to its latest observer entry                       | `Map<null \| undefined \| Element, IntersectionObserverEntry>`    | `new Map()`   |
+| observer              | Shared `IntersectionObserver` instance                                 | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver) | `null` |
 
 #### Callback props
 
-Called with:
-
-```ts
-{
-  entry: IntersectionObserverEntry;
-  target: HTMLElement;
-}
-```
-
-See [Callbacks](#callbacks-onobserve-onintersect-and-onexit) for when each one fires.
+Same `onobserve`/`onintersect`/`onexit` behavior as described in [Callbacks](#callbacks-onobserve-onintersect-and-onexit) above. Each callback receives the element's individual `IntersectionObserverEntry`.
 
 #### `children` snippet props
 
-| Name                 | Type                                                                                                                                    |
-| :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
-| observer             | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)                                         |
-| elementIntersections | `Map<HTMLElement \| null, boolean>`                                                                                                     |
-| elementEntries       | `Map<HTMLElement \| null,` [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)`>` |
+| Name                 | Type                                                                                             |
+| :------------------- | :----------------------------------------------------------------------------------------------- |
+| elementIntersections | `Map<null \| undefined \| Element, boolean>`                                                    |
+| elementEntries       | `Map<null \| undefined \| Element, IntersectionObserverEntry>`                                  |
+| observer             | [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver) |
 
 ### `intersect`
 
-As an alternative to the `IntersectionObserver` component, use the `intersect` action to observe an element directly with `use:`, without a `bind:this` reference or extra markup. Listen for `onobserve`/`onintersect`/`onexit` on the observed element itself.
+Use the `intersect` action to observe an element with `use:` and no wrapper component.
 
-```svelte
+```svelte no-eval
 <script lang="ts">
   import { intersect } from "svelte-intersection-observer";
 
-  let actionIntersecting = $state(false);
+  let inView = $state(false);
 </script>
 
-<header class:intersecting={actionIntersecting}>
-  {actionIntersecting ? "Element is in view" : "Element is not in view"}
-</header>
-
 <div
-  use:intersect={{ once: true }}
+  use:intersect
   onobserve={(e) => {
-    actionIntersecting = e.detail.isIntersecting;
+    inView = e.detail.isIntersecting;
   }}
 >
-  Hello world
+  {inView ? "In view" : "Not in view"}
 </div>
 ```
 
-Options passed to `use:intersect` are reactive: updating `root`, `rootMargin`, or `threshold` re-initializes the underlying observer. Updating `skip` toggles observing on the existing observer without re-initializing it.
+#### Parameters
 
-#### Options
-
-| Name       | Description                                              | Type                                                               | Default value |
-| :--------- | :------------------------------------------------------- | :----------------------------------------------------------------- | :------------ |
-| root       | Containing element                                       | `null` or `HTMLElement`                                            | `null`        |
-| rootMargin | Margin offset of the containing element                  | `string`                                                           | `"0px"`       |
-| threshold  | Percentage of element visibility to trigger an event     | `number` between 0 and 1, or an array of `number`s between 0 and 1 | `0`           |
-| once       | Unobserve the element after the first intersection event | `boolean`                                                          | `false`       |
-| skip       | Pause observing without disconnecting the observer       | `boolean`                                                          | `false`       |
-
-#### Dispatched events
-
-Same `onobserve`/`onintersect`/`onexit` behavior as described in [Callbacks](#callbacks-onobserve-onintersect-and-onexit); the action dispatches them on the element, and `e.detail` is the [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry).
+| Name       | Description                                               | Type                                                    | Default value |
+| :--------- | :-------------------------------------------------------- | :------------------------------------------------------ | :------------ |
+| once       | Unobserve the element after the first intersection event  | `boolean`                                               | `false`       |
+| skip       | Pause observing without losing `entry`/`intersecting` state | `boolean`                                            | `false`       |
+| root       | Containing element                                        | `Element` \| `Document` \| `null`                       | `null`        |
+| rootMargin | Margin offset of the containing element                   | `string`                                                | `"0px"`       |
+| threshold  | Percentage of element visibility to trigger an event      | `number` between 0 and 1, or an array of `number`s between 0 and 1 | `0` |
+| onobserve  | Called when the element is first observed or when an intersection change occurs | `(entry: IntersectionObserverEntry) => void` | `undefined` |
+| onintersect | Called when the element is intersecting the viewport     | `(entry: IntersectionObserverEntry) => void`            | `undefined`   |
+| onexit     | Called when the element stops intersecting                | `(entry: IntersectionObserverEntry) => void`            | `undefined`   |
 
 ### `intersectAttachment`
 
-As of Svelte 5.29, [attachments](https://svelte.dev/docs/svelte/svelte-attachments) are the preferred replacement for actions. `intersectAttachment` wraps the `intersect` action with `svelte/attachments`'s `fromAction`, reusing the same observer logic but plugging into `{@attach ...}` instead of `use:`.
+Use `intersectAttachment` in Svelte 5.29+ if you prefer `{@attach}` over `use:`.
 
-Attachments have a few architectural advantages over actions:
-
-- No separate `update()` lifecycle method; they rerun reactively like a `$effect`
-- Just plain functions, so they're easier to compose and generate dynamically
-- Can be forwarded through components as ordinary props, unlike actions
-
-```svelte
+```svelte no-eval
 <script lang="ts">
   import { intersectAttachment } from "svelte-intersection-observer";
 
-  let attachmentIntersecting = $state(false);
+  let inView = $state(false);
 </script>
 
-<header class:intersecting={attachmentIntersecting}>
-  {attachmentIntersecting ? "Element is in view" : "Element is not in view"}
-</header>
-
 <div
-  {@attach intersectAttachment(() => ({ once: true }))}
+  {@attach intersectAttachment()}
   onobserve={(e) => {
-    attachmentIntersecting = e.detail.isIntersecting;
+    inView = e.detail.isIntersecting;
   }}
 >
-  Hello world
+  {inView ? "In view" : "Not in view"}
 </div>
 ```
 
-**Note**: unlike `use:intersect`, which takes the options object directly, `intersectAttachment` takes a function that _returns_ the options object (this is how `fromAction` tracks reactive dependencies). `intersect` remains fully supported; use whichever fits your codebase.
+#### Parameters
 
-Options and dispatched events are identical to the [`intersect` action](#intersect) above.
+Same options and callbacks as [`intersect`](#intersect).
 
 ### `createIntersectionObserver`
 
-To get intersection state without wrapping markup in a component, use `createIntersectionObserver`, a script-only rune-based composable: call it in `<script>` for reactive `intersecting`/`entry` getters, then apply `attach` to the node with `{@attach}`.
+Use `createIntersectionObserver` to create and control observation from `<script>` without a directive or wrapper.
 
 ```svelte no-eval
 <script lang="ts">
   import { createIntersectionObserver } from "svelte-intersection-observer";
 
-  const observer = createIntersectionObserver(() => ({ threshold: 0.5 }));
+  let target: HTMLElement | undefined = $state();
+
+  const observer = createIntersectionObserver(() => ({
+    element: target,
+    threshold: 0.5,
+  }));
 </script>
 
-<div {@attach observer.attach}>
-  {observer.intersecting ? "In view" : "Not in view"}
+<div bind:this={target}>
+  {observer.intersecting ? "Half visible" : "Less than half visible"}
 </div>
 ```
 
-`createIntersectionObserver` takes the same options as [`intersectAttachment`](#intersectattachment) (as a function returning the options object) and reuses its underlying observer logic.
+#### Signature
 
-**Note**: the returned `intersecting`/`entry` are plain getters backed by runes. They only stay reactive when read from a runes-mode component — a non-runes ("legacy") consumer won't re-render when they change, since its template doesn't track getter reads. If you need this to work from a legacy component, use one of the other primitives (e.g. [`intersectAttachment`](#intersectattachment) with its `onobserve` callback) instead.
+```ts
+function createIntersectionObserver(
+  getOptions?: () => IntersectOptions,
+): {
+  readonly intersecting: boolean;
+  readonly entry: IntersectionObserverEntry | null;
+  readonly observer: IntersectionObserver | null;
+};
+```
 
-#### Return value
+#### Options
 
-| Name         | Description                                             | Type                                                                                                                 |
-| :----------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
-| intersecting | `true` if the observed element is intersecting the viewport | `boolean`                                                                                                          |
-| entry        | Observed element metadata                                | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
-| attach       | Attachment to apply to the observed element via `{@attach}` | [`Attachment<HTMLElement>`](https://svelte.dev/docs/svelte/svelte-attachments)                                    |
+Same core options as [`IntersectionObserver`](#intersectionobserver): `element`, `root`, `rootMargin`, `threshold`, `once`, and `skip`.
+
+#### Callback options
+
+Same `onobserve`/`onintersect`/`onexit` behavior as described in [Callbacks](#callbacks-onobserve-onintersect-and-onexit) above.
 
 ### `createIntersectionGroup`
 
-A bare `intersect`/`intersectAttachment` inside an `#each` block creates one native `IntersectionObserver` per iteration: for a long list, that's N observers instead of 1. `createIntersectionGroup` fixes this for the action/attachment API: call it once to create a group, then call `group.attach(...)` once per element to get an attachment that shares a single underlying observer across the whole group.
+Use `createIntersectionGroup` for one shared observer across many elements, attaching to each node with `{@attach}`.
 
-```svelte
+```svelte no-eval
 <script lang="ts">
   import { createIntersectionGroup } from "svelte-intersection-observer";
 
-  let groupItems = $state(
-    Array.from({ length: 5 }, (_, i) => ({ id: i, intersecting: false })),
-  );
+  let sections = [
+    { id: "intro", title: "Intro", visible: false },
+    { id: "details", title: "Details", visible: false },
+    { id: "summary", title: "Summary", visible: false },
+  ];
 
-  const group = createIntersectionGroup();
+  let sectionRoot: HTMLElement | undefined = $state();
+
+  const group = createIntersectionGroup(() => ({
+    root: sectionRoot,
+    threshold: 0.25,
+  }));
 </script>
 
-<header>
-  {#each groupItems as item (item.id)}
-    <div class:intersecting={item.intersecting}>
-      Item {item.id}: {item.intersecting ? "✓" : "✗"}
-    </div>
+<div bind:this={sectionRoot} style="height: 200px; overflow-y: auto;">
+  {#each sections as section (section.id)}
+    <section
+      id={section.id}
+      style="height: 160px;"
+      {@attach group.attach({
+        onobserve: (entry) => {
+          section.visible = entry.isIntersecting;
+        },
+      })}
+    >
+      <h3>{section.title}</h3>
+      <p>{section.visible ? "Visible" : "Not visible"}</p>
+    </section>
   {/each}
-</header>
-
-{#each groupItems as item (item.id)}
-  <div
-    class:intersecting={item.intersecting}
-    {@attach group.attach({
-      onobserve: (entry) => (item.intersecting = entry.isIntersecting),
-    })}
-  >
-    Item {item.id}
-  </div>
-{/each}
+</div>
 ```
-
-`root`/`rootMargin`/`threshold` configure the one shared observer, so they're passed once to `createIntersectionGroup` itself (as a function) rather than per element:
-
-```js
-const group = createIntersectionGroup(() => ({
-  root: container,
-  rootMargin: "0px",
-  threshold: 0.5,
-}));
-```
-
-Shared options are reactive: when `root`, `rootMargin`, or `threshold` changes, the group rebuilds its single shared observer and re-observes every element. Note that elements whose `once` has already fired are re-observed as well.
-
-`once`, `skip`, `onobserve`, `onintersect`, and `onexit` are the only options that make sense per element, so those are what `group.attach(...)` accepts.
 
 #### Signature
 
@@ -433,7 +431,7 @@ function createIntersectionGroup(
 
 #### Shared options
 
-Passed once to `createIntersectionGroup`; apply to every element in the group.
+Passed once to `createIntersectionGroup`. Apply to every element in the group.
 
 | Name       | Description                                           | Type                                                               | Default value |
 | :--------- | :----------------------------------------------------- | :----------------------------------------------------------------- | :------------ |
@@ -446,46 +444,24 @@ Passed once to `createIntersectionGroup`; apply to every element in the group.
 Passed once per element, to `group.attach(...)`.
 
 | Name       | Description                                               | Type                                                    | Default value |
-| :--------- | :---------------------------------------------------------- | :------------------------------------------------------- | :------------ |
+| :--------- | :-------------------------------------------------------- | :------------------------------------------------------ | :------------ |
 | once       | Unobserve the element after the first intersection event  | `boolean`                                               | `false`       |
 | skip       | Skip observing this element without affecting the group   | `boolean`                                               | `false`       |
 | onobserve  | Called when the element is first observed or when an intersection change occurs | `(entry: IntersectionObserverEntry) => void` | `undefined` |
-| onintersect | Called when the element is intersecting the viewport      | `(entry: IntersectionObserverEntry) => void`            | `undefined`   |
+| onintersect | Called when the element is intersecting the viewport     | `(entry: IntersectionObserverEntry) => void`            | `undefined`   |
 | onexit     | Called when the element stops intersecting                | `(entry: IntersectionObserverEntry) => void`            | `undefined`   |
 
-#### Callbacks: `onobserve`, `onintersect`, and `onexit`
+### SSR
 
-Every primitive above exposes the same three callbacks, called with an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) (components pass it directly; action and attachment dispatch it as `event.detail`):
+All exports are SSR-safe. You do not need guards. On the server nothing is observed, so `intersecting` is `false` and `entry` is `null`. Observation starts after mount in the browser. If above-the-fold content must look correct in the server HTML, do not gate its critical rendering on `intersecting`.
 
-- **onobserve**: called when the element is first observed, and again on every intersection change
-- **onintersect**: called only when the element is intersecting the viewport (a filtered view of `onobserve`)
-- **onexit**: called when the element stops intersecting (transitions out of view); not called for the initial off-screen report
+## Use cases
 
-```svelte no-eval
-<IntersectionObserver
-  {element}
-  onobserve={(entry) => {
-    console.log(entry); // IntersectionObserverEntry
-    console.log(entry.isIntersecting); // true | false
-  }}
-  onintersect={(entry) => {
-    console.log(entry.isIntersecting); // always true
-  }}
-  onexit={(entry) => {
-    console.log(entry.isIntersecting); // always false
-  }}
->
-  <div bind:this={element}>Hello world</div>
-</IntersectionObserver>
-```
-
-## Use Cases
-
-Realistic scenarios built from the primitives above.
+Concrete setups using the exports above.
 
 ### Lazy-loading images
 
-Delay loading an image's real `src` until it's about to scroll into view. `rootMargin` starts the fetch slightly before the image is visible so it's ready when the user scrolls to it; `once` stops observing once it has loaded.
+Delay the real `src` until the image is about to enter view. `rootMargin` starts the fetch a bit early so it is ready when the user scrolls to it. `once` stops observing after load.
 
 ```svelte no-eval
 <script lang="ts">
@@ -504,7 +480,7 @@ Delay loading an image's real `src` until it's about to scroll into view. `rootM
 
 ### Autoplaying video
 
-Play a `<video>` while it's on screen and pause it once it scrolls away. Unlike lazy-loading, this needs to react every time visibility changes, so use the `onintersect`/`onexit` pair (not `onobserve`) and skip `once`.
+Play a `<video>` while it is on screen, pause when it leaves. This needs a reaction on every visibility change, so use `onintersect`/`onexit` and skip `once`.
 
 ```svelte no-eval
 <script lang="ts">
@@ -526,7 +502,7 @@ Play a `<video>` while it's on screen and pause it once it scrolls away. Unlike 
 
 ### Tracking impressions
 
-Fire an impression event the first time an element is meaningfully visible. `threshold` sets what counts as "visible enough," and `once` guarantees a single event per element.
+Fire an impression the first time an element is meaningfully visible. `threshold` defines "visible enough." `once` keeps it to a single event per element.
 
 ```svelte no-eval
 <div
@@ -539,9 +515,9 @@ Fire an impression event the first time an element is meaningfully visible. `thr
 
 ### Infinite scroll
 
-To detect when a user has scrolled to the end of a scrollable container, place a sentinel element after the content and set `root` to the container. `intersecting` becomes `true` once the sentinel scrolls into view.
+To detect scroll-to-end in a scrollable container, put a sentinel after the content and set `root` to the container. `intersecting` becomes `true` when the sentinel enters view.
 
-**Note**: `root` must be the scrollable element itself (i.e. it has its own `overflow`/fixed `height`), not just an ancestor of one. If `root` merely sits inside a scrollable ancestor, the sentinel scrolls along with `root` and never changes position relative to it, so it reports as permanently intersecting.
+**Note**: `root` must be the scrollable element itself. It needs its own `overflow` and fixed `height`, not merely an ancestor that scrolls. If `root` only sits inside a scrollable ancestor, the sentinel moves with `root` and never changes position relative to it, so it stays permanently intersecting.
 
 ```svelte
 <script lang="ts">
@@ -571,11 +547,11 @@ To detect when a user has scrolled to the end of a scrollable container, place a
 </div>
 ```
 
-The same sentinel pattern powers infinite scroll: call a `loadMore()` function from `onintersect` instead of (or alongside) updating `reachedEnd`.
+Same sentinel pattern for infinite scroll: call `loadMore()` from `onintersect` instead of, or as well as, updating `reachedEnd`.
 
 ### Reveal animation on scroll
 
-Keep the `bind:this` element outside the `{#if intersecting}` block, and only gate the animated content inside it. The bound element stays in the DOM even before the reveal fires, so external triggers like `scrollIntoView()` still work, and the animation replays every time the element crosses into or out of view.
+Keep the `bind:this` element outside `{#if intersecting}`. Only gate the animated content inside. The bound element stays in the DOM before the reveal, so things like `scrollIntoView()` still work, and the animation can replay each time the element enters or leaves view.
 
 ```svelte
 <script lang="ts">
@@ -609,9 +585,11 @@ Keep the `bind:this` element outside the `{#if intersecting}` block, and only ga
 </IntersectionObserver>
 ```
 
+Respect `prefers-reduced-motion` by gating the transition, for example with Svelte's [`prefersReducedMotion`](https://svelte.dev/docs/svelte/svelte-motion#prefersReducedMotion) store from `svelte/motion` (≥5.7).
+
 ### `skip`
 
-Set `skip` to `true` to unobserve without disconnecting the underlying observer or losing `entry`/`intersecting` state. Useful for pausing tracking on an off-screen carousel panel or a closed modal. Set `skip` back to `false` to resume; unlike `once`, this toggles back and forth freely. `MultipleIntersectionObserver` and the `intersect` action support the same `skip` option.
+Set `skip` to `true` to unobserve without disconnecting the observer or clearing `entry`/`intersecting`. Handy for pausing on an off-screen carousel panel or a closed modal. Set it back to `false` to resume. Unlike `once`, this toggles freely. `MultipleIntersectionObserver` and the `intersect` action support `skip` too.
 
 ```svelte no-eval
 <script lang="ts">
@@ -634,61 +612,16 @@ Set `skip` to `true` to unobserve without disconnecting the underlying observer 
 
 ### List strategy
 
-Both [`MultipleIntersectionObserver`](#multipleintersectionobserver) and [`createIntersectionGroup`](#createintersectiongroup) share one observer across many elements. Pick based on how you want to wire it up:
+[`MultipleIntersectionObserver`](#multipleintersectionobserver) and [`createIntersectionGroup`](#createintersectiongroup) both share one observer across many elements. Choose by wiring style:
 
-- Use `MultipleIntersectionObserver` when you're fine wrapping the list in a component and want a ready-made `elementIntersections` map handed to you via the `children` snippet.
-- Use `createIntersectionGroup` when you'd rather attach directly to each element with `{@attach}`, no extra component, and are happy tracking intersection state on your own per-item objects (as shown in its example above).
+- `MultipleIntersectionObserver` if you are fine wrapping the list in a component and want an `elementIntersections` map from the `children` snippet.
+- `createIntersectionGroup` if you would rather `{@attach}` on each element with no wrapper, and track intersection on your own per-item objects.
 
-Either way, avoid giving `IntersectionObserver` a single shared `bind:this` variable inside `#each`; see the warning under [pooled component](#multipleintersectionobserver).
+Either way, do not give `IntersectionObserver` a single shared `bind:this` inside `#each`. See the warning under [pooled component](#multipleintersectionobserver).
 
 ## `IntersectionObserverEntry`
 
-Note that all properties in [IntersectionObserverEntry](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) are read-only.
-
-<details>
- <summary><code>IntersectionObserverEntry</code></summary>
-
-```ts
-interface IntersectionObserverEntry {
-  target: HTMLElement;
-  time: number;
-  isIntersecting: boolean;
-  isVisible: boolean;
-  intersectionRatio: number;
-  intersectionRect: {
-    bottom: number;
-    height: number;
-    left: number;
-    right: number;
-    top: number;
-    width: number;
-    x: number;
-    y: number;
-  };
-  rootBounds: {
-    bottom: number;
-    height: number;
-    left: number;
-    right: number;
-    top: number;
-    width: number;
-    x: number;
-    y: number;
-  };
-  boundingClientRect: {
-    bottom: number;
-    height: number;
-    left: number;
-    right: number;
-    top: number;
-    width: number;
-    x: number;
-    y: number;
-  };
-}
-```
-
-</details>
+Fields on an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) are read-only. The ones you reach for most are `isIntersecting`, `intersectionRatio`, and `target`. MDN covers the rest.
 
 [npm]: https://img.shields.io/npm/v/svelte-intersection-observer.svg?color=%23ff3e00&style=for-the-badge
 [npm-url]: https://npmjs.com/package/svelte-intersection-observer
