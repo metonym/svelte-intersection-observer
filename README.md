@@ -25,8 +25,10 @@ See [Library](#library) for the full docs on each. Try it in the [Svelte REPL](h
 
 | Package version | Svelte version    | Notes                                     |
 | :--------------- | :----------------- | :----------------------------------------- |
-| [1.x](https://github.com/metonym/svelte-intersection-observer/tree/v1.2.x) | 3, 4, 5 (non-runes) | Uses `export let`, slots, and `on:` events |
-| 2.x              | ≥5.29 (runes mode only) | Uses `$props()`, snippets, and callback props |
+| [1.x](https://github.com/metonym/svelte-intersection-observer/tree/v1.2.x) | 3, 4, 5 (legacy/non-runes) | Uses `export let`, slots, and `on:` events |
+| 2.x              | ≥5.29 (legacy + runes) | Uses `$props()`, snippets, and callback props |
+
+All primitives are implemented with runes internally, but Svelte 5 lets a non-runes ("legacy") component consume them — `bind:`, callback props, snippets, and `{@attach}` all interoperate across that boundary. The one exception is [`createIntersectionObserver`](#createintersectionobserver): it exposes `intersecting`/`entry` as plain getters with no bind:/callback prop, and a legacy-mode template doesn't reactively track getter reads, so its state won't update the UI unless the consuming component is itself in runes mode.
 
 <!-- TOC -->
 
@@ -361,6 +363,8 @@ To get intersection state without wrapping markup in a component, use `createInt
 ```
 
 `createIntersectionObserver` takes the same options as [`intersectAttachment`](#intersectattachment) (as a function returning the options object) and reuses its underlying observer logic.
+
+**Note**: the returned `intersecting`/`entry` are plain getters backed by runes. They only stay reactive when read from a runes-mode component — a non-runes ("legacy") consumer won't re-render when they change, since its template doesn't track getter reads. If you need this to work from a legacy component, use one of the other primitives (e.g. [`intersectAttachment`](#intersectattachment) with its `onobserve` callback) instead.
 
 #### Return value
 
