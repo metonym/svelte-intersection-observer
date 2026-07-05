@@ -1,7 +1,5 @@
 import { fromAction } from "svelte/attachments";
 
-let warned = false;
-
 /**
  * Svelte action that observes `node` with the Intersection Observer API.
  * Dispatches `observe` (on every change) and `intersect` (on entering the
@@ -22,16 +20,7 @@ export function intersect(node, options = {}) {
   let observer;
 
   const createObserver = () => {
-    if (typeof IntersectionObserver === "undefined") {
-      if (!warned) {
-        warned = true;
-        console.warn(
-          "svelte-intersection-observer: `IntersectionObserver` is not available in this environment. No observation will occur; consider using a polyfill if you need to support it.",
-        );
-      }
-
-      return null;
-    }
+    if (typeof IntersectionObserver === "undefined") return null;
 
     return new IntersectionObserver(
       (entries) => {

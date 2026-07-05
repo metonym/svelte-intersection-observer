@@ -1,7 +1,3 @@
-<script module>
-  let warned = false;
-</script>
-
 <script>
   import { untrack } from "svelte";
 
@@ -44,13 +40,6 @@
 
   const initialize = () => {
     if (typeof IntersectionObserver === "undefined") {
-      if (!warned) {
-        warned = true;
-        console.warn(
-          "svelte-intersection-observer: `IntersectionObserver` is not available in this environment. No observation will occur; consider using a polyfill if you need to support it.",
-        );
-      }
-
       observer = null;
       return;
     }

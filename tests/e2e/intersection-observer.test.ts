@@ -611,14 +611,10 @@ test.describe("Missing IntersectionObserver support", () => {
     });
   });
 
-  test("IntersectionObserver component - degrades gracefully with a single warning", async ({
+  test("IntersectionObserver component - degrades gracefully without throwing", async ({
     page,
   }) => {
-    const warnings: string[] = [];
     const pageErrors: Error[] = [];
-    page.on("console", (msg) => {
-      if (msg.type() === "warning") warnings.push(msg.text());
-    });
     page.on("pageerror", (err) => pageErrors.push(err));
 
     await page.goto("/basic.html");
@@ -629,9 +625,6 @@ test.describe("Missing IntersectionObserver support", () => {
     await expect(page.locator("header")).toHaveText(/Element is not in view/);
 
     expect(pageErrors).toEqual([]);
-    expect(
-      warnings.filter((w) => w.includes("IntersectionObserver")),
-    ).toHaveLength(1);
   });
 
   test("MultipleIntersectionObserver component - degrades gracefully without throwing", async ({
