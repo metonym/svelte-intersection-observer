@@ -6,7 +6,12 @@
 
 Use it to lazy-load images, trigger scroll animations, implement infinite scroll, autoplay video when visible, track ad or analytics impressions, or detect when a user has scrolled to the end of a list.
 
-This library is zero-dependency and offers three ways to observe elements: the `IntersectionObserver` component for a single element, the `MultipleIntersectionObserver` component for observing many elements with one shared observer (better performance than one observer per element), and the `intersect` action for observing an element directly with `use:`.
+This library is zero-dependency and offers several ways to observe elements:
+
+- `IntersectionObserver`: component for a single element
+- `MultipleIntersectionObserver`: component for observing many elements (shared observer, better performance)
+- `intersect`: action for observing an element directly with `use:`
+- `intersectAttachment`: attachment for observing an element directly with `{@attach}` (Svelte 5.29+)
 
 Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d).
 
@@ -263,6 +268,37 @@ As an alternative to the `IntersectionObserver` component, use the `intersect` a
 
 Options passed to `use:intersect` are reactive: updating `root`, `rootMargin`, or `threshold` re-initializes the underlying observer. Updating `skip` toggles observing on the existing observer without re-initializing it.
 
+### `intersectAttachment` attachment
+
+As of Svelte 5.29, [attachments](https://svelte.dev/docs/svelte/svelte-attachments) are the preferred replacement for actions. `intersectAttachment` wraps the `intersect` action with `svelte/attachments`'s `fromAction`, reusing the same observer logic but plugging into `{@attach ...}` instead of `use:`.
+
+Attachments have a few architectural advantages over actions:
+
+- No separate `update()` lifecycle method; they rerun reactively like a `$effect`
+- Just plain functions, so they're easier to compose and generate dynamically
+- Can be forwarded through components as ordinary props, unlike actions
+
+```svelte
+<script>
+  import { intersectAttachment } from "svelte-intersection-observer";
+
+  let attachmentIntersecting = $state(false);
+</script>
+
+<header class:intersecting={attachmentIntersecting}>
+  {attachmentIntersecting ? "Element is in view" : "Element is not in view"}
+</header>
+
+<div
+  {@attach intersectAttachment(() => ({ once: true }))}
+  onobserve={(e) => (attachmentIntersecting = e.detail.isIntersecting)}
+>
+  Hello world
+</div>
+```
+
+**Note**: unlike `use:intersect`, which takes the options object directly, `intersectAttachment` takes a function that _returns_ the options object (this is how `fromAction` tracks reactive dependencies). `intersect` remains fully supported; use whichever fits your codebase.
+
 ### Multiple elements
 
 For performance, use `MultipleIntersectionObserver` to observe multiple elements with a single shared observer instead of instantiating a new one for every element.
@@ -417,7 +453,9 @@ Both callbacks are called with:
 | elementIntersections | `Map<HTMLElement \| null, boolean>`                                                                                                     |
 | elementEntries       | `Map<HTMLElement \| null,` [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)`>` |
 
-### `intersect` action
+### `intersect` action / `intersectAttachment` attachment
+
+`intersectAttachment` is a thin wrapper around the `intersect` action (see [above](#intersectattachment-attachment)), so both share the same options and dispatched events.
 
 #### Options
 
