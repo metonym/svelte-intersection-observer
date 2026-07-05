@@ -454,6 +454,33 @@ test("Multiple elements - elements array add/remove retargets the observer", asy
     /Item 2 is not visible/,
   );
   await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+});
+
+test("Multiple elements - re-observes the same refs after elements becomes empty", async ({
+  page,
+}) => {
+  await page.goto("/multiple-elements-change.html");
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
+  );
+
+  await page.getByTestId("remove-item-1").click();
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.getByTestId("add-item-1").click();
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is not visible/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
     /Item 1 is visible/,
   );
 });

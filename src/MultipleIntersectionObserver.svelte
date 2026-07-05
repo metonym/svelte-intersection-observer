@@ -84,27 +84,32 @@
     const isSkipped = skip;
     const activeObserver = observer;
 
-    if (currentElements.length > 0) {
-      const newElements = currentElements.filter(
-        (el) => el && !prevElements.includes(el),
-      );
+    const newElements = currentElements.filter(
+      (el) => el && !prevElements.includes(el),
+    );
+    const removedElements = prevElements.filter(
+      (el) => el && !currentElements.includes(el),
+    );
 
-      if (!isSkipped) {
-        for (const el of newElements) {
-          if (el) activeObserver?.observe(el);
-        }
+    if (!isSkipped) {
+      for (const el of newElements) {
+        if (el) activeObserver?.observe(el);
       }
-
-      const removedElements = prevElements.filter(
-        (el) => el && !currentElements.includes(el),
-      );
-
-      for (const el of removedElements) {
-        if (el) activeObserver?.unobserve(el);
-      }
-
-      prevElements = [...currentElements];
     }
+
+    for (const el of removedElements) {
+      if (!el) continue;
+      activeObserver?.unobserve(el);
+      elementIntersections.delete(el);
+      elementEntries.delete(el);
+    }
+
+    if (removedElements.length > 0) {
+      elementIntersections = new Map(elementIntersections);
+      elementEntries = new Map(elementEntries);
+    }
+
+    prevElements = [...currentElements];
 
     if (isSkipped !== prevSkip) {
       for (const el of currentElements) {
