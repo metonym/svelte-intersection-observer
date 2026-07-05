@@ -92,29 +92,34 @@
     const isSkipped = skip;
     const activeObserver = observer;
 
-    if (currentElements.length > 0) {
-      const currentSet = new Set(currentElements);
+    const currentSet = new Set(currentElements);
 
-      const newElements = currentElements.filter(
-        (el) => el && !prevElements.has(el),
-      );
+    const newElements = currentElements.filter(
+      (el) => el && !prevElements.has(el),
+    );
+    const removedElements = [...prevElements].filter(
+      (el) => el && !currentSet.has(el),
+    );
 
-      if (!isSkipped) {
-        for (const el of newElements) {
-          if (el) activeObserver?.observe(el);
-        }
+    if (!isSkipped) {
+      for (const el of newElements) {
+        if (el) activeObserver?.observe(el);
       }
-
-      const removedElements = [...prevElements].filter(
-        (el) => el && !currentSet.has(el),
-      );
-
-      for (const el of removedElements) {
-        if (el) activeObserver?.unobserve(el);
-      }
-
-      prevElements = currentSet;
     }
+
+    for (const el of removedElements) {
+      if (!el) continue;
+      activeObserver?.unobserve(el);
+      elementIntersections.delete(el);
+      elementEntries.delete(el);
+    }
+
+    if (removedElements.length > 0) {
+      elementIntersections = new Map(elementIntersections);
+      elementEntries = new Map(elementEntries);
+    }
+
+    prevElements = currentSet;
 
     if (isSkipped !== prevSkip) {
       for (const el of currentElements) {
