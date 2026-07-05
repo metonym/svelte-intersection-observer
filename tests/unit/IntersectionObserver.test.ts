@@ -3,6 +3,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import BasicFixture from "../e2e/fixtures/BasicFixture.svelte";
 import EachBindingFixture from "../e2e/fixtures/EachBindingFixture.svelte";
 import ElementChangeFixture from "../e2e/fixtures/ElementChangeFixture.svelte";
+import ElementNullFixture from "../e2e/fixtures/ElementNullFixture.svelte";
 import OnceFixture from "../e2e/fixtures/OnceFixture.svelte";
 import RootFixture from "../e2e/fixtures/RootFixture.svelte";
 import RootMarginChangeFixture from "../e2e/fixtures/RootMarginChangeFixture.svelte";
@@ -10,6 +11,7 @@ import RootMarginFixture from "../e2e/fixtures/RootMarginFixture.svelte";
 import SkipFixture from "../e2e/fixtures/SkipFixture.svelte";
 import ThresholdChangeFixture from "../e2e/fixtures/ThresholdChangeFixture.svelte";
 import ThresholdFixture from "../e2e/fixtures/ThresholdFixture.svelte";
+import ThresholdStableFixture from "../e2e/fixtures/ThresholdStableFixture.svelte";
 import { MockIntersectionObserver } from "./mock-intersection-observer";
 import { render } from "./render";
 
@@ -209,5 +211,64 @@ describe("IntersectionObserver", () => {
     expect(
       rendered.target.querySelector('[data-testid="section-two"]')?.textContent,
     ).toContain("not visible");
+  });
+
+  test("element becoming null unobserves it and resets intersecting/entry; restoring re-observes", () => {
+    const rendered = render(ElementNullFixture);
+    cleanup = rendered.cleanup;
+    const el = rendered.target.querySelector("div");
+    const header = rendered.target.querySelector("header");
+    const clearButton = rendered.target.querySelector('[data-testid="clear"]');
+    const restoreButton = rendered.target.querySelector(
+      '[data-testid="restore"]',
+    );
+    if (
+      !el ||
+      !header ||
+      !(clearButton instanceof HTMLButtonElement) ||
+      !(restoreButton instanceof HTMLButtonElement)
+    ) {
+      throw new Error("fixture markup missing");
+    }
+
+    const observer = MockIntersectionObserver.last();
+    flushSync(() => observer.trigger([{ target: el, isIntersecting: true }]));
+    expect(header.textContent).toContain("Element is in view");
+
+    clearButton.click();
+    flushSync();
+
+    expect(observer.observedElements.has(el)).toBe(false);
+    expect(header.textContent).toContain("Element is not in view");
+
+    restoreButton.click();
+    flushSync();
+    expect(observer.observedElements.has(el)).toBe(true);
+  });
+
+  test("value-equal but referentially-new threshold arrays do not recreate the observer", () => {
+    const rendered = render(ThresholdStableFixture);
+    cleanup = rendered.cleanup;
+    const unrelatedButton = rendered.target.querySelector(
+      '[data-testid="unrelated-button"]',
+    );
+    if (!(unrelatedButton instanceof HTMLButtonElement)) {
+      throw new Error("fixture markup missing");
+    }
+
+    expect(
+      rendered.target.querySelector('[data-testid="observer-count"]')
+        ?.textContent,
+    ).toContain("Observer count: 1");
+
+    for (let i = 0; i < 3; i++) {
+      unrelatedButton.click();
+      flushSync();
+    }
+
+    expect(
+      rendered.target.querySelector('[data-testid="observer-count"]')
+        ?.textContent,
+    ).toContain("Observer count: 1");
   });
 });
