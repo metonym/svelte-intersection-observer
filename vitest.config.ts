@@ -23,5 +23,9 @@ export default defineConfig({
     environment: "jsdom",
     include: ["tests/unit/**/*.test.ts"],
     setupFiles: ["./tests/unit/setup.ts"],
+    typecheck: {
+      enabled: true,
+      include: ["tests/unit/**/*.test-d.ts"],
+    },
   },
 });
