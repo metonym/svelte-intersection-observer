@@ -1,6 +1,6 @@
 {
   "name": "svelte-intersection-observer",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "license": "MIT",
   "description": "Detects when an element enters or exits the viewport using the Intersection Observer API.",
   "author": "Eric Liu (https://github.com/metonym)",

@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0](https://github.com/metonym/svelte-intersection-observer/releases/tag/v2.2.0) - 2026-07-05
+
+**Features**
+
+- Add `createIntersectionGroup` for shared-observer list usage (#138)
+- Add `createIntersectionObserver` rune-based composable (#139)
+
+**Fixes**
+
+- Guard against missing `IntersectionObserver` support (#137)
+- `IntersectionObserver`: unobserve the previous element when `element` becomes `null` (#143)
+- `MultipleIntersectionObserver`: unobserve elements when `elements` becomes empty (#142)
+- `createIntersectionGroup`: guard against missing `IntersectionObserver` support (#149)
+
+**Performance**
+
+- `MultipleIntersectionObserver`: use Set-based diffing for the `elements` array
+- `IntersectionObserver`: avoid recreating the observer for value-equal `threshold`, `root`, or `rootMargin` (#141)
+
 ## [2.0.1](https://github.com/metonym/svelte-intersection-observer/releases/tag/v2.0.1) - 2026-07-04
 
 **Features**
