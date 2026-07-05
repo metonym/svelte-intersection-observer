@@ -33,8 +33,8 @@
     children,
   } = $props();
 
-  /** @type {(HTMLElement | null)[]} */
-  let prevElements = [];
+  /** @type {Set<HTMLElement | null>} */
+  let prevElements = new Set();
 
   let prevSkip = untrack(() => skip);
 
@@ -77,7 +77,7 @@
     configKey;
 
     untrack(() => {
-      prevElements = [];
+      prevElements = new Set();
       initialize();
     });
 
@@ -93,8 +93,10 @@
     const activeObserver = observer;
 
     if (currentElements.length > 0) {
+      const currentSet = new Set(currentElements);
+
       const newElements = currentElements.filter(
-        (el) => el && !prevElements.includes(el),
+        (el) => el && !prevElements.has(el),
       );
 
       if (!isSkipped) {
@@ -103,15 +105,15 @@
         }
       }
 
-      const removedElements = prevElements.filter(
-        (el) => el && !currentElements.includes(el),
+      const removedElements = [...prevElements].filter(
+        (el) => el && !currentSet.has(el),
       );
 
       for (const el of removedElements) {
         if (el) activeObserver?.unobserve(el);
       }
 
-      prevElements = [...currentElements];
+      prevElements = currentSet;
     }
 
     if (isSkipped !== prevSkip) {
