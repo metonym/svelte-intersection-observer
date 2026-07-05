@@ -246,6 +246,32 @@ test("Attachment - {@attach intersectAttachment} dispatches observe/intersect ev
   );
 });
 
+test("createIntersectionObserver - updates intersecting/entry via {@attach observer.attach} and honors once", async ({
+  page,
+}) => {
+  await page.goto("/create-intersection-observer.html");
+  const app = page.locator("#app");
+
+  await expect(page.locator("header")).toHaveText(/Element is not in view/);
+  await expect(page.getByTestId("intersect-count")).toHaveText(
+    /Intersect count: 0/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+  await expect(page.locator("header")).toHaveText(/Element is in view/);
+  await expect(app).toHaveText(/Hello world/);
+  await expect(page.getByTestId("intersect-count")).toHaveText(
+    /Intersect count: 1/,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("intersect-count")).toHaveText(
+    /Intersect count: 1/,
+  );
+});
+
 test("Attachment - reinitializes the observer when the parameter changes at runtime", async ({
   page,
 }) => {
