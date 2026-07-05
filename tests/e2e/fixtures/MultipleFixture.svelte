@@ -8,41 +8,42 @@
   $: elements = [ref1, ref2, ref3];
 </script>
 
-<MultipleIntersectionObserver
-  {elements}
-  let:elementIntersections
->
-  <header>
-    {#each elements as el, index}
-      {@const visible = elementIntersections.get(el)}
-      {#if visible}
-        <p data-testid="item-{index + 1}-status">Item {index + 1} is visible</p>
-      {:else}
-        <p data-testid="item-{index + 1}-status">
-          Item {index + 1} is not visible
-        </p>
-      {/if}
-    {/each}
-  </header>
+<MultipleIntersectionObserver {elements}>
+  {#snippet children({ elementIntersections })}
+    <header>
+      {#each elements as el, index}
+        {@const visible = elementIntersections.get(el)}
+        {#if visible}
+          <p data-testid="item-{index + 1}-status">
+            Item {index + 1} is visible
+          </p>
+        {:else}
+          <p data-testid="item-{index + 1}-status">
+            Item {index + 1} is not visible
+          </p>
+        {/if}
+      {/each}
+    </header>
 
-  <div
-    bind:this={ref1}
-    data-testid="item-1"
-  >
-    Item 1
-  </div>
-  <div
-    bind:this={ref2}
-    data-testid="item-2"
-  >
-    Item 2
-  </div>
-  <div
-    bind:this={ref3}
-    data-testid="item-3"
-  >
-    Item 3
-  </div>
+    <div
+      bind:this={ref1}
+      data-testid="item-1"
+    >
+      Item 1
+    </div>
+    <div
+      bind:this={ref2}
+      data-testid="item-2"
+    >
+      Item 2
+    </div>
+    <div
+      bind:this={ref3}
+      data-testid="item-3"
+    >
+      Item 3
+    </div>
+  {/snippet}
 </MultipleIntersectionObserver>
 
 <style>

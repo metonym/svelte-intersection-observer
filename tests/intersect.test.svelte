@@ -18,11 +18,11 @@
 
 <div
   use:intersect={options}
-  on:observe={(e) => {
+  onobserve={(e) => {
     e.detail.intersectionRect; // DOMRectReadOnly
     e.detail.isIntersecting; // boolean
   }}
-  on:intersect={(e) => {
+  onintersect={(e) => {
     e.detail.isIntersecting; // true
   }}
 >

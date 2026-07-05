@@ -6,7 +6,7 @@
   import type { ComponentProps } from "svelte";
   import { MultipleIntersectionObserver } from "svelte-intersection-observer";
 
-  type Props = ComponentProps<MultipleIntersectionObserver>;
+  type Props = ComponentProps<typeof MultipleIntersectionObserver>;
 
   let elements: Props["elements"] = [];
   let elementIntersections: Props["elementIntersections"] = new Map();
@@ -26,26 +26,25 @@
   bind:observer
   bind:elementIntersections
   bind:elementEntries
-  on:observe={(e) => {
-    e.detail.target; // HTMLElement
-    e.detail.entry.intersectionRect; // DOMRectReadOnly
-    e.detail.entry.isIntersecting; // boolean
+  onobserve={(detail) => {
+    detail.target; // HTMLElement
+    detail.entry.intersectionRect; // DOMRectReadOnly
+    detail.entry.isIntersecting; // boolean
   }}
-  on:intersect={(e) => {
-    e.detail.target; // HTMLElement
-    e.detail.entry.isIntersecting; // true
+  onintersect={(detail) => {
+    detail.target; // HTMLElement
+    detail.entry.isIntersecting; // true
   }}
-  let:elementIntersections
-  let:elementEntries
-  let:observer
 >
-  <div bind:this={ref1}>
-    {elementIntersections.get(ref1) ? "visible" : "not visible"}
-    {elementEntries.get(ref1)?.boundingClientRect}
-  </div>
-  <div bind:this={ref2}>
-    {elementIntersections.get(ref2) ? "visible" : "not visible"}
-    {elementEntries.get(ref2)?.boundingClientRect}
-  </div>
-  {observer}
+  {#snippet children({ elementIntersections, elementEntries, observer })}
+    <div bind:this={ref1}>
+      {elementIntersections.get(ref1) ? "visible" : "not visible"}
+      {elementEntries.get(ref1)?.boundingClientRect}
+    </div>
+    <div bind:this={ref2}>
+      {elementIntersections.get(ref2) ? "visible" : "not visible"}
+      {elementEntries.get(ref2)?.boundingClientRect}
+    </div>
+    {observer}
+  {/snippet}
 </MultipleIntersectionObserver>

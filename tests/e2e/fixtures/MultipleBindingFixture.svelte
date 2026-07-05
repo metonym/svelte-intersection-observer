@@ -14,7 +14,6 @@
 <MultipleIntersectionObserver
   {elements}
   bind:elementIntersections
-  let:elementIntersections
 >
   <header
     class:intersecting={anyItemVisible}

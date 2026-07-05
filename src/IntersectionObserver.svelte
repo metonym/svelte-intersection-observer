@@ -1,74 +1,42 @@
 <script>
-  /**
-   * The HTML Element to observe.
-   * @type {null | HTMLElement}
-   */
-  export let element = null;
+  import { untrack } from "svelte";
 
   /**
-   * Set to `true` to unobserve the element
-   * after it intersects the viewport.
-   * @type {boolean}
+   * @typedef {Object} Props
+   * @property {null | HTMLElement} [element] The HTML Element to observe.
+   * @property {boolean} [once] Set to `true` to unobserve the element after it intersects the viewport.
+   * @property {boolean} [intersecting] `true` if the observed element is intersecting the viewport.
+   * @property {null | HTMLElement} [root] Specify the containing element. Defaults to the browser viewport.
+   * @property {string} [rootMargin] Margin offset of the containing element.
+   * @property {number | number[]} [threshold] Percentage of element visibility to trigger an event. Value must be between 0 and 1.
+   * @property {null | IntersectionObserverEntry} [entry] Observed element metadata.
+   * @property {null | IntersectionObserver} [observer] `IntersectionObserver` instance.
+   * @property {boolean} [skip] Set to `true` to pause observing without disconnecting the observer or losing `entry`/`intersecting` state. Set back to `false` to resume.
+   * @property {(entry: IntersectionObserverEntry) => void} [onobserve] Called when the element is first observed and also whenever an intersection event occurs.
+   * @property {(entry: IntersectionObserverEntry & { isIntersecting: true }) => void} [onintersect] Called only when the observed element is intersecting the viewport.
+   * @property {import("svelte").Snippet<[{ intersecting: boolean, entry: null | IntersectionObserverEntry, observer: null | IntersectionObserver }]>} [children]
    */
-  export let once = false;
 
-  /**
-   * `true` if the observed element
-   * is intersecting the viewport.
-   */
-  export let intersecting = false;
-
-  /**
-   * Specify the containing element.
-   * Defaults to the browser viewport.
-   * @type {null | HTMLElement}
-   */
-  export let root = null;
-
-  /** Margin offset of the containing element. */
-  export let rootMargin = "0px";
-
-  /**
-   * Percentage of element visibility to trigger an event.
-   * Value must be between 0 and 1.
-   */
-  export let threshold = 0;
-
-  /**
-   * Observed element metadata.
-   * @type {null | IntersectionObserverEntry}
-   */
-  export let entry = null;
-
-  /**
-   * `IntersectionObserver` instance.
-   * @type {null | IntersectionObserver}
-   */
-  export let observer = null;
-
-  /**
-   * Set to `true` to pause observing without disconnecting the
-   * observer or losing `entry`/`intersecting` state. Set back to
-   * `false` to resume.
-   * @type {boolean}
-   */
-  export let skip = false;
-
-  import { afterUpdate, createEventDispatcher, onMount, tick } from "svelte";
-
-  const dispatch = createEventDispatcher();
-
-  let prevRootMargin = rootMargin;
-
-  let prevThreshold = threshold;
-
-  /** @type {null | HTMLElement} */
-  let prevRoot = root;
+  /** @type {Props} */
+  let {
+    element = null,
+    once = false,
+    intersecting = $bindable(false),
+    root = null,
+    rootMargin = "0px",
+    threshold = 0,
+    entry = $bindable(null),
+    observer = $bindable(null),
+    skip = false,
+    onobserve,
+    onintersect,
+    children,
+  } = $props();
 
   /** @type {null | HTMLElement} */
   let prevElement = null;
 
-  let prevSkip = skip;
+  let prevSkip = untrack(() => skip);
 
   const initialize = () => {
     observer = new IntersectionObserver(
@@ -77,10 +45,10 @@
           entry = _entry;
           intersecting = _entry.isIntersecting;
 
-          dispatch("observe", entry);
+          onobserve?.(_entry);
 
           if (_entry.isIntersecting) {
-            dispatch("intersect", entry);
+            onintersect?.(_entry);
 
             if (element && once) observer?.unobserve(element);
           }
@@ -90,53 +58,34 @@
     );
   };
 
-  onMount(() => {
+  $effect(() => {
+    prevElement = null;
     initialize();
 
     return () => {
-      if (observer) {
-        observer.disconnect();
-        observer = null;
-      }
+      observer?.disconnect();
+      observer = null;
     };
   });
 
-  afterUpdate(async () => {
-    await tick();
+  $effect(() => {
+    const target = element;
+    const isSkipped = skip;
+    const activeObserver = observer;
 
-    if (element !== null && element !== prevElement) {
-      if (!skip) observer?.observe(element);
-
-      if (prevElement !== null) observer?.unobserve(prevElement);
-      prevElement = element;
+    if (target !== null && target !== prevElement) {
+      if (!isSkipped) activeObserver?.observe(target);
+      if (prevElement !== null) activeObserver?.unobserve(prevElement);
+      prevElement = target;
     }
 
-    if (skip !== prevSkip && element !== null) {
-      if (skip) observer?.unobserve(element);
-      else observer?.observe(element);
+    if (isSkipped !== prevSkip && target !== null) {
+      if (isSkipped) activeObserver?.unobserve(target);
+      else activeObserver?.observe(target);
     }
 
-    if (
-      rootMargin !== prevRootMargin ||
-      threshold !== prevThreshold ||
-      root !== prevRoot
-    ) {
-      observer?.disconnect();
-      initialize();
-
-      if (element !== null && !skip) observer?.observe(element);
-      prevElement = element;
-    }
-
-    prevRootMargin = rootMargin;
-    prevThreshold = threshold;
-    prevRoot = root;
-    prevSkip = skip;
+    prevSkip = isSkipped;
   });
 </script>
 
-<slot
-  {intersecting}
-  {entry}
-  {observer}
-/>
+{@render children?.({ intersecting, entry, observer })}

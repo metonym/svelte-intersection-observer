@@ -10,7 +10,7 @@
   {intersecting ? "Element is in view" : "Element is not in view"}
   <button
     data-testid="toggle-skip"
-    on:click={() => (skip = !skip)}
+    onclick={() => (skip = !skip)}
   >
     {skip ? "Resume" : "Pause"}
   </button>

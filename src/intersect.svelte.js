@@ -1,9 +1,9 @@
 /**
  * Svelte action that observes `node` with the Intersection Observer API.
  * Dispatches `observe` (on every change) and `intersect` (on entering the
- * viewport) `CustomEvent`s on `node` — listen with `on:observe`/`on:intersect`.
+ * viewport) `CustomEvent`s on `node` — listen with `onobserve`/`onintersect`.
  * @param {HTMLElement} node
- * @param {import("./intersect.d.ts").IntersectActionOptions} [options]
+ * @param {import("./intersect.svelte.d.ts").IntersectActionOptions} [options]
  */
 export function intersect(node, options = {}) {
   let {
@@ -36,7 +36,7 @@ export function intersect(node, options = {}) {
   if (!skip) observer.observe(node);
 
   return {
-    /** @param {import("./intersect.d.ts").IntersectActionOptions} [newOptions] */
+    /** @param {import("./intersect.svelte.d.ts").IntersectActionOptions} [newOptions] */
     update(newOptions = {}) {
       once = newOptions.once ?? false;
 

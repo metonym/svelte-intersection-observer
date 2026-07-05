@@ -10,7 +10,7 @@
   {intersecting ? "Element is in view" : "Element is not in view"}
   <button
     data-testid="shrink-root-margin"
-    on:click={() => (rootMargin = "-200px")}
+    onclick={() => (rootMargin = "-200px")}
   >
     Shrink root margin
   </button>

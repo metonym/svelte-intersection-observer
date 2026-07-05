@@ -1,75 +1,42 @@
 <script>
-  /**
-   * Array of HTML Elements to observe.
-   * Use this for better performance when observing multiple elements.
-   * @type {(HTMLElement | null)[]}
-   */
-  export let elements = [];
+  import { untrack } from "svelte";
 
   /**
-   * Set to `true` to unobserve the element
-   * after it intersects the viewport.
-   * @type {boolean}
+   * @typedef {Object} Props
+   * @property {(HTMLElement | null)[]} [elements] Array of HTML Elements to observe. Use this for better performance when observing multiple elements.
+   * @property {boolean} [once] Set to `true` to unobserve the element after it intersects the viewport.
+   * @property {null | HTMLElement} [root] Specify the containing element. Defaults to the browser viewport.
+   * @property {string} [rootMargin] Margin offset of the containing element.
+   * @property {number | number[]} [threshold] Percentage of element visibility to trigger an event. Value must be between 0 and 1.
+   * @property {Map<HTMLElement | null, boolean>} [elementIntersections] Map of element to its intersection state.
+   * @property {Map<HTMLElement | null, IntersectionObserverEntry>} [elementEntries] Map of element to its latest entry.
+   * @property {null | IntersectionObserver} [observer] `IntersectionObserver` instance.
+   * @property {boolean} [skip] Set to `true` to pause observing all elements without disconnecting the observer or losing `elementIntersections`/`elementEntries` state. Set back to `false` to resume.
+   * @property {(detail: { entry: IntersectionObserverEntry, target: HTMLElement }) => void} [onobserve] Called when an element is first observed and also whenever an intersection event occurs.
+   * @property {(detail: { entry: IntersectionObserverEntry & { isIntersecting: true }, target: HTMLElement }) => void} [onintersect] Called only when an element is intersecting the viewport.
+   * @property {import("svelte").Snippet<[{ observer: null | IntersectionObserver, elementIntersections: Map<HTMLElement | null, boolean>, elementEntries: Map<HTMLElement | null, IntersectionObserverEntry> }]>} [children]
    */
-  export let once = false;
 
-  /**
-   * Specify the containing element.
-   * Defaults to the browser viewport.
-   * @type {null | HTMLElement}
-   */
-  export let root = null;
-
-  /** Margin offset of the containing element. */
-  export let rootMargin = "0px";
-
-  /**
-   * Percentage of element visibility to trigger an event.
-   * Value must be between 0 and 1.
-   */
-  export let threshold = 0;
-
-  /**
-   * Map of element to its intersection state.
-   * @type {Map<HTMLElement | null, boolean>}
-   */
-  export let elementIntersections = new Map();
-
-  /**
-   * Map of element to its latest entry.
-   * @type {Map<HTMLElement | null, IntersectionObserverEntry>}
-   */
-  export let elementEntries = new Map();
-
-  /**
-   * `IntersectionObserver` instance.
-   * @type {null | IntersectionObserver}
-   */
-  export let observer = null;
-
-  /**
-   * Set to `true` to pause observing all elements without disconnecting
-   * the observer or losing `elementIntersections`/`elementEntries` state.
-   * Set back to `false` to resume.
-   * @type {boolean}
-   */
-  export let skip = false;
-
-  import { afterUpdate, createEventDispatcher, onMount, tick } from "svelte";
-
-  const dispatch = createEventDispatcher();
-
-  let prevRootMargin = rootMargin;
-
-  let prevThreshold = threshold;
-
-  /** @type {null | HTMLElement} */
-  let prevRoot = root;
+  /** @type {Props} */
+  let {
+    elements = [],
+    once = false,
+    root = null,
+    rootMargin = "0px",
+    threshold = 0,
+    elementIntersections = $bindable(new Map()),
+    elementEntries = $bindable(new Map()),
+    observer = $bindable(null),
+    skip = false,
+    onobserve,
+    onintersect,
+    children,
+  } = $props();
 
   /** @type {(HTMLElement | null)[]} */
   let prevElements = [];
 
-  let prevSkip = skip;
+  let prevSkip = untrack(() => skip);
 
   const initialize = () => {
     observer = new IntersectionObserver(
@@ -80,10 +47,10 @@
           elementIntersections.set(target, _entry.isIntersecting);
           elementEntries.set(target, _entry);
 
-          dispatch("observe", { entry: _entry, target });
+          onobserve?.({ entry: _entry, target });
 
           if (_entry.isIntersecting) {
-            dispatch("intersect", { entry: _entry, target });
+            onintersect?.({ entry: _entry, target });
             if (once) observer?.unobserve(target);
           }
         }
@@ -96,73 +63,53 @@
     );
   };
 
-  onMount(() => {
+  $effect(() => {
+    prevElements = [];
     initialize();
 
     return () => {
-      if (observer) {
-        observer.disconnect();
-        observer = null;
-      }
+      observer?.disconnect();
+      observer = null;
     };
   });
 
-  afterUpdate(async () => {
-    await tick();
+  $effect(() => {
+    const currentElements = elements;
+    const isSkipped = skip;
+    const activeObserver = observer;
 
-    if (elements.length > 0) {
-      const newElements = elements.filter(
+    if (currentElements.length > 0) {
+      const newElements = currentElements.filter(
         (el) => el && !prevElements.includes(el),
       );
-      if (!skip) {
+
+      if (!isSkipped) {
         for (const el of newElements) {
-          if (el) observer?.observe(el);
+          if (el) activeObserver?.observe(el);
         }
       }
 
       const removedElements = prevElements.filter(
-        (el) => el && !elements.includes(el),
+        (el) => el && !currentElements.includes(el),
       );
+
       for (const el of removedElements) {
-        if (el) observer?.unobserve(el);
+        if (el) activeObserver?.unobserve(el);
       }
 
-      prevElements = [...elements];
+      prevElements = [...currentElements];
     }
 
-    if (skip !== prevSkip) {
-      for (const el of elements.filter((el) => el)) {
+    if (isSkipped !== prevSkip) {
+      for (const el of currentElements) {
         if (!el) continue;
-        if (skip) observer?.unobserve(el);
-        else observer?.observe(el);
+        if (isSkipped) activeObserver?.unobserve(el);
+        else activeObserver?.observe(el);
       }
     }
 
-    if (
-      rootMargin !== prevRootMargin ||
-      threshold !== prevThreshold ||
-      root !== prevRoot
-    ) {
-      observer?.disconnect();
-      prevElements = [];
-      initialize();
-
-      if (!skip) {
-        for (const el of elements.filter((el) => el)) {
-          if (el) observer?.observe(el);
-        }
-      }
-    }
-
-    prevRootMargin = rootMargin;
-    prevThreshold = threshold;
-    prevRoot = root;
-    prevSkip = skip;
+    prevSkip = isSkipped;
   });
 </script>
 
-<slot
-  {observer}
-  {elementIntersections}
-  {elementEntries}
-/>
+{@render children?.({ observer, elementIntersections, elementEntries })}

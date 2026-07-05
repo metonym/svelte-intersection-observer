@@ -12,8 +12,8 @@
 
 <div
   use:intersect={{ once: true }}
-  on:observe={(e) => (intersecting = e.detail.isIntersecting)}
-  on:intersect={() => (intersectCount += 1)}
+  onobserve={(e) => (intersecting = e.detail.isIntersecting)}
+  onintersect={() => (intersectCount += 1)}
 >
   Hello world
 </div>

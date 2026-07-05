@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+**Breaking Changes**
+
+- Port `IntersectionObserver` and `MultipleIntersectionObserver` to Svelte 5 runes; requires `svelte@^5` in runes mode
+- Replace the default `<slot>` with a `children` snippet — use `{#snippet children({ intersecting, entry, observer })}` instead of `let:intersecting`/`let:entry`/`let:observer` (and `let:elementIntersections`/`let:elementEntries`/`let:observer` for `MultipleIntersectionObserver`)
+- Replace `on:observe`/`on:intersect` dispatched events with `onobserve`/`onintersect` callback props, called directly with the `IntersectionObserverEntry` (or `{ entry, target }` for `MultipleIntersectionObserver`) instead of a `CustomEvent`
+- `use:intersect` now listens via `onobserve`/`onintersect` attributes instead of `on:observe`/`on:intersect` (the action itself still dispatches native `CustomEvent`s)
+- Rename `src/intersect.js`/`src/intersect.d.ts` to `src/intersect.svelte.js`/`src/intersect.svelte.d.ts`
+
 ## [1.2.0](https://github.com/metonym/svelte-intersection-observer/releases/tag/v1.2.0) - 2026-07-04
 
 **Features**
