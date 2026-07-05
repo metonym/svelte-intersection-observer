@@ -4,6 +4,10 @@
 
 > Detect if an element is in the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 
+Use it to lazy-load images, trigger scroll animations, implement infinite scroll, autoplay video when visible, track ad or analytics impressions, or detect when a user has scrolled to the end of a list.
+
+This library is zero-dependency and offers three ways to observe elements: the `IntersectionObserver` component for a single element, the `MultipleIntersectionObserver` component for observing many elements with one shared observer (better performance than one observer per element), and the `intersect` action for observing an element directly with `use:`.
+
 Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d).
 
 ## Compatibility
@@ -57,6 +61,33 @@ Then, simply bind to the reactive `intersecting` prop to determine if the elemen
 </IntersectionObserver>
 ```
 
+### `children` snippet
+
+An alternative to binding to the `intersecting` prop is to use the `children` snippet, which receives `intersecting`, `entry`, and `observer`.
+
+In the following example, the "Hello world" element fades in when its containing element intersects the viewport.
+
+```svelte
+<script>
+  import IntersectionObserver from "svelte-intersection-observer";
+  import { fade } from "svelte/transition";
+
+  let node = $state();
+</script>
+
+<header></header>
+
+<IntersectionObserver element={node}>
+  {#snippet children({ intersecting })}
+    <div bind:this={node}>
+      {#if intersecting}
+        <div transition:fade={{ delay: 200 }}>Hello world</div>
+      {/if}
+    </div>
+  {/snippet}
+</IntersectionObserver>
+```
+
 ### Once
 
 Set `once` to `true` for the intersection event to occur only once. The `element` will be unobserved after the first intersection event occurs.
@@ -84,7 +115,7 @@ Set `once` to `true` for the intersection event to occur only once. The `element
 
 ### Pausing with `skip`
 
-Set `skip` to `true` to unobserve without disconnecting the underlying observer or losing `entry`/`intersecting` state — useful for pausing tracking on an off-screen carousel panel or a closed modal. Set `skip` back to `false` to resume; unlike `once`, this can be toggled back and forth. `MultipleIntersectionObserver` and the `intersect` action support the same `skip` option.
+Set `skip` to `true` to unobserve without disconnecting the underlying observer or losing `entry`/`intersecting` state. This is useful for pausing tracking on an off-screen carousel panel or a closed modal. Set `skip` back to `false` to resume; unlike `once`, this can be toggled back and forth. `MultipleIntersectionObserver` and the `intersect` action support the same `skip` option.
 
 ```svelte no-eval
 <script>
@@ -101,33 +132,6 @@ Set `skip` to `true` to unobserve without disconnecting the underlying observer 
 <IntersectionObserver element={elementSkip} skip={paused}>
   {#snippet children({ intersecting })}
     <div bind:this={elementSkip}>{intersecting ? "In view" : "Not in view"}</div>
-  {/snippet}
-</IntersectionObserver>
-```
-
-### `children` snippet
-
-An alternative to binding to the `intersecting` prop is to use the `children` snippet, which receives `intersecting`, `entry`, and `observer`.
-
-In the following example, the "Hello world" element will fade in when its containing element intersects the viewport.
-
-```svelte
-<script>
-  import IntersectionObserver from "svelte-intersection-observer";
-  import { fade } from "svelte/transition";
-
-  let node = $state();
-</script>
-
-<header></header>
-
-<IntersectionObserver element={node}>
-  {#snippet children({ intersecting })}
-    <div bind:this={node}>
-      {#if intersecting}
-        <div transition:fade={{ delay: 200 }}>Hello world</div>
-      {/if}
-    </div>
   {/snippet}
 </IntersectionObserver>
 ```
@@ -257,13 +261,11 @@ As an alternative to the `IntersectionObserver` component, use the `intersect` a
 </div>
 ```
 
-Options passed to `use:intersect` are reactive — updating `root`, `rootMargin`, or `threshold` re-initializes the underlying observer. Updating `skip` toggles observing on the existing observer without re-initializing it.
+Options passed to `use:intersect` are reactive: updating `root`, `rootMargin`, or `threshold` re-initializes the underlying observer. Updating `skip` toggles observing on the existing observer without re-initializing it.
 
 ### Multiple elements
 
-For performance, use `MultipleIntersectionObserver` to observe multiple elements.
-
-This avoids instantiating a new observer for every element.
+For performance, use `MultipleIntersectionObserver` to observe multiple elements with a single shared observer instead of instantiating a new one for every element.
 
 ```svelte
 <script>
@@ -294,7 +296,7 @@ This avoids instantiating a new observer for every element.
 
 ### Using with `#each`
 
-`MultipleIntersectionObserver` also handles a dynamic, `#each`-driven list — give every item its own slot in an array/object instead of one shared variable.
+`MultipleIntersectionObserver` also handles a dynamic, `#each`-driven list: give every item its own slot in an array/object instead of one shared variable.
 
 ```svelte
 <script>
@@ -338,7 +340,7 @@ This avoids instantiating a new observer for every element.
 </MultipleIntersectionObserver>
 ```
 
-As with the scroll-to-end example, `root` must be an element that scrolls on its own — here, `itemsContainer` has an explicit `height` and `overflow-y: auto`.
+As with the scroll-to-end example, `root` must be an element that scrolls on its own; here, `itemsContainer` has an explicit `height` and `overflow-y: auto`.
 
 **Avoid** using the single-element `IntersectionObserver` component inside an `#each` block with one variable shared across iterations (e.g. `let node;` declared outside the loop and bound via `bind:this={node}` inside it). Every iteration overwrites the same `node`, so each observer instance keeps re-observing a moving target, which can produce an infinite update loop. Use `MultipleIntersectionObserver` with a per-item ref, as shown above, instead.
 
@@ -360,7 +362,7 @@ As with the scroll-to-end example, `root` must be an element that scrolls on its
 | observer     | `IntersectionObserver` instance                             | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
 | skip         | Pause observing without losing `entry`/`intersecting` state | `boolean`                                                                                                           | `false`       |
 
-**Note**: the observed `element` must render with a non-zero width and height for `threshold` values greater than `0` to have any effect — this is a constraint of the underlying [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), not something this component controls.
+**Note**: the observed `element` must render with a non-zero width and height for `threshold` values greater than `0` to have any effect. This is a constraint of the underlying [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), not something this component controls.
 
 #### Callback props
 
@@ -482,14 +484,6 @@ interface IntersectionObserverEntry {
 ```
 
 </details>
-
-## Changelog
-
-[Changelog](CHANGELOG.md)
-
-## License
-
-[MIT](LICENSE)
 
 [npm]: https://img.shields.io/npm/v/svelte-intersection-observer.svg?color=%23ff3e00&style=for-the-badge
 [npm-url]: https://npmjs.com/package/svelte-intersection-observer
