@@ -77,10 +77,15 @@
     const isSkipped = skip;
     const activeObserver = observer;
 
-    if (target !== null && target !== prevElement) {
-      if (!isSkipped) activeObserver?.observe(target);
+    if (target !== prevElement) {
       if (prevElement !== null) activeObserver?.unobserve(prevElement);
+      if (target !== null && !isSkipped) activeObserver?.observe(target);
       prevElement = target;
+
+      if (target === null) {
+        intersecting = false;
+        entry = null;
+      }
     }
 
     if (isSkipped !== prevSkip && target !== null) {
