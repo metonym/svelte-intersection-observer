@@ -12,6 +12,7 @@
 
   let options: IntersectActionOptions = {
     once: true,
+    root: null,
     rootMargin: "0px",
     threshold: 0,
     skip: false,

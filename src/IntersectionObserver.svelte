@@ -48,7 +48,11 @@
           onobserve?.(_entry);
 
           if (_entry.isIntersecting) {
-            onintersect?.(_entry);
+            onintersect?.(
+              /** @type {IntersectionObserverEntry & { isIntersecting: true }} */ (
+                _entry
+              ),
+            );
 
             if (element && once) observer?.unobserve(element);
           }

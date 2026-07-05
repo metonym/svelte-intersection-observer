@@ -50,7 +50,13 @@
           onobserve?.({ entry: _entry, target });
 
           if (_entry.isIntersecting) {
-            onintersect?.({ entry: _entry, target });
+            onintersect?.({
+              entry:
+                /** @type {IntersectionObserverEntry & { isIntersecting: true }} */ (
+                  _entry
+                ),
+              target,
+            });
             if (once) observer?.unobserve(target);
           }
         }
