@@ -3,18 +3,18 @@
 
   /**
    * @typedef {Object} Props
-   * @property {(HTMLElement | null)[]} [elements] Array of HTML Elements to observe. Use this for better performance when observing multiple elements.
+   * @property {ReadonlyArray<Element | null | undefined>} [elements] Array of Elements to observe. Use this for better performance when observing multiple elements.
    * @property {boolean} [once] Set to `true` to unobserve the element after it intersects the viewport.
-   * @property {null | HTMLElement} [root] Specify the containing element. Defaults to the browser viewport.
+   * @property {Element | Document | null | undefined} [root] Specify the containing element. Defaults to the browser viewport.
    * @property {string} [rootMargin] Margin offset of the containing element.
    * @property {number | number[]} [threshold] Percentage of element visibility to trigger an event. Value must be between 0 and 1.
-   * @property {Map<HTMLElement | null, boolean>} [elementIntersections] Map of element to its intersection state.
-   * @property {Map<HTMLElement | null, IntersectionObserverEntry>} [elementEntries] Map of element to its latest entry.
+   * @property {Map<Element | null | undefined, boolean>} [elementIntersections] Map of element to its intersection state.
+   * @property {Map<Element | null | undefined, IntersectionObserverEntry>} [elementEntries] Map of element to its latest entry.
    * @property {null | IntersectionObserver} [observer] `IntersectionObserver` instance.
    * @property {boolean} [skip] Set to `true` to pause observing all elements without disconnecting the observer or losing `elementIntersections`/`elementEntries` state. Set back to `false` to resume.
-   * @property {(detail: { entry: IntersectionObserverEntry, target: HTMLElement }) => void} [onobserve] Called when an element is first observed and also whenever an intersection event occurs.
-   * @property {(detail: { entry: IntersectionObserverEntry & { isIntersecting: true }, target: HTMLElement }) => void} [onintersect] Called only when an element is intersecting the viewport.
-   * @property {import("svelte").Snippet<[{ observer: null | IntersectionObserver, elementIntersections: Map<HTMLElement | null, boolean>, elementEntries: Map<HTMLElement | null, IntersectionObserverEntry> }]>} [children]
+   * @property {(detail: { entry: IntersectionObserverEntry, target: Element }) => void} [onobserve] Called when an element is first observed and also whenever an intersection event occurs.
+   * @property {(detail: { entry: IntersectionObserverEntry & { isIntersecting: true }, target: Element }) => void} [onintersect] Called only when an element is intersecting the viewport.
+   * @property {import("svelte").Snippet<[{ observer: null | IntersectionObserver, elementIntersections: Map<Element | null | undefined, boolean>, elementEntries: Map<Element | null | undefined, IntersectionObserverEntry> }]>} [children]
    */
 
   /** @type {Props} */
@@ -33,7 +33,7 @@
     children,
   } = $props();
 
-  /** @type {Set<HTMLElement | null>} */
+  /** @type {Set<Element | null | undefined>} */
   let prevElements = new Set();
 
   let prevSkip = untrack(() => skip);
@@ -51,7 +51,7 @@
     observer = new IntersectionObserver(
       (entries) => {
         for (const _entry of entries) {
-          const target = /** @type {HTMLElement} */ (_entry.target);
+          const target = /** @type {Element} */ (_entry.target);
 
           elementIntersections.set(target, _entry.isIntersecting);
           elementEntries.set(target, _entry);

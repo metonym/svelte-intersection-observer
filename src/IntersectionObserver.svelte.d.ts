@@ -2,10 +2,10 @@ import type { Component, Snippet } from "svelte";
 
 export interface IntersectionObserverProps {
   /**
-   * The HTML Element to observe.
+   * The Element to observe.
    * @default null
    */
-  element?: null | HTMLElement;
+  element?: Element | null | undefined;
 
   /**
    * Set to `true` to unobserve the element
@@ -26,7 +26,7 @@ export interface IntersectionObserverProps {
    * Defaults to the browser viewport.
    * @default null
    */
-  root?: null | HTMLElement;
+  root?: Element | Document | null | undefined;
 
   /**
    * Margin offset of the containing element.

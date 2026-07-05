@@ -14,7 +14,7 @@ export function createIntersectionObserver(getOptions = () => ({})) {
 
   const attachment = intersectAttachment(getOptions);
 
-  /** @param {HTMLElement} node */
+  /** @param {Element} node */
   function attach(node) {
     /** @param {Event} event */
     const onObserve = (event) => {

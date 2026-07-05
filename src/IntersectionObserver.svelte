@@ -3,10 +3,10 @@
 
   /**
    * @typedef {Object} Props
-   * @property {null | HTMLElement} [element] The HTML Element to observe.
+   * @property {Element | null | undefined} [element] The Element to observe.
    * @property {boolean} [once] Set to `true` to unobserve the element after it intersects the viewport.
    * @property {boolean} [intersecting] `true` if the observed element is intersecting the viewport.
-   * @property {null | HTMLElement} [root] Specify the containing element. Defaults to the browser viewport.
+   * @property {Element | Document | null | undefined} [root] Specify the containing element. Defaults to the browser viewport.
    * @property {string} [rootMargin] Margin offset of the containing element.
    * @property {number | number[]} [threshold] Percentage of element visibility to trigger an event. Value must be between 0 and 1.
    * @property {null | IntersectionObserverEntry} [entry] Observed element metadata.
@@ -33,7 +33,7 @@
     children,
   } = $props();
 
-  /** @type {null | HTMLElement} */
+  /** @type {null | Element} */
   let prevElement = null;
 
   let prevSkip = untrack(() => skip);
@@ -86,7 +86,7 @@
   });
 
   $effect(() => {
-    const target = element;
+    const target = element ?? null;
     const isSkipped = skip;
     const activeObserver = observer;
 

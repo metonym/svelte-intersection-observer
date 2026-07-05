@@ -7,7 +7,7 @@ export interface IntersectActionOptions {
    * Defaults to the browser viewport.
    * @default null
    */
-  root?: null | HTMLElement;
+  root?: Element | Document | null;
 
   /**
    * Margin offset of the containing element.
@@ -43,7 +43,7 @@ export interface IntersectActionOptions {
  * viewport) `CustomEvent`s on the element — listen with `onobserve`/`onintersect`.
  */
 export const intersect: Action<
-  HTMLElement,
+  Element,
   IntersectActionOptions | undefined,
   {
     onobserve?: (event: CustomEvent<IntersectionObserverEntry>) => void;
@@ -59,7 +59,7 @@ export const intersect: Action<
  */
 export function intersectAttachment(
   getOptions?: () => IntersectActionOptions,
-): Attachment<HTMLElement>;
+): Attachment<Element>;
 
 declare module "svelte/elements" {
   export interface HTMLAttributes<T> {
@@ -81,7 +81,7 @@ export interface IntersectGroupSharedOptions {
    * Defaults to the browser viewport.
    * @default null
    */
-  root?: null | HTMLElement;
+  root?: Element | Document | null;
 
   /**
    * Margin offset of the containing element.
@@ -129,7 +129,7 @@ export interface IntersectionGroup {
    * Returns an attachment for a single node in the group. Call once per
    * element in a loop, e.g. `{@attach group.attach({ onobserve })}`.
    */
-  attach(options?: IntersectGroupNodeOptions): Attachment<HTMLElement>;
+  attach(options?: IntersectGroupNodeOptions): Attachment<Element>;
 }
 
 /**
