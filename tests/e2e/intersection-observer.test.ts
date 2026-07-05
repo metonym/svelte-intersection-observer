@@ -79,6 +79,29 @@ test("Element - switching the observed element retargets the observer", async ({
   await expect(page.locator("header")).toHaveText(/Element is in view/);
 });
 
+test("Element - unobserves when element becomes null and re-observes when restored", async ({
+  page,
+}) => {
+  await page.goto("/element-null.html");
+  const header = page.locator("header");
+
+  await expect(header).toHaveText(/Element is not in view/);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(header).toHaveText(/Element is in view/);
+
+  await page.getByTestId("clear").click();
+  await expect(header).toHaveText(/Element is not in view/);
+
+  // Scrolling away and back must not resurrect a leaked observation of the
+  // previous element.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(header).toHaveText(/Element is not in view/);
+
+  await page.getByTestId("restore").click();
+  await expect(header).toHaveText(/Element is in view/);
+});
+
 test("Root margin - reinitializes the observer when changed at runtime", async ({
   page,
 }) => {
