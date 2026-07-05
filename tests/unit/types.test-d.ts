@@ -29,7 +29,7 @@ test("IntersectActionOptions accepts the documented shape", () => {
   }>();
 });
 
-test("intersect is a Svelte action dispatching observe/intersect handlers", () => {
+test("intersect is a Svelte action dispatching observe/intersect/exit handlers", () => {
   expectTypeOf(intersect).toEqualTypeOf<
     Action<
       Element,
@@ -41,8 +41,26 @@ test("intersect is a Svelte action dispatching observe/intersect handlers", () =
             IntersectionObserverEntry & { isIntersecting: true }
           >,
         ) => void;
+        onexit?: (
+          event: CustomEvent<
+            IntersectionObserverEntry & { isIntersecting: false }
+          >,
+        ) => void;
       }
     >
+  >();
+});
+
+test("svelte/elements HTMLAttributes.onexit entry param types as isIntersecting: false", () => {
+  expectTypeOf<
+    import("svelte/elements").HTMLAttributes<Element>["onexit"]
+  >().toEqualTypeOf<
+    | ((
+        event: CustomEvent<
+          IntersectionObserverEntry & { isIntersecting: false }
+        >,
+      ) => void)
+    | undefined
   >();
 });
 
@@ -74,6 +92,9 @@ test("IntersectGroupNodeOptions covers only the per-node options", () => {
     onobserve?: (entry: IntersectionObserverEntry) => void;
     onintersect?: (
       entry: IntersectionObserverEntry & { isIntersecting: true },
+    ) => void;
+    onexit?: (
+      entry: IntersectionObserverEntry & { isIntersecting: false },
     ) => void;
   }>();
 });
@@ -143,6 +164,13 @@ test("IntersectionObserverProps.root accepts Document", () => {
   expectTypeOf<Document>().toExtend<IntersectionObserverProps["root"]>();
 });
 
+test("IntersectionObserverProps.onexit entry param types as isIntersecting: false", () => {
+  expectTypeOf<IntersectionObserverProps["onexit"]>().toEqualTypeOf<
+    | ((entry: IntersectionObserverEntry & { isIntersecting: false }) => void)
+    | undefined
+  >();
+});
+
 test("MultipleIntersectionObserverProps.elements accepts (HTMLElement | undefined)[]", () => {
   expectTypeOf<(HTMLElement | undefined)[]>().toExtend<
     MultipleIntersectionObserverProps["elements"]
@@ -152,6 +180,16 @@ test("MultipleIntersectionObserverProps.elements accepts (HTMLElement | undefine
 test("MultipleIntersectionObserverProps.root accepts Document", () => {
   expectTypeOf<Document>().toExtend<
     MultipleIntersectionObserverProps["root"]
+  >();
+});
+
+test("MultipleIntersectionObserverProps.onexit entry param types as isIntersecting: false", () => {
+  expectTypeOf<MultipleIntersectionObserverProps["onexit"]>().toEqualTypeOf<
+    | ((detail: {
+        entry: IntersectionObserverEntry & { isIntersecting: false };
+        target: Element;
+      }) => void)
+    | undefined
   >();
 });
 

@@ -78,6 +78,16 @@ export interface MultipleIntersectionObserverProps {
     target: Element;
   }) => void;
 
+  /**
+   * Called when an element transitions from intersecting
+   * to not intersecting. Not called for the initial
+   * off-screen report.
+   */
+  onexit?: (detail: {
+    entry: IntersectionObserverEntry & { isIntersecting: false };
+    target: Element;
+  }) => void;
+
   children?: Snippet<
     [
       {

@@ -84,6 +84,46 @@ describe("intersect action", () => {
     expect(observer.observedElements.has(node)).toBe(true);
   });
 
+  test("dispatches exit only on the intersecting-to-not-intersecting transition, not the initial report", () => {
+    const node = document.createElement("div");
+    intersect(node);
+
+    const exitSpy = vi.fn();
+    node.addEventListener("exit", exitSpy);
+
+    const observer = MockIntersectionObserver.last();
+    observer.trigger([{ target: node, isIntersecting: false }]);
+    expect(exitSpy).not.toHaveBeenCalled();
+
+    observer.trigger([{ target: node, isIntersecting: true }]);
+    expect(exitSpy).not.toHaveBeenCalled();
+
+    observer.trigger([{ target: node, isIntersecting: false }]);
+    expect(exitSpy).toHaveBeenCalledTimes(1);
+    expect(
+      (exitSpy.mock.calls[0]?.[0] as CustomEvent).detail.isIntersecting,
+    ).toBe(false);
+  });
+
+  test("recreating the observer on a config change resets exit tracking so a fresh initial report does not fire exit", () => {
+    const node = document.createElement("div");
+    const action = handlers(intersect(node, { rootMargin: "0px" }));
+
+    const exitSpy = vi.fn();
+    node.addEventListener("exit", exitSpy);
+
+    const firstObserver = MockIntersectionObserver.last();
+    firstObserver.trigger([{ target: node, isIntersecting: true }]);
+
+    action.update?.({ rootMargin: "-200px" });
+
+    const secondObserver = MockIntersectionObserver.last();
+    expect(secondObserver).not.toBe(firstObserver);
+
+    secondObserver.trigger([{ target: node, isIntersecting: false }]);
+    expect(exitSpy).not.toHaveBeenCalled();
+  });
+
   test("update() with a changed root/rootMargin/threshold recreates the observer", () => {
     const node = document.createElement("div");
     const action = handlers(intersect(node, { rootMargin: "0px" }));

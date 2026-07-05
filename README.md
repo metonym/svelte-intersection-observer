@@ -49,7 +49,7 @@ yarn add svelte-intersection-observer
 
 ## Library
 
-Every primitive shares the same core options (`root`, `rootMargin`, `threshold`, `once`, `skip`) and the same `onobserve`/`onintersect` callbacks. Only how you plug it into your markup differs. See [Use Cases](#use-cases) for realistic scenarios built from these.
+Every primitive shares the same core options (`root`, `rootMargin`, `threshold`, `once`, `skip`) and the same `onobserve`/`onintersect`/`onexit` callbacks. Only how you plug it into your markup differs. See [Use Cases](#use-cases) for realistic scenarios built from these.
 
 ### `IntersectionObserver`
 
@@ -144,7 +144,7 @@ In this example, "Hello world" fades in when its containing element intersects t
 
 #### Callback props
 
-Same `onobserve`/`onintersect` behavior as described in [Callbacks](#callbacks-onobserve-and-onintersect) below.
+Same `onobserve`/`onintersect`/`onexit` behavior as described in [Callbacks](#callbacks-onobserve-onintersect-and-onexit) below.
 
 #### `children` snippet props
 
@@ -258,7 +258,7 @@ Called with:
 }
 ```
 
-See [Callbacks](#callbacks-onobserve-and-onintersect) for when each one fires.
+See [Callbacks](#callbacks-onobserve-onintersect-and-onexit) for when each one fires.
 
 #### `children` snippet props
 
@@ -270,7 +270,7 @@ See [Callbacks](#callbacks-onobserve-and-onintersect) for when each one fires.
 
 ### `intersect`
 
-As an alternative to the `IntersectionObserver` component, use the `intersect` action to observe an element directly with `use:`, without a `bind:this` reference or extra markup. Listen for `onobserve`/`onintersect` on the observed element itself.
+As an alternative to the `IntersectionObserver` component, use the `intersect` action to observe an element directly with `use:`, without a `bind:this` reference or extra markup. Listen for `onobserve`/`onintersect`/`onexit` on the observed element itself.
 
 ```svelte
 <script lang="ts">
@@ -307,7 +307,7 @@ Options passed to `use:intersect` are reactive: updating `root`, `rootMargin`, o
 
 #### Dispatched events
 
-Same `onobserve`/`onintersect` behavior as described in [Callbacks](#callbacks-onobserve-and-onintersect); the action dispatches them on the element, and `e.detail` is the [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry).
+Same `onobserve`/`onintersect`/`onexit` behavior as described in [Callbacks](#callbacks-onobserve-onintersect-and-onexit); the action dispatches them on the element, and `e.detail` is the [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry).
 
 ### `intersectAttachment`
 
@@ -417,7 +417,7 @@ const group = createIntersectionGroup(() => ({
 
 Shared options are reactive: when `root`, `rootMargin`, or `threshold` changes, the group rebuilds its single shared observer and re-observes every element. Note that elements whose `once` has already fired are re-observed as well.
 
-`once`, `skip`, `onobserve`, and `onintersect` are the only options that make sense per element, so those are what `group.attach(...)` accepts.
+`once`, `skip`, `onobserve`, `onintersect`, and `onexit` are the only options that make sense per element, so those are what `group.attach(...)` accepts.
 
 #### Signature
 
@@ -447,13 +447,15 @@ Passed once per element, to `group.attach(...)`.
 | skip       | Skip observing this element without affecting the group   | `boolean`                                               | `false`       |
 | onobserve  | Called when the element is first observed or when an intersection change occurs | `(entry: IntersectionObserverEntry) => void` | `undefined` |
 | onintersect | Called when the element is intersecting the viewport      | `(entry: IntersectionObserverEntry) => void`            | `undefined`   |
+| onexit     | Called when the element stops intersecting                | `(entry: IntersectionObserverEntry) => void`            | `undefined`   |
 
-#### Callbacks: `onobserve` and `onintersect`
+#### Callbacks: `onobserve`, `onintersect`, and `onexit`
 
-Every primitive above exposes the same two callbacks, called with an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) (components pass it directly; action and attachment dispatch it as `event.detail`):
+Every primitive above exposes the same three callbacks, called with an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) (components pass it directly; action and attachment dispatch it as `event.detail`):
 
 - **onobserve**: called when the element is first observed, and again on every intersection change
 - **onintersect**: called only when the element is intersecting the viewport (a filtered view of `onobserve`)
+- **onexit**: called when the element stops intersecting (transitions out of view); not called for the initial off-screen report
 
 ```svelte no-eval
 <IntersectionObserver
@@ -464,6 +466,9 @@ Every primitive above exposes the same two callbacks, called with an [`Intersect
   }}
   onintersect={(entry) => {
     console.log(entry.isIntersecting); // always true
+  }}
+  onexit={(entry) => {
+    console.log(entry.isIntersecting); // always false
   }}
 >
   <div bind:this={element}>Hello world</div>
@@ -495,7 +500,7 @@ Delay loading an image's real `src` until it's about to scroll into view. `rootM
 
 ### Autoplaying video
 
-Play a `<video>` while it's on screen and pause it once it scrolls away. Unlike lazy-loading, this needs to react every time visibility changes, so use `onobserve` (not `onintersect`) and skip `once`.
+Play a `<video>` while it's on screen and pause it once it scrolls away. Unlike lazy-loading, this needs to react every time visibility changes, so use the `onintersect`/`onexit` pair (not `onobserve`) and skip `once`.
 
 ```svelte no-eval
 <script lang="ts">
@@ -507,9 +512,8 @@ Play a `<video>` while it's on screen and pause it once it scrolls away. Unlike 
 <video
   bind:this={video}
   use:intersect
-  onobserve={(e) => {
-    e.detail.isIntersecting ? video?.play() : video?.pause();
-  }}
+  onintersect={() => video?.play()}
+  onexit={() => video?.pause()}
   src="/clip.mp4"
   muted
   loop
