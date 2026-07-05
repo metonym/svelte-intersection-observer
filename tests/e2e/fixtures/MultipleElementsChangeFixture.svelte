@@ -13,7 +13,7 @@
 </script>
 
 <MultipleIntersectionObserver {elements}>
-  {#snippet children({ elementIntersections })}
+  {#snippet children({ elementIntersections, elementEntries })}
     <header>
       <button
         data-testid="add-item-2"
@@ -44,6 +44,9 @@
       </p>
       <p data-testid="item-2-status">
         {`Item 2 ${elementIntersections.get(ref2) ? "is visible" : "is not visible"}`}
+      </p>
+      <p data-testid="item-1-map-status">
+        {`Item 1 ${elementIntersections.has(ref1) || elementEntries.has(ref1) ? "is in maps" : "is not in maps"}`}
       </p>
     </header>
 

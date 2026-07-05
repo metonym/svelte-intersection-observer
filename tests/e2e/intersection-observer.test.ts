@@ -494,8 +494,30 @@ test("Multiple elements - elements array add/remove retargets the observer", asy
   await expect(page.getByTestId("item-2-status")).toHaveText(
     /Item 2 is not visible/,
   );
+  // Item 1 was removed from `elements`, so its stale map entry is cleared
+  // rather than continuing to report its last-known intersection state.
   await expect(page.getByTestId("item-1-status")).toHaveText(
     /Item 1 is not visible/,
+  );
+});
+
+test("Multiple elements - removing an element clears its map entries", async ({
+  page,
+}) => {
+  await page.goto("/multiple-elements-change.html");
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.getByTestId("item-1-status")).toHaveText(
+    /Item 1 is visible/,
+  );
+  await expect(page.getByTestId("item-1-map-status")).toHaveText(
+    /Item 1 is in maps/,
+  );
+
+  await page.getByTestId("remove-item-1").click();
+
+  await expect(page.getByTestId("item-1-map-status")).toHaveText(
+    /Item 1 is not in maps/,
   );
 });
 
