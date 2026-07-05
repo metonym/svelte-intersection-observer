@@ -1,5 +1,7 @@
 import { fromAction } from "svelte/attachments";
 
+let warned = false;
+
 /**
  * Svelte action that observes `node` with the Intersection Observer API.
  * Dispatches `observe` (on every change) and `intersect` (on entering the
@@ -16,26 +18,38 @@ export function intersect(node, options = {}) {
     skip = false,
   } = options;
 
-  /** @type {IntersectionObserver} */
+  /** @type {null | IntersectionObserver} */
   let observer;
 
-  const createObserver = () =>
-    new IntersectionObserver(
+  const createObserver = () => {
+    if (typeof IntersectionObserver === "undefined") {
+      if (!warned) {
+        warned = true;
+        console.warn(
+          "svelte-intersection-observer: `IntersectionObserver` is not available in this environment. No observation will occur; consider using a polyfill if you need to support it.",
+        );
+      }
+
+      return null;
+    }
+
+    return new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           node.dispatchEvent(new CustomEvent("observe", { detail: entry }));
 
           if (entry.isIntersecting) {
             node.dispatchEvent(new CustomEvent("intersect", { detail: entry }));
-            if (once) observer.unobserve(node);
+            if (once) observer?.unobserve(node);
           }
         }
       },
       { root, rootMargin, threshold },
     );
+  };
 
   observer = createObserver();
-  if (!skip) observer.observe(node);
+  if (!skip) observer?.observe(node);
 
   return {
     /** @param {import("./intersect.svelte.d.ts").IntersectActionOptions} [newOptions] */
@@ -54,18 +68,18 @@ export function intersect(node, options = {}) {
         rootMargin = newOptions.rootMargin ?? "0px";
         threshold = newOptions.threshold ?? 0;
 
-        observer.disconnect();
+        observer?.disconnect();
         observer = createObserver();
-        if (!newSkip) observer.observe(node);
+        if (!newSkip) observer?.observe(node);
       } else if (newSkip !== skip) {
-        if (newSkip) observer.unobserve(node);
-        else observer.observe(node);
+        if (newSkip) observer?.unobserve(node);
+        else observer?.observe(node);
       }
 
       skip = newSkip;
     },
     destroy() {
-      observer.disconnect();
+      observer?.disconnect();
     },
   };
 }
