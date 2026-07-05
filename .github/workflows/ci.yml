@@ -25,6 +25,9 @@ jobs:
       - name: Check types
         run: bun run test:types
 
+      - name: Build documentation
+        run: bun run build
+
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
