@@ -4,28 +4,28 @@
 [![NPM][npm]][npm-url]
 <!-- HIDE_END -->
 
-> Detect if an element is in the viewport using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+## About
 
-This zero-dependency library detects when an element enters the viewport, for lazy-loading images, scroll animations, infinite scroll, autoplaying video, analytics impressions, or scroll-to-end detection (see [Use Cases](#use-cases) for worked examples).
+`svelte-intersection-observer` is a zero-dependency Svelte library built on the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) that detects when an element enters or exits the viewport, without expensive scroll listeners. Use it for lazy-loading, scroll animations, infinite scroll, autoplaying video, impression tracking, and more (see [Use Cases](#use-cases)).
 
-It offers six interchangeable primitives, all backed by the same shared observer logic. Pick whichever fits your component's shape:
+It offers six interchangeable primitives, all backed by the same shared observer logic.
 
-| Primitive | Export | Reach for it when... |
+| Primitive | Export | Use it when... |
 | :-------- | :----- | :--------------------- |
-| [Component](#intersectionobserver) | `IntersectionObserver` | you want a wrapper component with a bound `intersecting` prop |
+| [Component](#intersectionobserver) | `IntersectionObserver` | you want a component with a bound `intersecting` prop |
 | [Pooled component](#multipleintersectionobserver) | `MultipleIntersectionObserver` | you're observing many elements and want one shared observer |
-| [Action](#intersect) | `intersect` | you want `use:` on a plain element, no wrapper markup |
+| [Action](#intersect) | `intersect` | you want `use:` on a plain element, no extra markup |
 | [Attachment](#intersectattachment) | `intersectAttachment` | same as the action, composed via `{@attach}` (Svelte 5.29+) |
 | [Composable](#createintersectionobserver) | `createIntersectionObserver` | you want reactive state from `<script>`, no directive |
 | [Factory](#createintersectiongroup) | `createIntersectionGroup` | you're rendering a list with `{@attach}` and want one shared observer |
 
 See [Library](#library) for the full docs on each. Try it in the [Svelte REPL](https://svelte.dev/repl/8cd2327a580c4f429c71f7df999bd51d).
 
-## Compatibility
+### Compatibility
 
 | Package version | Svelte version    | Notes                                     |
 | :--------------- | :----------------- | :----------------------------------------- |
-| 1.x              | 3, 4, 5 (non-runes) | Uses `export let`, slots, and `on:` events |
+| [1.x](https://github.com/metonym/svelte-intersection-observer/tree/v1.2.x) | 3, 4, 5 (non-runes) | Uses `export let`, slots, and `on:` events |
 | 2.x              | 5 (runes mode only) | Uses `$props()`, snippets, and callback props |
 
 <!-- TOC -->
@@ -270,7 +270,7 @@ See [Callbacks](#callbacks-onobserve-and-onintersect) for when each one fires.
 
 ### `intersect`
 
-As an alternative to the `IntersectionObserver` component, use the `intersect` action to observe an element directly with `use:`, without a `bind:this` reference or wrapper markup. Listen for `onobserve`/`onintersect` on the observed element itself.
+As an alternative to the `IntersectionObserver` component, use the `intersect` action to observe an element directly with `use:`, without a `bind:this` reference or extra markup. Listen for `onobserve`/`onintersect` on the observed element itself.
 
 ```svelte
 <script lang="ts">
@@ -626,8 +626,8 @@ Set `skip` to `true` to unobserve without disconnecting the underlying observer 
 
 Both [`MultipleIntersectionObserver`](#multipleintersectionobserver) and [`createIntersectionGroup`](#createintersectiongroup) share one observer across many elements. Pick based on how you want to wire it up:
 
-- Reach for `MultipleIntersectionObserver` when you're fine wrapping the list in a component and want a ready-made `elementIntersections` map handed to you via the `children` snippet.
-- Reach for `createIntersectionGroup` when you'd rather attach directly to each element with `{@attach}`, no wrapper component, and are happy tracking intersection state on your own per-item objects (as shown in its example above).
+- Use `MultipleIntersectionObserver` when you're fine wrapping the list in a component and want a ready-made `elementIntersections` map handed to you via the `children` snippet.
+- Use `createIntersectionGroup` when you'd rather attach directly to each element with `{@attach}`, no extra component, and are happy tracking intersection state on your own per-item objects (as shown in its example above).
 
 Either way, avoid giving `IntersectionObserver` a single shared `bind:this` variable inside `#each`; see the warning under [pooled component](#multipleintersectionobserver).
 
