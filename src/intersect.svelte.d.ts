@@ -23,6 +23,21 @@ export interface IntersectActionOptions {
   threshold?: number | number[];
 
   /**
+   * Set to `true` to enable occlusion-aware visibility tracking
+   * (Intersection Observer v2), populating `entry.isVisible`.
+   * Requires `delay` to be set per the spec.
+   * @default false
+   */
+  trackVisibility?: boolean;
+
+  /**
+   * Minimum delay in milliseconds between notifications from this
+   * observer. Required to be non-zero when `trackVisibility` is `true`.
+   * @default 0
+   */
+  delay?: number;
+
+  /**
    * Set to `true` to unobserve the element
    * after it intersects the viewport.
    * @default false
@@ -67,5 +82,18 @@ declare module "svelte/elements" {
     onintersect?: (
       event: CustomEvent<IntersectionObserverEntry & { isIntersecting: true }>,
     ) => void;
+  }
+}
+
+// TypeScript's DOM lib doesn't yet declare Intersection Observer v2
+// (`trackVisibility`/`delay`/`isVisible`), so it's added here.
+declare global {
+  interface IntersectionObserverInit {
+    trackVisibility?: boolean;
+    delay?: number;
+  }
+
+  interface IntersectionObserverEntry {
+    readonly isVisible: boolean;
   }
 }

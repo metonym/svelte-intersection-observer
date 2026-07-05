@@ -487,6 +487,33 @@ test("Multiple elements - basic pattern", async ({ page }) => {
   await expect(page.getByTestId("item-2-indicator")).toHaveText(/Item 2: ✗/);
 });
 
+test("Track visibility - entry.isVisible reflects occlusion, not just intersection", async ({
+  page,
+  browserName,
+}) => {
+  // Intersection Observer v2 (trackVisibility/isVisible) is only implemented
+  // in Chromium; skip elsewhere rather than flake on unsupported browsers.
+  test.skip(
+    browserName !== "chromium",
+    "trackVisibility is only supported in Chromium",
+  );
+
+  await page.goto("/track-visibility.html");
+  const header = page.locator("header");
+  const visibilityStatus = page.getByTestId("visibility-status");
+
+  await expect(header).toHaveText(/Element is not in view/);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+  await expect(header).toHaveText(/Element is in view/);
+  await expect(visibilityStatus).toHaveText(/Element is not visible/);
+
+  await page.getByTestId("toggle-occluder").click();
+  await expect(visibilityStatus).toHaveText(/Element is visible/, {
+    timeout: 5_000,
+  });
+});
+
 test("Each block - bind:this + bind:intersecting per item does not deadlock and tracks independently", async ({
   page,
 }) => {

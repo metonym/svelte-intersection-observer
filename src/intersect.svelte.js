@@ -12,6 +12,8 @@ export function intersect(node, options = {}) {
     root = null,
     rootMargin = "0px",
     threshold = 0,
+    trackVisibility = false,
+    delay = 0,
     once = false,
     skip = false,
   } = options;
@@ -31,7 +33,7 @@ export function intersect(node, options = {}) {
           }
         }
       },
-      { root, rootMargin, threshold },
+      { root, rootMargin, threshold, trackVisibility, delay },
     );
 
   observer = createObserver();
@@ -47,12 +49,17 @@ export function intersect(node, options = {}) {
       const configChanged =
         (newOptions.root ?? null) !== root ||
         (newOptions.rootMargin ?? "0px") !== rootMargin ||
-        JSON.stringify(newOptions.threshold ?? 0) !== JSON.stringify(threshold);
+        JSON.stringify(newOptions.threshold ?? 0) !==
+          JSON.stringify(threshold) ||
+        (newOptions.trackVisibility ?? false) !== trackVisibility ||
+        (newOptions.delay ?? 0) !== delay;
 
       if (configChanged) {
         root = newOptions.root ?? null;
         rootMargin = newOptions.rootMargin ?? "0px";
         threshold = newOptions.threshold ?? 0;
+        trackVisibility = newOptions.trackVisibility ?? false;
+        delay = newOptions.delay ?? 0;
 
         observer.disconnect();
         observer = createObserver();
