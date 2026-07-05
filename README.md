@@ -8,10 +8,10 @@
 
 Use it to lazy-load images, trigger scroll animations, implement infinite scroll, autoplay video when visible, track ad or analytics impressions, or detect when a user has scrolled to the end of a list.
 
-This library is zero-dependency and offers several ways to observe elements:
+This zero-dependency library offers several ways to observe elements:
 
-- `IntersectionObserver`: component for a single element
-- `MultipleIntersectionObserver`: component for observing many elements (shared observer, better performance)
+- `IntersectionObserver`: component for observing a single element
+- `MultipleIntersectionObserver`: component for observing multiple elements (shared observer for better performance)
 - `intersect`: action for observing an element directly with `use:`
 - `intersectAttachment`: attachment for observing an element directly with `{@attach}` (Svelte 5.29+)
 
