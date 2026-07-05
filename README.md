@@ -305,7 +305,7 @@ Attachments have a few architectural advantages over actions:
 
 For consumers who want Intersection Observer state without wrapping markup in a component, `createIntersectionObserver` is a script-only rune-based composable: call it in `<script>` to get reactive `intersecting`/`entry` getters, then apply `attach` to the node with `{@attach}`.
 
-```svelte
+```svelte no-eval
 <script>
   import { createIntersectionObserver } from "svelte-intersection-observer";
 
