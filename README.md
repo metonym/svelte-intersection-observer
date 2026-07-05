@@ -302,46 +302,6 @@ Attachments have a few architectural advantages over actions:
 
 **Note**: unlike `use:intersect`, which takes the options object directly, `intersectAttachment` takes a function that _returns_ the options object (this is how `fromAction` tracks reactive dependencies). `intersect` remains fully supported; use whichever fits your codebase.
 
-### `createIntersectionGroup` factory
-
-A bare `intersect`/`intersectAttachment` inside an `#each` block creates one native `IntersectionObserver` per iteration — for a long list, that's N observers instead of 1. `createIntersectionGroup` fixes this for the action/attachment API: call it once to create a group, then call `group.attach(...)` once per element to get an attachment that shares a single underlying observer across the whole group.
-
-```svelte
-<script>
-  import { createIntersectionGroup } from "svelte-intersection-observer";
-
-  let items = Array.from({ length: 100 }, (_, i) => ({
-    id: i + 1,
-    text: `Item ${i + 1}`,
-    intersecting: false,
-  }));
-
-  const group = createIntersectionGroup(); // one observer, however many items
-</script>
-
-{#each items as item (item.id)}
-  <div
-    {@attach group.attach({
-      onobserve: (entry) => (item.intersecting = entry.isIntersecting),
-    })}
-  >
-    {item.text}: {item.intersecting ? "✓" : "✗"}
-  </div>
-{/each}
-```
-
-`root`/`rootMargin`/`threshold` configure the one shared observer, so they're passed once to `createIntersectionGroup` itself (as a function, for the same reactive-dependency-tracking reason `intersectAttachment` takes one) rather than per element:
-
-```svelte no-eval
-const group = createIntersectionGroup(() => ({
-  root: container,
-  rootMargin: "0px",
-  threshold: 0.5,
-}));
-```
-
-`once`, `skip`, `onobserve`, and `onintersect` are the only options that make sense per element, so those are what `group.attach(...)` accepts.
-
 ### Multiple elements
 
 For performance, use `MultipleIntersectionObserver` to observe multiple elements with a single shared observer instead of instantiating a new one for every element.
@@ -422,6 +382,42 @@ For performance, use `MultipleIntersectionObserver` to observe multiple elements
 As with the scroll-to-end example, `root` must be an element that scrolls on its own; here, `itemsContainer` has an explicit `height` and `overflow-y: auto`.
 
 **Avoid** using the single-element `IntersectionObserver` component inside an `#each` block with one variable shared across iterations (e.g. `let node;` declared outside the loop and bound via `bind:this={node}` inside it). Every iteration overwrites the same `node`, so each observer instance keeps re-observing a moving target, which can produce an infinite update loop. Use `MultipleIntersectionObserver` with a per-item ref, as shown above, instead.
+
+### `createIntersectionGroup` factory
+
+A bare `intersect`/`intersectAttachment` inside an `#each` block creates one native `IntersectionObserver` per iteration — for a long list, that's N observers instead of 1. `createIntersectionGroup` fixes this for the action/attachment API: call it once to create a group, then call `group.attach(...)` once per element to get an attachment that shares a single underlying observer across the whole group.
+
+```svelte
+<script>
+  import { createIntersectionGroup } from "svelte-intersection-observer";
+
+  let groupItems = Array.from({ length: 100 }, (_, i) => ({ id: i, intersecting: false }));
+
+  const group = createIntersectionGroup(); // one observer, however many items
+</script>
+
+{#each groupItems as item (item.id)}
+  <div
+    {@attach group.attach({
+      onobserve: (entry) => (item.intersecting = entry.isIntersecting),
+    })}
+  >
+    Item {item.id}: {item.intersecting ? "✓" : "✗"}
+  </div>
+{/each}
+```
+
+`root`/`rootMargin`/`threshold` configure the one shared observer, so they're passed once to `createIntersectionGroup` itself (as a function, for the same reactive-dependency-tracking reason `intersectAttachment` takes one) rather than per element:
+
+```js
+const group = createIntersectionGroup(() => ({
+  root: container,
+  rootMargin: "0px",
+  threshold: 0.5,
+}));
+```
+
+`once`, `skip`, `onobserve`, and `onintersect` are the only options that make sense per element, so those are what `group.attach(...)` accepts.
 
 ## API
 
