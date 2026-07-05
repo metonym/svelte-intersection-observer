@@ -38,6 +38,10 @@
 
   let prevSkip = untrack(() => skip);
 
+  const configKey = $derived(
+    `${root}|${rootMargin}|${JSON.stringify(threshold)}`,
+  );
+
   const initialize = () => {
     observer = new IntersectionObserver(
       (entries) => {
@@ -70,8 +74,12 @@
   };
 
   $effect(() => {
-    prevElements = new Set();
-    initialize();
+    configKey;
+
+    untrack(() => {
+      prevElements = new Set();
+      initialize();
+    });
 
     return () => {
       observer?.disconnect();
