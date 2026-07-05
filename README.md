@@ -391,7 +391,9 @@ A bare `intersect`/`intersectAttachment` inside an `#each` block creates one nat
 <script>
   import { createIntersectionGroup } from "svelte-intersection-observer";
 
-  let groupItems = Array.from({ length: 100 }, (_, i) => ({ id: i, intersecting: false }));
+  let groupItems = $state(
+    Array.from({ length: 100 }, (_, i) => ({ id: i, intersecting: false })),
+  );
 
   const group = createIntersectionGroup(); // one observer, however many items
 </script>
