@@ -36,6 +36,11 @@ pkgJson.exports = {
   },
 };
 
+pkgJson.sideEffects = false;
+pkgJson.peerDependencies = {
+  svelte: "^5.29.0",
+};
+
 await Bun.write("./package/package.json", JSON.stringify(pkgJson, null, 2));
 
 /** Comment ranges (byte offsets, delimiters included) found in a source string. */
