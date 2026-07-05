@@ -302,6 +302,24 @@ Attachments have a few architectural advantages over actions:
 
 **Note**: unlike `use:intersect`, which takes the options object directly, `intersectAttachment` takes a function that _returns_ the options object (this is how `fromAction` tracks reactive dependencies). `intersect` remains fully supported; use whichever fits your codebase.
 
+### `createIntersectionObserver` composable
+
+For consumers who want Intersection Observer state without wrapping markup in a component, `createIntersectionObserver` is a script-only rune-based composable: call it in `<script>` to get reactive `intersecting`/`entry` getters, then apply `attach` to the node with `{@attach}`.
+
+```svelte no-eval
+<script>
+  import { createIntersectionObserver } from "svelte-intersection-observer";
+
+  const observer = createIntersectionObserver(() => ({ threshold: 0.5 }));
+</script>
+
+<div {@attach observer.attach}>
+  {observer.intersecting ? "In view" : "Not in view"}
+</div>
+```
+
+`createIntersectionObserver` takes the same options as `intersectAttachment` (as a function returning the options object) and reuses its underlying observer logic.
+
 ### Multiple elements
 
 For performance, use `MultipleIntersectionObserver` to observe multiple elements with a single shared observer instead of instantiating a new one for every element.
@@ -523,6 +541,18 @@ Both callbacks are called with:
 - **onintersect**: fired on the element when it is intersecting the viewport
 
 The `e.detail` dispatched by the `observe` and `intersect` events is an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) interface.
+
+### `createIntersectionObserver` composable
+
+Takes the same options as [`intersectAttachment`](#options) (see above).
+
+#### Return value
+
+| Name         | Description                                             | Type                                                                                                                 |
+| :----------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| intersecting | `true` if the observed element is intersecting the viewport | `boolean`                                                                                                          |
+| entry        | Observed element metadata                                | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) |
+| attach       | Attachment to apply to the observed element via `{@attach}` | [`Attachment<HTMLElement>`](https://svelte.dev/docs/svelte/svelte-attachments)                                    |
 
 ### `createIntersectionGroup`
 

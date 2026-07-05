@@ -1,3 +1,4 @@
+export { createIntersectionObserver } from "./create-intersection-observer.svelte.js";
 export { default } from "./IntersectionObserver.svelte";
 export {
   createIntersectionGroup,

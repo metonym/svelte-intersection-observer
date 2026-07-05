@@ -1,3 +1,5 @@
+export type { IntersectionObserverState } from "./create-intersection-observer.svelte.js";
+export { createIntersectionObserver } from "./create-intersection-observer.svelte.js";
 export { default } from "./IntersectionObserver.svelte";
 export type {
   IntersectActionOptions,
