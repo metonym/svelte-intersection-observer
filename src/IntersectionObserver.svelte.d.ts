@@ -42,6 +42,21 @@ export interface IntersectionObserverProps {
   threshold?: number | number[];
 
   /**
+   * Set to `true` to enable occlusion-aware visibility tracking
+   * (Intersection Observer v2), populating `entry.isVisible`.
+   * Requires `delay` to be set per the spec.
+   * @default false
+   */
+  trackVisibility?: boolean;
+
+  /**
+   * Minimum delay in milliseconds between notifications from the
+   * observer. Required to be non-zero when `trackVisibility` is `true`.
+   * @default 0
+   */
+  delay?: number;
+
+  /**
    * Observed element metadata.
    * @default null
    */

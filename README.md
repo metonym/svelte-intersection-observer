@@ -8,6 +8,25 @@
 
 Use it to lazy-load images, trigger scroll animations, implement infinite scroll, autoplay video when visible, track ad or analytics impressions, or detect when a user has scrolled to the end of a list.
 
+### Trustworthy impression tracking with `trackVisibility`
+
+By default, an element is reported as intersecting even if it's fully covered by another element (e.g. an overlay or iframe) — not something you want when billing an advertiser for an impression. Set `trackVisibility` to `true` (with a non-zero `delay`, per the underlying [Intersection Observer v2](https://developer.chrome.com/blog/intersectionobserver-v2/) spec) to get occlusion-aware visibility on `entry.isVisible`.
+
+```svelte
+<IntersectionObserver
+  {element}
+  trackVisibility
+  delay={100}
+  onintersect={(entry) => {
+    if (entry.isVisible) {
+      // Only fires when the element is unoccluded — safe to log an impression.
+    }
+  }}
+>
+  <div bind:this={element}>Ad content</div>
+</IntersectionObserver>
+```
+
 This zero-dependency library offers several ways to observe elements:
 
 - `IntersectionObserver`: component for observing a single element
@@ -396,6 +415,8 @@ As with the scroll-to-end example, `root` must be an element that scrolls on its
 | root         | Containing element                                          | `null` or `HTMLElement`                                                                                             | `null`        |
 | rootMargin   | Margin offset of the containing element                     | `string`                                                                                                            | `"0px"`       |
 | threshold    | Percentage of element visibility to trigger an event        | `number` between 0 and 1, or an array of `number`s between 0 and 1                                                  | `0`           |
+| trackVisibility | Enable occlusion-aware visibility tracking (Intersection Observer v2), populating `entry.isVisible`. Requires `delay` to be set. | `boolean`  | `false`       |
+| delay        | Minimum delay in milliseconds between notifications. Required to be non-zero when `trackVisibility` is `true`. | `number`                                                                       | `0`           |
 | entry        | Observed element metadata                                   | `null` or [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry) | `null`        |
 | observer     | `IntersectionObserver` instance                             | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)           | `null`        |
 | skip         | Pause observing without losing `entry`/`intersecting` state | `boolean`                                                                                                           | `false`       |
@@ -428,6 +449,8 @@ Both callbacks are called with an [`IntersectionObserverEntry`](https://develope
 | root                 | Containing element                                    | `null` or `HTMLElement`                                                                                                                 | `null`        |
 | rootMargin           | Margin offset of the containing element               | `string`                                                                                                                                | `"0px"`       |
 | threshold            | Percentage of element visibility to trigger an event  | `number` between 0 and 1, or an array of `number`s between 0 and 1                                                                      | `0`           |
+| trackVisibility      | Enable occlusion-aware visibility tracking (Intersection Observer v2), populating `entry.isVisible`. Requires `delay` to be set. | `boolean` | `false`       |
+| delay                | Minimum delay in milliseconds between notifications. Required to be non-zero when `trackVisibility` is `true`. | `number`                                               | `0`           |
 | elementIntersections | Map of each element to its intersection state         | `Map<HTMLElement \| null, boolean>`                                                                                                     | `new Map()`   |
 | elementEntries       | Map of each element to its latest entry               | `Map<HTMLElement \| null,` [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)`>` | `new Map()`   |
 | observer             | `IntersectionObserver` instance                       | `null` or [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)                               | `null`        |
@@ -466,6 +489,8 @@ Both callbacks are called with:
 | root       | Containing element                                       | `null` or `HTMLElement`                                            | `null`        |
 | rootMargin | Margin offset of the containing element                  | `string`                                                           | `"0px"`       |
 | threshold  | Percentage of element visibility to trigger an event     | `number` between 0 and 1, or an array of `number`s between 0 and 1 | `0`           |
+| trackVisibility | Enable occlusion-aware visibility tracking (Intersection Observer v2), populating `entry.isVisible`. Requires `delay` to be set. | `boolean` | `false` |
+| delay      | Minimum delay in milliseconds between notifications. Required to be non-zero when `trackVisibility` is `true`. | `number`         | `0`           |
 | once       | Unobserve the element after the first intersection event | `boolean`                                                          | `false`       |
 | skip       | Pause observing without disconnecting the observer       | `boolean`                                                          | `false`       |
 

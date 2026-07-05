@@ -8,6 +8,8 @@
    * @property {null | HTMLElement} [root] Specify the containing element. Defaults to the browser viewport.
    * @property {string} [rootMargin] Margin offset of the containing element.
    * @property {number | number[]} [threshold] Percentage of element visibility to trigger an event. Value must be between 0 and 1.
+   * @property {boolean} [trackVisibility] Set to `true` to enable occlusion-aware visibility tracking (Intersection Observer v2), populating `entry.isVisible`. Requires `delay` to be set per the spec.
+   * @property {number} [delay] Minimum delay in milliseconds between notifications from the observer. Required to be non-zero when `trackVisibility` is `true`.
    * @property {Map<HTMLElement | null, boolean>} [elementIntersections] Map of element to its intersection state.
    * @property {Map<HTMLElement | null, IntersectionObserverEntry>} [elementEntries] Map of element to its latest entry.
    * @property {null | IntersectionObserver} [observer] `IntersectionObserver` instance.
@@ -24,6 +26,8 @@
     root = null,
     rootMargin = "0px",
     threshold = 0,
+    trackVisibility = false,
+    delay = 0,
     elementIntersections = $bindable(new Map()),
     elementEntries = $bindable(new Map()),
     observer = $bindable(null),
@@ -65,7 +69,7 @@
         elementIntersections = new Map(elementIntersections);
         elementEntries = new Map(elementEntries);
       },
-      { root, rootMargin, threshold },
+      { root, rootMargin, threshold, trackVisibility, delay },
     );
   };
 

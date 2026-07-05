@@ -9,6 +9,8 @@
    * @property {null | HTMLElement} [root] Specify the containing element. Defaults to the browser viewport.
    * @property {string} [rootMargin] Margin offset of the containing element.
    * @property {number | number[]} [threshold] Percentage of element visibility to trigger an event. Value must be between 0 and 1.
+   * @property {boolean} [trackVisibility] Set to `true` to enable occlusion-aware visibility tracking (Intersection Observer v2), populating `entry.isVisible`. Requires `delay` to be set per the spec.
+   * @property {number} [delay] Minimum delay in milliseconds between notifications from the observer. Required to be non-zero when `trackVisibility` is `true`.
    * @property {null | IntersectionObserverEntry} [entry] Observed element metadata.
    * @property {null | IntersectionObserver} [observer] `IntersectionObserver` instance.
    * @property {boolean} [skip] Set to `true` to pause observing without disconnecting the observer or losing `entry`/`intersecting` state. Set back to `false` to resume.
@@ -25,6 +27,8 @@
     root = null,
     rootMargin = "0px",
     threshold = 0,
+    trackVisibility = false,
+    delay = 0,
     entry = $bindable(null),
     observer = $bindable(null),
     skip = false,
@@ -58,7 +62,7 @@
           }
         }
       },
-      { root, rootMargin, threshold },
+      { root, rootMargin, threshold, trackVisibility, delay },
     );
   };
 
