@@ -5,7 +5,7 @@ on:
 
 jobs:
   checks:
-    name: Lint & Type Check
+    name: Lint, Type Check & Unit Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -24,6 +24,9 @@ jobs:
 
       - name: Check types
         run: bun run test:types
+
+      - name: Run unit tests
+        run: bun run test:unit
 
       - name: Build documentation
         run: bun run build
