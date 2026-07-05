@@ -1,6 +1,7 @@
 import { flushSync } from "svelte";
 import { createIntersectionGroup } from "svelte-intersection-observer";
 import { afterEach, describe, expect, test, vi } from "vitest";
+import GroupSharedOptionsChangeFixture from "../e2e/fixtures/GroupSharedOptionsChangeFixture.svelte";
 import IntersectionGroupFixture from "../e2e/fixtures/IntersectionGroupFixture.svelte";
 import { MockIntersectionObserver } from "./mock-intersection-observer";
 import { render } from "./render";
@@ -171,5 +172,51 @@ describe("createIntersectionGroup (component integration)", () => {
       rendered.target.querySelector('[data-testid="observer-count"]')
         ?.textContent,
     ).toContain("Observer count: 1");
+  });
+
+  test("rebuilds the shared observer and re-observes every node when shared options change", () => {
+    const rendered = render(GroupSharedOptionsChangeFixture);
+    cleanup = rendered.cleanup;
+    const item1 = rendered.target.querySelector('[data-testid="item-1"]');
+    const item2 = rendered.target.querySelector('[data-testid="item-2"]');
+    const button = rendered.target.querySelector<HTMLButtonElement>(
+      '[data-testid="grow-root-margin"]',
+    );
+    if (!item1 || !item2 || !button) throw new Error("fixture markup missing");
+
+    expect(MockIntersectionObserver.instances).toHaveLength(1);
+    const firstObserver = MockIntersectionObserver.last();
+
+    flushSync(() => button.click());
+
+    expect(MockIntersectionObserver.instances).toHaveLength(2);
+    expect(firstObserver.disconnected).toBe(true);
+
+    const secondObserver = MockIntersectionObserver.last();
+    expect(secondObserver.options.rootMargin).toBe("100px");
+    expect(secondObserver.observedElements.has(item1)).toBe(true);
+    expect(secondObserver.observedElements.has(item2)).toBe(true);
+  });
+
+  test("keeps tracking shared options reactively across repeated changes", () => {
+    const rendered = render(GroupSharedOptionsChangeFixture);
+    cleanup = rendered.cleanup;
+    const item1 = rendered.target.querySelector('[data-testid="item-1"]');
+    const item2 = rendered.target.querySelector('[data-testid="item-2"]');
+    const button = rendered.target.querySelector<HTMLButtonElement>(
+      '[data-testid="grow-root-margin"]',
+    );
+    if (!item1 || !item2 || !button) throw new Error("fixture markup missing");
+
+    flushSync(() => button.click());
+    expect(MockIntersectionObserver.last().options.rootMargin).toBe("100px");
+
+    flushSync(() => button.click());
+
+    expect(MockIntersectionObserver.instances).toHaveLength(3);
+    const thirdObserver = MockIntersectionObserver.last();
+    expect(thirdObserver.options.rootMargin).toBe("200px");
+    expect(thirdObserver.observedElements.has(item1)).toBe(true);
+    expect(thirdObserver.observedElements.has(item2)).toBe(true);
   });
 });
