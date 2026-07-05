@@ -147,6 +147,42 @@ describe("MultipleIntersectionObserver", () => {
     expect(MockIntersectionObserver.instances).toHaveLength(1);
   });
 
+  test("removing the only element empties the array, unobserves it, and clears map entries; re-adding it re-observes", () => {
+    const rendered = render(MultipleElementsChangeFixture);
+    cleanup = rendered.cleanup;
+    const item1 = rendered.target.querySelector('[data-testid="item-1"]');
+    const removeButton = rendered.target.querySelector(
+      '[data-testid="remove-item-1"]',
+    );
+    const addButton = rendered.target.querySelector(
+      '[data-testid="add-item-1"]',
+    );
+    if (
+      !item1 ||
+      !(removeButton instanceof HTMLButtonElement) ||
+      !(addButton instanceof HTMLButtonElement)
+    ) {
+      throw new Error("fixture markup missing");
+    }
+
+    const observer = MockIntersectionObserver.last();
+    expect(observer.observedElements.has(item1)).toBe(true);
+
+    removeButton.click();
+    flushSync();
+
+    expect(observer.observedElements.has(item1)).toBe(false);
+    expect(
+      rendered.target.querySelector('[data-testid="item-1-map-status"]')
+        ?.textContent,
+    ).toContain("Item 1 is not in maps");
+    expect(MockIntersectionObserver.instances).toHaveLength(1);
+
+    addButton.click();
+    flushSync();
+    expect(observer.observedElements.has(item1)).toBe(true);
+  });
+
   test("once unobserves only the target that intersected", () => {
     const rendered = render(MultipleOnceFixture);
     cleanup = rendered.cleanup;
