@@ -14,6 +14,7 @@
    * @property {boolean} [skip] Set to `true` to pause observing without disconnecting the observer or losing `entry`/`intersecting` state. Set back to `false` to resume.
    * @property {(entry: IntersectionObserverEntry) => void} [onobserve] Called when the element is first observed and also whenever an intersection event occurs.
    * @property {(entry: IntersectionObserverEntry & { isIntersecting: true }) => void} [onintersect] Called only when the observed element is intersecting the viewport.
+   * @property {(entry: IntersectionObserverEntry & { isIntersecting: false }) => void} [onexit] Called when the observed element transitions from intersecting to not intersecting. Not called for the initial off-screen report.
    * @property {import("svelte").Snippet<[{ intersecting: boolean, entry: null | IntersectionObserverEntry, observer: null | IntersectionObserver }]>} [children]
    */
 
@@ -30,6 +31,7 @@
     skip = false,
     onobserve,
     onintersect,
+    onexit,
     children,
   } = $props();
 
@@ -49,6 +51,8 @@
     observer = new IntersectionObserver(
       (entries) => {
         for (const _entry of entries) {
+          const wasIntersecting = intersecting;
+
           entry = _entry;
           intersecting = _entry.isIntersecting;
 
@@ -62,6 +66,12 @@
             );
 
             if (once) observer?.unobserve(_entry.target);
+          } else if (wasIntersecting) {
+            onexit?.(
+              /** @type {IntersectionObserverEntry & { isIntersecting: false }} */ (
+                _entry
+              ),
+            );
           }
         }
       },

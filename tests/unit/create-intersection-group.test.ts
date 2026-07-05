@@ -80,6 +80,55 @@ describe("createIntersectionGroup", () => {
     expect(observer.observedElements.has(nodeB)).toBe(true);
   });
 
+  test("onexit fires only for a node that transitions from intersecting to not intersecting", () => {
+    const group = createIntersectionGroup();
+    const nodeA = document.createElement("div");
+    const nodeB = document.createElement("div");
+
+    const exitA = vi.fn();
+    const exitB = vi.fn();
+
+    group.attach({ onexit: exitA })(nodeA);
+    group.attach({ onexit: exitB })(nodeB);
+
+    const observer = MockIntersectionObserver.last();
+
+    // Node A enters, then the same batch reports node B's initial off-screen state.
+    observer.trigger([
+      { target: nodeA, isIntersecting: true },
+      { target: nodeB, isIntersecting: false },
+    ]);
+    expect(exitA).not.toHaveBeenCalled();
+    expect(exitB).not.toHaveBeenCalled();
+
+    observer.trigger([{ target: nodeA, isIntersecting: false }]);
+    expect(exitA).toHaveBeenCalledTimes(1);
+    expect(exitB).not.toHaveBeenCalled();
+  });
+
+  test("rebuilding the shared observer clears exit tracking so a stale intersecting node does not fire a phantom exit", () => {
+    let rootMargin = "0px";
+    const group = createIntersectionGroup(() => ({ rootMargin }));
+    const nodeA = document.createElement("div");
+
+    const exitA = vi.fn();
+    group.attach({ onexit: exitA })(nodeA);
+
+    const firstObserver = MockIntersectionObserver.last();
+    firstObserver.trigger([{ target: nodeA, isIntersecting: true }]);
+
+    rootMargin = "-200px";
+    const nodeB = document.createElement("div");
+    group.attach()(nodeB);
+
+    expect(MockIntersectionObserver.instances).toHaveLength(2);
+    const secondObserver = MockIntersectionObserver.last();
+    expect(secondObserver).not.toBe(firstObserver);
+
+    secondObserver.trigger([{ target: nodeA, isIntersecting: false }]);
+    expect(exitA).not.toHaveBeenCalled();
+  });
+
   test("detaching one node unobserves it without tearing down the shared observer", () => {
     const group = createIntersectionGroup();
     const nodeA = document.createElement("div");

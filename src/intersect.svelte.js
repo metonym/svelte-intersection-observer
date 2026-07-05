@@ -2,8 +2,9 @@ import { fromAction } from "svelte/attachments";
 
 /**
  * Svelte action that observes `node` with the Intersection Observer API.
- * Dispatches `observe` (on every change) and `intersect` (on entering the
- * viewport) `CustomEvent`s on `node` — listen with `onobserve`/`onintersect`.
+ * Dispatches `observe` (on every change), `intersect` (on entering the
+ * viewport), and `exit` (on leaving the viewport) `CustomEvent`s on `node` —
+ * listen with `onobserve`/`onintersect`/`onexit`.
  * @param {Element} node
  * @param {import("./intersect.svelte.d.ts").IntersectActionOptions} [options]
  */
@@ -19,6 +20,8 @@ export function intersect(node, options = {}) {
   /** @type {null | IntersectionObserver} */
   let observer;
 
+  let wasIntersecting = false;
+
   const createObserver = () => {
     if (typeof IntersectionObserver === "undefined") return null;
 
@@ -30,7 +33,11 @@ export function intersect(node, options = {}) {
           if (entry.isIntersecting) {
             node.dispatchEvent(new CustomEvent("intersect", { detail: entry }));
             if (once) observer?.unobserve(node);
+          } else if (wasIntersecting) {
+            node.dispatchEvent(new CustomEvent("exit", { detail: entry }));
           }
+
+          wasIntersecting = entry.isIntersecting;
         }
       },
       { root, rootMargin, threshold },
@@ -56,6 +63,8 @@ export function intersect(node, options = {}) {
         root = newOptions.root ?? null;
         rootMargin = newOptions.rootMargin ?? "0px";
         threshold = newOptions.threshold ?? 0;
+
+        wasIntersecting = false;
 
         observer?.disconnect();
         observer = createObserver();
@@ -92,7 +101,7 @@ export function intersectAttachment(getOptions = () => ({})) {
  *
  * `root`/`rootMargin`/`threshold` are shared across every node in the group
  * (they configure the one underlying observer); only `once`/`skip` and the
- * `onobserve`/`onintersect` callbacks are meaningful per node. Changing
+ * `onobserve`/`onintersect`/`onexit` callbacks are meaningful per node. Changing
  * shared options rebuilds the single shared observer and re-observes every
  * element in the group; elements whose `once` already fired are re-observed
  * as well, so their callbacks may fire again under the new config.
@@ -108,6 +117,9 @@ export function createIntersectionGroup(getSharedOptions = () => ({})) {
 
   /** @type {Map<Element, import("./intersect.svelte.d.ts").IntersectGroupNodeOptions>} */
   const callbacks = new Map();
+
+  /** Previous intersecting state per node, used to detect enter→exit transitions. */
+  const wasIntersecting = new Map();
 
   const handleEntries = (
     /** @type {IntersectionObserverEntry[]} */ entries,
@@ -125,7 +137,15 @@ export function createIntersectionGroup(getSharedOptions = () => ({})) {
           ),
         );
         if (nodeOptions?.once) observer?.unobserve(target);
+      } else if (wasIntersecting.get(target)) {
+        nodeOptions?.onexit?.(
+          /** @type {IntersectionObserverEntry & { isIntersecting: false }} */ (
+            entry
+          ),
+        );
       }
+
+      wasIntersecting.set(target, entry.isIntersecting);
     }
   };
 
@@ -154,6 +174,7 @@ export function createIntersectionGroup(getSharedOptions = () => ({})) {
           threshold,
         });
         configKey = key;
+        wasIntersecting.clear();
 
         for (const [el, opts] of callbacks) {
           if (!opts.skip) observer.observe(el);
@@ -166,6 +187,7 @@ export function createIntersectionGroup(getSharedOptions = () => ({})) {
       return () => {
         observer?.unobserve(node);
         callbacks.delete(node);
+        wasIntersecting.delete(node);
 
         if (callbacks.size === 0) {
           observer?.disconnect();

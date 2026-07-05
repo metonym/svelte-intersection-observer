@@ -5,6 +5,7 @@ import EachBindingFixture from "../e2e/fixtures/EachBindingFixture.svelte";
 import ElementChangeFixture from "../e2e/fixtures/ElementChangeFixture.svelte";
 import ElementNullFixture from "../e2e/fixtures/ElementNullFixture.svelte";
 import ElementUndefinedFixture from "../e2e/fixtures/ElementUndefinedFixture.svelte";
+import ExitFixture from "../e2e/fixtures/ExitFixture.svelte";
 import OnceElementChangeFixture from "../e2e/fixtures/OnceElementChangeFixture.svelte";
 import OnceFixture from "../e2e/fixtures/OnceFixture.svelte";
 import RootChangeFixture from "../e2e/fixtures/RootChangeFixture.svelte";
@@ -345,6 +346,27 @@ describe("IntersectionObserver", () => {
     restoreButton.click();
     flushSync();
     expect(observer.observedElements.has(el)).toBe(true);
+  });
+
+  test("onexit fires only on the intersecting-to-not-intersecting transition, not the initial report", () => {
+    const rendered = render(ExitFixture);
+    cleanup = rendered.cleanup;
+    const el = rendered.target.querySelector("div");
+    if (!el) throw new Error("fixture markup missing");
+
+    const exitCount = () =>
+      rendered.target.querySelector('[data-testid="exit-count"]')?.textContent;
+
+    const observer = MockIntersectionObserver.last();
+
+    flushSync(() => observer.trigger([{ target: el, isIntersecting: false }]));
+    expect(exitCount()).toContain("Exit count: 0");
+
+    flushSync(() => observer.trigger([{ target: el, isIntersecting: true }]));
+    expect(exitCount()).toContain("Exit count: 0");
+
+    flushSync(() => observer.trigger([{ target: el, isIntersecting: false }]));
+    expect(exitCount()).toContain("Exit count: 1");
   });
 
   test("value-equal but referentially-new threshold arrays do not recreate the observer", () => {

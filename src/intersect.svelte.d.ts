@@ -39,8 +39,9 @@ export interface IntersectActionOptions {
 
 /**
  * Svelte action that observes the element with the Intersection Observer API.
- * Dispatches `observe` (on every change) and `intersect` (on entering the
- * viewport) `CustomEvent`s on the element — listen with `onobserve`/`onintersect`.
+ * Dispatches `observe` (on every change), `intersect` (on entering the
+ * viewport), and `exit` (on leaving the viewport) `CustomEvent`s on the
+ * element — listen with `onobserve`/`onintersect`/`onexit`.
  */
 export const intersect: Action<
   Element,
@@ -49,6 +50,9 @@ export const intersect: Action<
     onobserve?: (event: CustomEvent<IntersectionObserverEntry>) => void;
     onintersect?: (
       event: CustomEvent<IntersectionObserverEntry & { isIntersecting: true }>,
+    ) => void;
+    onexit?: (
+      event: CustomEvent<IntersectionObserverEntry & { isIntersecting: false }>,
     ) => void;
   }
 >;
@@ -66,6 +70,9 @@ declare module "svelte/elements" {
     onobserve?: (event: CustomEvent<IntersectionObserverEntry>) => void;
     onintersect?: (
       event: CustomEvent<IntersectionObserverEntry & { isIntersecting: true }>,
+    ) => void;
+    onexit?: (
+      event: CustomEvent<IntersectionObserverEntry & { isIntersecting: false }>,
     ) => void;
   }
 }
@@ -121,6 +128,15 @@ export interface IntersectGroupNodeOptions {
   /** Called only when the element is intersecting the viewport. */
   onintersect?: (
     entry: IntersectionObserverEntry & { isIntersecting: true },
+  ) => void;
+
+  /**
+   * Called when the element transitions from intersecting
+   * to not intersecting. Not called for the initial
+   * off-screen report.
+   */
+  onexit?: (
+    entry: IntersectionObserverEntry & { isIntersecting: false },
   ) => void;
 }
 
