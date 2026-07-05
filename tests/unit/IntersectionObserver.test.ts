@@ -5,6 +5,7 @@ import EachBindingFixture from "../e2e/fixtures/EachBindingFixture.svelte";
 import ElementChangeFixture from "../e2e/fixtures/ElementChangeFixture.svelte";
 import ElementNullFixture from "../e2e/fixtures/ElementNullFixture.svelte";
 import OnceFixture from "../e2e/fixtures/OnceFixture.svelte";
+import RootChangeFixture from "../e2e/fixtures/RootChangeFixture.svelte";
 import RootFixture from "../e2e/fixtures/RootFixture.svelte";
 import RootMarginChangeFixture from "../e2e/fixtures/RootMarginChangeFixture.svelte";
 import RootMarginFixture from "../e2e/fixtures/RootMarginFixture.svelte";
@@ -189,6 +190,41 @@ describe("IntersectionObserver", () => {
     if (!container) throw new Error("fixture markup missing");
 
     expect(MockIntersectionObserver.last().options.root).toBe(container);
+  });
+
+  test("changing root to a different element of the same tag recreates the observer", () => {
+    const rendered = render(RootChangeFixture);
+    cleanup = rendered.cleanup;
+    const containerA = rendered.target.querySelector('[data-testid="root-a"]');
+    const containerB = rendered.target.querySelector('[data-testid="root-b"]');
+    const element = rendered.target.querySelector('[data-testid="element"]');
+    const swapButton = rendered.target.querySelector(
+      '[data-testid="swap-root"]',
+    );
+    if (
+      !containerA ||
+      !containerB ||
+      !element ||
+      !(swapButton instanceof HTMLButtonElement)
+    ) {
+      throw new Error("fixture markup missing");
+    }
+
+    const instanceCountBefore = MockIntersectionObserver.instances.length;
+    const firstObserver = MockIntersectionObserver.last();
+    expect(firstObserver.root).toBe(containerA);
+
+    swapButton.click();
+    flushSync();
+
+    expect(MockIntersectionObserver.instances.length).toBe(
+      instanceCountBefore + 1,
+    );
+    expect(firstObserver.disconnected).toBe(true);
+
+    const secondObserver = MockIntersectionObserver.last();
+    expect(secondObserver.root).toBe(containerB);
+    expect(secondObserver.observedElements.has(element)).toBe(true);
   });
 
   test("each block instances get independent observers", () => {
