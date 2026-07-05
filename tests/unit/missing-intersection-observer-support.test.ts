@@ -64,11 +64,9 @@ describe("missing IntersectionObserver support", () => {
     const group = createIntersectionGroup();
     const node = document.createElement("div");
 
-    let detach: (() => void) | undefined;
     expect(() => {
-      detach = group.attach()(node);
+      const detach = group.attach()(node);
+      detach?.();
     }).not.toThrow();
-
-    expect(() => detach?.()).not.toThrow();
   });
 });
