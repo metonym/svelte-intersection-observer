@@ -1,4 +1,5 @@
 import type { Action } from "svelte/action";
+import type { Attachment } from "svelte/attachments";
 
 export interface IntersectActionOptions {
   /**
@@ -51,3 +52,11 @@ export const intersect: Action<
     ) => void;
   }
 >;
+
+/**
+ * Svelte attachment that observes the element with the Intersection Observer
+ * API. Equivalent to `intersect`, for use with `{@attach}` instead of `use:`.
+ */
+export function intersectAttachment(
+  getOptions?: () => IntersectActionOptions,
+): Attachment<HTMLElement>;

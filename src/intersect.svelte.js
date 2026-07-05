@@ -1,3 +1,5 @@
+import { fromAction } from "svelte/attachments";
+
 /**
  * Svelte action that observes `node` with the Intersection Observer API.
  * Dispatches `observe` (on every change) and `intersect` (on entering the
@@ -66,4 +68,14 @@ export function intersect(node, options = {}) {
       observer.disconnect();
     },
   };
+}
+
+/**
+ * Svelte attachment that observes the element with the Intersection Observer
+ * API. Equivalent to the `intersect` action, for use with `{@attach}` instead
+ * of `use:`. Wraps `intersect` via `svelte/attachments`'s `fromAction`.
+ * @param {() => import("./intersect.svelte.d.ts").IntersectActionOptions} [getOptions]
+ */
+export function intersectAttachment(getOptions = () => ({})) {
+  return fromAction(intersect, getOptions);
 }
