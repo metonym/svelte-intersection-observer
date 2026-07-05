@@ -43,6 +43,11 @@
   );
 
   const initialize = () => {
+    if (typeof IntersectionObserver === "undefined") {
+      observer = null;
+      return;
+    }
+
     observer = new IntersectionObserver(
       (entries) => {
         for (const _entry of entries) {

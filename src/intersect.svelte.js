@@ -16,26 +16,29 @@ export function intersect(node, options = {}) {
     skip = false,
   } = options;
 
-  /** @type {IntersectionObserver} */
+  /** @type {null | IntersectionObserver} */
   let observer;
 
-  const createObserver = () =>
-    new IntersectionObserver(
+  const createObserver = () => {
+    if (typeof IntersectionObserver === "undefined") return null;
+
+    return new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           node.dispatchEvent(new CustomEvent("observe", { detail: entry }));
 
           if (entry.isIntersecting) {
             node.dispatchEvent(new CustomEvent("intersect", { detail: entry }));
-            if (once) observer.unobserve(node);
+            if (once) observer?.unobserve(node);
           }
         }
       },
       { root, rootMargin, threshold },
     );
+  };
 
   observer = createObserver();
-  if (!skip) observer.observe(node);
+  if (!skip) observer?.observe(node);
 
   return {
     /** @param {import("./intersect.svelte.d.ts").IntersectActionOptions} [newOptions] */
@@ -54,18 +57,18 @@ export function intersect(node, options = {}) {
         rootMargin = newOptions.rootMargin ?? "0px";
         threshold = newOptions.threshold ?? 0;
 
-        observer.disconnect();
+        observer?.disconnect();
         observer = createObserver();
-        if (!newSkip) observer.observe(node);
+        if (!newSkip) observer?.observe(node);
       } else if (newSkip !== skip) {
-        if (newSkip) observer.unobserve(node);
-        else observer.observe(node);
+        if (newSkip) observer?.unobserve(node);
+        else observer?.observe(node);
       }
 
       skip = newSkip;
     },
     destroy() {
-      observer.disconnect();
+      observer?.disconnect();
     },
   };
 }

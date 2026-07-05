@@ -668,3 +668,62 @@ test("Multiple elements - binding pattern", async ({ page }) => {
     "false",
   );
 });
+
+test.describe("Missing IntersectionObserver support", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "IntersectionObserver", {
+        value: undefined,
+        configurable: true,
+      });
+    });
+  });
+
+  test("IntersectionObserver component - degrades gracefully without throwing", async ({
+    page,
+  }) => {
+    const pageErrors: Error[] = [];
+    page.on("pageerror", (err) => pageErrors.push(err));
+
+    await page.goto("/basic.html");
+    await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(200);
+    await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+    expect(pageErrors).toEqual([]);
+  });
+
+  test("MultipleIntersectionObserver component - degrades gracefully without throwing", async ({
+    page,
+  }) => {
+    const pageErrors: Error[] = [];
+    page.on("pageerror", (err) => pageErrors.push(err));
+
+    await page.goto("/multiple-basic.html");
+    await expect(page.getByTestId("item-1-indicator")).toHaveText(/Item 1: ✗/);
+
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight + 50));
+    await page.waitForTimeout(200);
+    await expect(page.getByTestId("item-1-indicator")).toHaveText(/Item 1: ✗/);
+
+    expect(pageErrors).toEqual([]);
+  });
+
+  test("intersect action - degrades gracefully without throwing", async ({
+    page,
+  }) => {
+    const pageErrors: Error[] = [];
+    page.on("pageerror", (err) => pageErrors.push(err));
+
+    await page.goto("/action.html");
+    await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(200);
+    await expect(page.locator("header")).toHaveText(/Element is not in view/);
+
+    expect(pageErrors).toEqual([]);
+  });
+});
