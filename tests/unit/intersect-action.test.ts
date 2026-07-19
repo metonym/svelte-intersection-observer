@@ -101,7 +101,7 @@ describe("intersect action", () => {
     observer.trigger([{ target: node, isIntersecting: false }]);
     expect(exitSpy).toHaveBeenCalledTimes(1);
     expect(
-      (exitSpy.mock.calls[0]?.[0] as CustomEvent).detail.isIntersecting,
+      (exitSpy.mock.calls[0][0] as CustomEvent).detail.isIntersecting,
     ).toBe(false);
   });
 
