@@ -7,7 +7,6 @@
     createIntersectionGroup,
     type IntersectActionOptions,
     intersect,
-    // biome-ignore lint/correctness/noUnusedImports: used in {@attach}, which Biome's Svelte parser doesn't yet analyze for usages
     intersectAttachment,
   } from "svelte-intersection-observer";
 
@@ -19,7 +18,6 @@
     skip: false,
   };
 
-  // biome-ignore lint/correctness/noUnusedVariables: used in {@attach}, which Biome's Svelte parser doesn't yet analyze for usages
   const group = createIntersectionGroup(() => ({
     root: null,
     rootMargin: "0px",

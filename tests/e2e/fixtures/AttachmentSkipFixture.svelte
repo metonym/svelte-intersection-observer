@@ -1,5 +1,4 @@
 <script lang="ts">
-  // biome-ignore lint/correctness/noUnusedImports: used in {@attach}, which Biome's Svelte parser doesn't yet analyze for usages
   import { intersectAttachment } from "svelte-intersection-observer";
 
   let intersecting = false;
